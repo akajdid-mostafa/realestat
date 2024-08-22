@@ -1,9 +1,7 @@
 // lib/init-middleware.js
 import Cors from 'cors';
 
-// Helper method to wait for a middleware to execute before continuing
-// And to throw an error when an error happens in a middleware
-function initMiddleware(middleware) {
+export function initMiddleware(middleware) {
   return (req, res) =>
     new Promise((resolve, reject) => {
       middleware(req, res, (result) => {
@@ -15,13 +13,11 @@ function initMiddleware(middleware) {
     });
 }
 
-
-
-// Initialize the CORS middleware
+// Initialize the CORS middleware with proper configuration
 export const cors = initMiddleware(
   Cors({
-    // Only allow requests from this origin
     origin: 'http://localhost:3000',
     methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
