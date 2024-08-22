@@ -10,7 +10,7 @@ import { ChakraBaseProvider } from '@chakra-ui/react'
 // import Phone from '../components/Phone'
 // import SEO from '../components/SEO'
 // Ensure the path is correct
-// import ContactForm from '@/components/ContactForm'
+import ContactForm from '../components/ContactForm'
 const HomePage = ({ homePage, galleryPage, houses, siteInfo }) => {
     return (
         <>
@@ -23,11 +23,11 @@ const HomePage = ({ homePage, galleryPage, houses, siteInfo }) => {
                           
                         </Box>
                         <Box width={['full', '45%']}>
-                            {/* <ContactForm
+                            <ContactForm
                                 siteInfo={siteInfo}
                      
                                 shouldHaveNegativeTopMargin
-                            /> */}
+                            />
                         </Box>
                     </Stack>
                     {/* Add Gallery section */}
