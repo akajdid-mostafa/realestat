@@ -31,7 +31,7 @@ const Navbar = () => {
 						justifyContent='start'
 						alignItems='center'
 					>
-						<Link href='/' passHref legacyBehavior>
+						<Link href='/Index' passHref legacyBehavior>
 							<Flex
 								as={'a'}
 								h='100%'
