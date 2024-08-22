@@ -25,7 +25,7 @@ model Post {
   adress     String
   ville      String
   status     Status
-  table      String
+  title      String
   categoryId Int?
   typeId     Int?
   Detail     Detail?
@@ -52,10 +52,24 @@ model Type {
 }
 
 model Detail {
-  id          Int    @id @default(autoincrement())
-  alldetaille String
-  postId      Int    @unique
-  post        Post   @relation(fields: [postId], references: [id])
+  id               Int     @id @default(autoincrement())
+  CONSTRUCTIONYEAR String?
+  SURFACEm2        String?
+  ROOMS            String?
+  bedromms         String?
+  livingRooms      String?
+  kitchen          String?
+  bathrooms        String?
+  FURNISHED        String?
+  FLOOR            String?
+  ELEVATOR         String?
+  PARKING          String?
+  BALCONY          String?
+  POOL             String?
+  FACADE           String?
+  DOCUMENTS        String?
+  postId           Int     @unique
+  post             Post    @relation(fields: [postId], references: [id])
 }
 
 enum Status {
