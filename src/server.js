@@ -1,25 +1,22 @@
-const cors = require('cors');
+import express from 'express';
+import cors from 'cors';
 
 const corsOptions = {
   origin: 'http://localhost:3000', // Replace with your frontend's origin
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  preflightContinue: false,
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
 };
 
-const app = next({ dev: process.env.NODE_ENV !== 'production' });
-const handle = app.getRequestHandler();
+const app = express();
+app.use(cors(corsOptions));
 
-app.prepare().then(() => {
-  const server = express();
+app.options('*', cors(corsOptions)); // Handle preflight requests
 
-  server.use(cors(corsOptions));
+app.post('/api/login', (req, res) => {
+  // Your login logic here
+});
 
-  server.get('*', (req, res) => {
-    return handle(req, res);
-  });
-
-  server.listen(3005, (err) => {
-    if (err) throw err;
-    console.log('> Ready on http://localhost:3000');
-  });
+app.listen(3005, () => {
+  console.log('Server is running on http://localhost:3005');
 });
