@@ -2,7 +2,7 @@ import { Box, HStack, Text, useMediaQuery } from '@chakra-ui/react'
 import React from 'react'
 import { FaBath, FaBed, FaRuler } from 'react-icons/fa'
 import Link from 'next/link'
-import theme from '@/types/CmsSingleTypes/theme'
+import theme from '../types/CmsSingleTypes/theme'
 import { ChakraBaseProvider } from '@chakra-ui/react'
 const HouseCard = ({ house }) => {
 	const [shouldHave2Columns] = useMediaQuery('(min-width: 45rem)')
