@@ -13,13 +13,10 @@ import '../styles/globals.css';
 // import SEO from '../components/SEO'
 // Ensure the path is correct
 import ContactForm from '../components/ContactForm'
-<<<<<<< HEAD
-=======
 import Cta3 from '../components/cta'
 
 
 
->>>>>>> d5119b5335278bdd9ba8d4e579baa775b9f73c44
 const HomePage = ({ homePage, galleryPage, houses, siteInfo }) => {
     return (
         <>
@@ -28,14 +25,7 @@ const HomePage = ({ homePage, galleryPage, houses, siteInfo }) => {
                 <Hero {...homePage} />
                 <Container>
                     <Stack direction={['column-reverse', 'row']}>
-<<<<<<< HEAD
-                        <Box width={['full', '55%']} mt={'3rem'} mr={[0, '4rem']}>
-                          
-                        </Box>
-                        <Box width={['full', '45%']}>
-=======
                         <Box >
->>>>>>> d5119b5335278bdd9ba8d4e579baa775b9f73c44
                             <ContactForm
                                 siteInfo={siteInfo}
                                 shouldHaveNegativeTopMargin
