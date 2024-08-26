@@ -2,7 +2,11 @@ import { Box, Stack } from '@chakra-ui/react'
 // import getData, { getSiteInfo } from '../utils/data'
 import Container from '../components/Container'
 import Layout from '../components/Layout'
+<<<<<<< HEAD
 import theme from '../types/CmsSingleTypes/theme'
+=======
+
+>>>>>>> d5119b5335278bdd9ba8d4e579baa775b9f73c44
 import { ChakraBaseProvider } from '@chakra-ui/react'
 import ContactForm from '../components/ContactForm'
 // import SimplePage from '../types/CmsSingleTypes/simplePage'
@@ -10,7 +14,7 @@ import ContactForm from '../components/ContactForm'
 // import SEO from '../components/SEO'
 // import { metaDescriptionFromHtml } from '../utils/pipes'
 
-
+import theme from '../types/CmsSingleTypes/theme'
 const ContactUsPage = () => {
 	return (
 		<>
