@@ -1,17 +1,39 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Status } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-// Get all posts with full details
 export async function GET(req: Request) {
+  const url = new URL(req.url);
+  const categoryId = url.searchParams.get('categoryId');
+  const typeId = url.searchParams.get('typeId');
+  const statusParam = url.searchParams.get('status');
+  const minPrice = url.searchParams.get('minPrice');
+  const maxPrice = url.searchParams.get('maxPrice');
+
+  let status: Status | undefined;
+  if (statusParam) {
+    if (Object.values(Status).includes(statusParam as Status)) {
+      status = statusParam as Status;
+    } else {
+      return NextResponse.json({ error: 'Invalid status value' }, { status: 400 });
+    }
+  }
+
   try {
     const posts = await prisma.post.findMany({
+      where: {
+        ...(categoryId && { categoryId: Number(categoryId) }),
+        ...(typeId && { typeId: Number(typeId) }),
+        ...(status && { status }),
+        ...(minPrice && { prix: { gte: Number(minPrice) } }),
+        ...(maxPrice && { prix: { lte: Number(maxPrice) } }),
+      },
       include: {
-        category: true, // Include related category
-        type: true, // Include related type
-        Detail: true, // Include related detail information
-        DateReserve: true, // Include related date reservations
+        category: true,
+        type: true,
+        Detail: true,
+        DateReserve: true,
       },
     });
 
@@ -22,7 +44,6 @@ export async function GET(req: Request) {
   }
 }
 
-// Create a new post
 export async function POST(req: Request) {
   const {
     img,
