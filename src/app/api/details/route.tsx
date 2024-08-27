@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 export async function POST(req: Request) {
   const {
     CONSTRUCTIONYEAR,
-    SURFACEm2,
+    SURFACE,
     ROOMS,
     bedromms,  // Updated to match the schema
     livingRooms,
@@ -27,9 +27,9 @@ export async function POST(req: Request) {
     const detail = await prisma.detail.create({
       data: {
         CONSTRUCTIONYEAR,
-        SURFACEm2,
+        SURFACE,
         ROOMS,
-        bedromms,  // Updated to match the schema
+        bedromms, 
         livingRooms,
         kitchen,
         bathrooms,

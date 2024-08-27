@@ -16,21 +16,22 @@ model User {
 }
 
 model Post {
-  id         Int       @id @default(autoincrement())
-  img        String
-  datePost   DateTime
-  lat        Float
-  lon        Float
-  prix       Float
-  adress     String
-  ville      String
-  status     Status
-  title      String
-  categoryId Int?
-  typeId     Int?
-  Detail     Detail?
-  category   Category? @relation(fields: [categoryId], references: [id])
-  type       Type?     @relation(fields: [typeId], references: [id])
+  id          Int           @id @default(autoincrement())
+  img         String[]
+  datePost    DateTime
+  lat         Float
+  lon         Float
+  prix        Float
+  adress      String
+  ville       String
+  status      Status
+  title       String
+  categoryId  Int?
+  typeId      Int?
+  Detail      Detail?
+  category    Category?     @relation(fields: [categoryId], references: [id])
+  type        Type?         @relation(fields: [typeId], references: [id])
+  DateReserve DateReserve[]
 }
 
 model Partennaire {
@@ -54,7 +55,7 @@ model Type {
 model Detail {
   id               Int     @id @default(autoincrement())
   CONSTRUCTIONYEAR String?
-  SURFACEm2        String?
+  SURFACE          String?
   ROOMS            String?
   bedromms         String?
   livingRooms      String?
@@ -72,9 +73,20 @@ model Detail {
   post             Post    @relation(fields: [postId], references: [id])
 }
 
+model DateReserve {
+  id       Int      @id @default(autoincrement())
+  DATEDEBU DateTime
+  dateFin  DateTime
+  fullname String
+  CIN      String
+  postId   Int
+  post     Post     @relation(fields: [postId], references: [id])
+}
+
 enum Status {
   DateValide
   DateInvalide
+  tken
 }
 
 enum CategoryName {

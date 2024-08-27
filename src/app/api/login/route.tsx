@@ -19,9 +19,9 @@ export async function OPTIONS(req: Request) {
 }
 
 export async function POST(req: Request) {
-  const { email, password } = await req.json();
-
   try {
+    const { email, password } = await req.json();
+
     const user = await prisma.user.findUnique({
       where: { email },
     });
@@ -38,14 +38,16 @@ export async function POST(req: Request) {
 
     const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' });
 
-    const response = NextResponse.json({ token }, { status: 200 });
+    const response = NextResponse.json({ token, user: { email, password } }, { status: 200 });
     response.headers.set('Access-Control-Allow-Origin', 'http://localhost:3000');
     response.headers.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
     response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     response.headers.set('Access-Control-Allow-Credentials', 'true');
     return response;
   } catch (error) {
-    console.error('Error during login:', error);
+    console.error('Error during login:', error.message); // Log the error message
+    console.error('Stack trace:', error.stack); // Log the stack trace for deeper inspection
+
     return NextResponse.json({ error: 'Error logging in' }, { status: 500 });
   }
 }
