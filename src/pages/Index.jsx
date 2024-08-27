@@ -14,6 +14,9 @@ import '../styles/globals.css';
 // Ensure the path is correct
 import ContactForm from '../components/ContactForm'
 import Cta3 from '../components/cta'
+import Popular from '../components/popular-post'
+
+
 
 
 
@@ -52,7 +55,9 @@ const HomePage = ({ homePage, galleryPage, houses, siteInfo }) => {
                     </VStack> */}
                 </Container>
                 <Cta3/>
-            </Layout>
+                <Popular/>
+                           
+            </Layout> 
             <Footer/>
             </ChakraBaseProvider>
             
