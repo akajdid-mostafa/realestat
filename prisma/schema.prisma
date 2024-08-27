@@ -54,39 +54,40 @@ model Type {
 
 model Detail {
   id               Int     @id @default(autoincrement())
-  CONSTRUCTIONYEAR String?
-  SURFACE          String?
-  ROOMS            String?
+  constructionyear String?
+  surface          String?
+  rooms            String?
   bedromms         String?
-  livingRooms      String?
+  livingrooms      String?
   kitchen          String?
   bathrooms        String?
-  FURNISHED        String?
-  FLOOR            String?
-  ELEVATOR         String?
-  PARKING          String?
-  BALCONY          String?
-  POOL             String?
-  FACADE           String?
-  DOCUMENTS        String?
+  furnished        String?
+  floor            String?
+  elevator         String?
+  parking          String?
+  balcony          String?
+  pool             String?
+  facade           String?
+  documents        String?
   postId           Int     @unique
   post             Post    @relation(fields: [postId], references: [id])
 }
 
 model DateReserve {
-  id       Int      @id @default(autoincrement())
-  DATEDEBU DateTime
-  dateFin  DateTime
-  fullname String
-  CIN      String
-  postId   Int
-  post     Post     @relation(fields: [postId], references: [id])
+  id        Int       @id @default(autoincrement())
+  dateDebut DateTime
+  dateFine  DateTime?
+  fullName  String
+  CIN       String
+  price     String
+  postId    Int?
+  post      Post?     @relation(fields: [postId], references: [id])
 }
 
 enum Status {
-  DateValide
-  DateInvalide
-  tken
+  available
+  unavailable
+  taken
 }
 
 enum CategoryName {

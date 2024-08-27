@@ -7,10 +7,10 @@ const prisma = new PrismaClient();
 export async function POST(req: Request) {
   try {
     // Parse the incoming JSON request body
-    const { DATEDEBU, dateFin, fullname, CIN, postId } = await req.json();
+    const { dateDebut, dateFine, fullName,price, CIN, postId } = await req.json();
 
     // Validate required fields
-    if (!DATEDEBU || !dateFin || !fullname || !CIN || !postId) {
+    if (!dateDebut || !dateFine || !fullName || !CIN || !postId) {
       throw new Error('Missing required fields');
     }
 
@@ -26,9 +26,10 @@ export async function POST(req: Request) {
     // Create the DateReserve entry
     const dateReserve = await prisma.dateReserve.create({
       data: {
-        DATEDEBU: new Date(DATEDEBU),
-        dateFin: new Date(dateFin),
-        fullname,
+        dateDebut: new Date(dateDebut),
+        dateFine: new Date(dateFine),
+        fullName,
+        price,
         CIN,
         post: { connect: { id: postId } }, // Connect the DateReserve to the Post
       },
