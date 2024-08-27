@@ -30,7 +30,7 @@ export async function PUT(req: Request) {
   const id = req.url.split('/').pop();
   const {
     CONSTRUCTIONYEAR,
-    SURFACEm2,
+    SURFACE,
     ROOMS,
     bedromms,
     livingRooms,
@@ -64,7 +64,7 @@ export async function PUT(req: Request) {
       where: { id: Number(id) },
       data: {
         CONSTRUCTIONYEAR,
-        SURFACEm2,
+        SURFACE,
         ROOMS,
         bedromms,
         livingRooms,
