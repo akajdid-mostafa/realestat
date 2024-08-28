@@ -15,6 +15,7 @@ import '../styles/globals.css';
 import ContactForm from '../components/ContactForm'
 import Cta3 from '../components/cta'
 import Popular from '../components/popular-post'
+import Aboutt from '../components/aboutt'
 
 
 
@@ -54,9 +55,9 @@ const HomePage = ({ homePage, galleryPage, houses, siteInfo }) => {
                         )}
                     </VStack> */}
                 </Container>
-                <Cta3/>
                 <Popular/>
-                           
+                <Aboutt/>
+                <Cta3/>    
             </Layout> 
             <Footer/>
             </ChakraBaseProvider>

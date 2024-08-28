@@ -46,14 +46,13 @@ const Hero = () => {
 							fontSize={useBreakpointValue({ base: '4xl', md: '6xl' })}
 						>
 							{/* {heroText} */}
-							Un moyen facile de trouver
-une propriété parfaite
+							Trouver un logement adapté à votre style de vie
 						</Heading>
           <Stack direction={['column', 'row']} spacing={['0.5rem', '1rem']}>
-		  <Button style={{backgroundColor:"#0165fc" ,color:"white"}} size="sm" borderRadius="md">
-  Discutons de la maison de vos rêves
+		  <Button style={{backgroundColor:"#0165fc" ,color:"white"}} size="md" borderRadius="md">
+		  Explorer l'immobilier local
 </Button>
-<Button as={'a'} size="sm"
+<Button as={'a'} size="md"
 										bg={'transparent'}
 										color={'whiteAlpha.800'}
 										_hover={{ bg: 'whiteAlpha.400' }} >
