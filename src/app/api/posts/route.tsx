@@ -56,8 +56,9 @@ export async function GET(req: Request) {
     const response = NextResponse.json(posts, { status: 200 });
     return setCorsHeaders(response);
   } catch (error) {
-    console.error('Error fetching posts:', error.message || error);
-    const response = NextResponse.json({ error: 'Error fetching posts', details: error.message || error }, { status: 500 });
+    const message = (error instanceof Error) ? error.message : 'Unknown error';
+    console.error('Error fetching posts:', message);
+    const response = NextResponse.json({ error: 'Error fetching posts', details: message }, { status: 500 });
     return setCorsHeaders(response);
   }
 }
@@ -103,8 +104,9 @@ export async function POST(req: Request) {
     const response = NextResponse.json(post, { status: 201 });
     return setCorsHeaders(response);
   } catch (error) {
-    console.error('Error creating post:', error.message || error);
-    const response = NextResponse.json({ error: 'Error creating post', details: error.message || error }, { status: 400 });
+    const message = (error instanceof Error) ? error.message : 'Unknown error';
+    console.error('Error creating post:', message);
+    const response = NextResponse.json({ error: 'Error creating post', details: message }, { status: 400 });
     return setCorsHeaders(response);
   }
 }
