@@ -28,6 +28,19 @@ module.exports = {
           '0%': { transform: 'rotate(0deg)' },
           '100%': { transform: 'rotate(360deg)' },
         },
+        zoomIn: {
+          '0%': { transform: 'scale(0.9)', opacity: '0' },
+          '100%': { transform: 'scale(1)', opacity: '1' },
+        },
+        zoomOut: {
+          '0%': { transform: 'scale(1)', opacity: '1' },
+          '100%': { transform: 'scale(0.9)', opacity: '0' },
+        },
+        bounce: {
+          '0%, 20%, 50%, 80%, 100%': { transform: 'translateY(0)' },
+          '40%': { transform: 'translateY(-30px)' },
+          '60%': { transform: 'translateY(-15px)' },
+        },
       },
       animation: {
         fadeIn: 'fadeIn 0.75s ease-out',
@@ -35,6 +48,9 @@ module.exports = {
         slideInLeft: 'slideInLeft 0.75s ease-out',
         slideInUp: 'slideInUp 0.75s ease-out',
         rotateOnce: 'rotateOnce 1s ease-out',
+        zoomIn: 'zoomIn 0.75s ease-out',
+        zoomOut: 'zoomOut 0.75s ease-out',
+        bounce: 'bounce 1s ease-in-out',
       },
     },
   },

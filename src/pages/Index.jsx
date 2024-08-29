@@ -16,6 +16,8 @@ import ContactForm from '../components/ContactForm'
 import Cta3 from '../components/cta'
 import Popular from '../components/popular-post'
 import Aboutt from '../components/aboutt'
+import HomeFinancingSteps from '../components/home'
+
 
 
 
@@ -57,7 +59,9 @@ const HomePage = ({ homePage, galleryPage, houses, siteInfo }) => {
                 </Container>
                 <Popular/>
                 <Aboutt/>
-                <Cta3/>    
+                <HomeFinancingSteps/>
+                <Cta3/>
+                
             </Layout> 
             <Footer/>
             </ChakraBaseProvider>

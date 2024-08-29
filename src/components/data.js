@@ -169,3 +169,35 @@ export const cardData = [
     },
     // Add more card objects as needed
 ];
+export const steps = [
+    {
+        image: "/images/1.svg",
+        title: "Prepare your finances",
+        description: "Review your credit score and income — and avoid taking out loans, opening credit cards or making large purchases for six months.",
+        linkText: "Try this calculator",
+        linkUrl: "#",
+    },
+    {
+        image: "/images/2.svg",
+        title: "Get pre-qualified",
+        description: "In as little as three minutesHelp, get an estimate of what you can borrow to shop for homes in your budget — with no impact to your credit.",
+        linkText: "Pre-qualify today",
+        linkUrl: "#",
+    },
+    {
+        image: "/images/3.svg",
+        title: "Get pre-approved",
+        description: "Make strong offers on homes with a verified pre-approval letter. A loan officer will review the documents you've prepared and verify the amount you're approved for.",
+    },
+    {
+        image: "/images/4.svg",
+        title: "Apply",
+        description: "After the seller accepts your offer, you can formally apply for a mortgage. Our loan officers will provide expert guidance every step of the way.",
+    },
+    {
+        image: "/images/5.svg",
+        title: "Close and move in",
+        description: "Congrats, homeowner! In most states, you'll close your loan with an escrow company. Once your loan is approved, the lender will finalize the sale.",
+    },
+
+];

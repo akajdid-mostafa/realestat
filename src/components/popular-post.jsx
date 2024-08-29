@@ -7,6 +7,7 @@ import { MdPhone } from 'react-icons/md';
 import { FaWhatsapp } from 'react-icons/fa';
 import { cardData } from './data';
 
+
 const Popular = () => {
     const [gridDisplay, setGridDisplay] = useState(false);
     const [slidesToShow, setSlidesToShow] = useState(1);
@@ -42,7 +43,7 @@ const Popular = () => {
             }
         } else if (window.innerWidth >= 768) {
             intervalRef.current = setInterval(() => {
-                setCurrentSlide(prev => (prev + 1) % totalSlides);
+                setCurrentSlide(prev => (prev + 1) % (totalSlides - 1));
             }, 2000);
 
             return () => {
@@ -63,15 +64,11 @@ const Popular = () => {
         }
     }, [gridDisplay, totalSlides]);
 
-    const handleShowAll = () => {
-        console.log('Show All Cards button clicked');
-    };
-
     return (
         <div className="flex flex-col items-center justify-center min-h-screen p-4 lg:p-8">
             <div className="mt-8 grid grid-cols-1 pb-6 text-center">
-                <h1 className="font-bold text-4xl leading-normal mb-4 animate-popIn">Annonces d'accueil dans Votre Immocean</h1>
-                <p className="text-slate-400 max-w-xl mx-auto mb-4 animate-popIn">
+                <h1 className="font-bold text-4xl leading-normal mb-4 animate-fadeInUp">Annonces d'accueil dans Votre Immocean</h1>
+                <p className="text-slate-400 max-w-xl mx-auto mb-4 animate-fadeInUp">
                     Avec plus d'un million de locations disponibles, il est facile de trouver ce qui vous convient le mieux.
                 </p>
             </div>
@@ -80,7 +77,7 @@ const Popular = () => {
                     {cardData.slice(0, 6).map(card => (
                         <div
                             key={card.id}
-                            className="bg-white mb-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 animate-flipIn hover:animate-zoomIn"
+                            className="bg-white mb-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 animate-fadeInUp"
                         >
                             <Image
                                 src={card.imageSrc}
@@ -130,12 +127,6 @@ const Popular = () => {
                             </div>
                         </div>
                     ))}
-                    <button
-                        onClick={handleShowAll}
-                        className="mt-6 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-transform transform hover:scale-105"
-                    >
-                        Show All Cards
-                    </button>
                 </div>
             ) : (
                 <CarouselProvider
@@ -153,7 +144,7 @@ const Popular = () => {
                             <Slide
                                 key={card.id}
                                 index={card.id}
-                                className="flex items-center justify-center px-2 animate-slideUp"
+                                className="flex items-center justify-center px-2 animate-fadeInUp"
                             >
                                 <div className="w-full max-w-lg bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
                                     <Image
@@ -209,13 +200,12 @@ const Popular = () => {
                 </CarouselProvider>
             )}
             <button
-                onClick={handleShowAll}
-                className="mt-6 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-transform transform hover:scale-105"
+                className="mt-6 px-6 py-3 w-80 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-transform transform hover:scale-105 animate-fadeInUp"
             >
-                Show All Cards
+                SHOW ALL POST
             </button>
         </div>
     );
-}
+};
 
 export default Popular;
