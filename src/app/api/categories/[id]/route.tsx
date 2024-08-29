@@ -3,11 +3,27 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+// Helper function to set CORS headers
+function setCorsHeaders(response: NextResponse) {
+  response.headers.set('Access-Control-Allow-Origin', '*'); // Adjust to allow specific origins
+  response.headers.set('Access-Control-Allow-Methods', 'GET, PUT, DELETE, OPTIONS');
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  response.headers.set('Access-Control-Allow-Credentials', 'true');
+  return response;
+}
+
+// Handle OPTIONS method for CORS preflight
+export function OPTIONS() {
+  const response = new NextResponse(null, { status: 204 });
+  return setCorsHeaders(response);
+}
+
 export async function GET(req: Request) {
   const id = req.url.split('/').pop();
 
   if (!id || isNaN(Number(id))) {
-    return NextResponse.json({ error: 'Invalid or missing ID' }, { status: 400 });
+    const response = NextResponse.json({ error: 'Invalid or missing ID' }, { status: 400 });
+    return setCorsHeaders(response);
   }
 
   try {
@@ -19,13 +35,16 @@ export async function GET(req: Request) {
     });
 
     if (!category) {
-      return NextResponse.json({ error: 'Category not found' }, { status: 404 });
+      const response = NextResponse.json({ error: 'Category not found' }, { status: 404 });
+      return setCorsHeaders(response);
     }
 
-    return NextResponse.json(category, { status: 200 });
+    const response = NextResponse.json(category, { status: 200 });
+    return setCorsHeaders(response);
   } catch (error) {
     console.error('Error fetching category by ID:', error.message || error);
-    return NextResponse.json({ error: 'Error fetching category by ID', details: error.message || error }, { status: 500 });
+    const response = NextResponse.json({ error: 'Error fetching category by ID', details: error.message || error }, { status: 500 });
+    return setCorsHeaders(response);
   }
 }
 
@@ -34,7 +53,8 @@ export async function PUT(req: Request) {
   const { name } = await req.json();
 
   if (!id || isNaN(Number(id))) {
-    return NextResponse.json({ error: 'Invalid or missing ID' }, { status: 400 });
+    const response = NextResponse.json({ error: 'Invalid or missing ID' }, { status: 400 });
+    return setCorsHeaders(response);
   }
 
   try {
@@ -43,10 +63,12 @@ export async function PUT(req: Request) {
       data: { name },
     });
 
-    return NextResponse.json(updatedCategory, { status: 200 });
+    const response = NextResponse.json(updatedCategory, { status: 200 });
+    return setCorsHeaders(response);
   } catch (error) {
     console.error('Error updating category:', error.message || error);
-    return NextResponse.json({ error: 'Error updating category', details: error.message || error }, { status: 500 });
+    const response = NextResponse.json({ error: 'Error updating category', details: error.message || error }, { status: 500 });
+    return setCorsHeaders(response);
   }
 }
 
@@ -54,7 +76,8 @@ export async function DELETE(req: Request) {
   const id = req.url.split('/').pop();
 
   if (!id || isNaN(Number(id))) {
-    return NextResponse.json({ error: 'Invalid or missing ID' }, { status: 400 });
+    const response = NextResponse.json({ error: 'Invalid or missing ID' }, { status: 400 });
+    return setCorsHeaders(response);
   }
 
   try {
@@ -62,9 +85,11 @@ export async function DELETE(req: Request) {
       where: { id: Number(id) },
     });
 
-    return NextResponse.json({ message: 'Category deleted successfully' }, { status: 200 });
+    const response = NextResponse.json({ message: 'Category deleted successfully' }, { status: 200 });
+    return setCorsHeaders(response);
   } catch (error) {
     console.error('Error deleting category:', error.message || error);
-    return NextResponse.json({ error: 'Error deleting category', details: error.message || error }, { status: 500 });
+    const response = NextResponse.json({ error: 'Error deleting category', details: error.message || error }, { status: 500 });
+    return setCorsHeaders(response);
   }
 }

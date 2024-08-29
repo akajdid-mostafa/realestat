@@ -3,12 +3,28 @@ import { PrismaClient, TypeName } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+// Helper function to set CORS headers
+function setCorsHeaders(response: NextResponse) {
+  response.headers.set('Access-Control-Allow-Origin', '*'); // Adjust according to your needs
+  response.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  response.headers.set('Access-Control-Allow-Credentials', 'true');
+  return response;
+}
+
+// Handle OPTIONS method for CORS preflight
+export function OPTIONS() {
+  const response = new NextResponse(null, { status: 204 });
+  return setCorsHeaders(response);
+}
+
 export async function GET(req: Request) {
   const url = new URL(req.url);
   const typeName = url.searchParams.get('name') as TypeName;
 
   if (!typeName) {
-    return NextResponse.json({ error: 'Type name is required' }, { status: 400 });
+    const response = NextResponse.json({ error: 'Type name is required' }, { status: 400 });
+    return setCorsHeaders(response);
   }
 
   try {
@@ -20,13 +36,16 @@ export async function GET(req: Request) {
     });
 
     if (!type) {
-      return NextResponse.json({ error: 'Type not found' }, { status: 404 });
+      const response = NextResponse.json({ error: 'Type not found' }, { status: 404 });
+      return setCorsHeaders(response);
     }
 
-    return NextResponse.json(type.posts, { status: 200 });
+    const response = NextResponse.json(type.posts, { status: 200 });
+    return setCorsHeaders(response);
   } catch (error) {
     console.error('Error fetching posts by type:', error.message || error);
-    return NextResponse.json({ error: 'Error fetching posts by type', details: error.message || error }, { status: 500 });
+    const response = NextResponse.json({ error: 'Error fetching posts by type', details: error.message || error }, { status: 500 });
+    return setCorsHeaders(response);
   }
 }
 
@@ -34,7 +53,8 @@ export async function POST(req: Request) {
   const { type } = await req.json();
 
   if (!type) {
-    return NextResponse.json({ error: 'Type name is required' }, { status: 400 });
+    const response = NextResponse.json({ error: 'Type name is required' }, { status: 400 });
+    return setCorsHeaders(response);
   }
 
   try {
@@ -42,9 +62,11 @@ export async function POST(req: Request) {
       data: { type },
     });
 
-    return NextResponse.json(newType, { status: 201 });
+    const response = NextResponse.json(newType, { status: 201 });
+    return setCorsHeaders(response);
   } catch (error) {
     console.error('Error creating type:', error.message || error);
-    return NextResponse.json({ error: 'Error creating type', details: error.message || error }, { status: 500 });
+    const response = NextResponse.json({ error: 'Error creating type', details: error.message || error }, { status: 500 });
+    return setCorsHeaders(response);
   }
 }

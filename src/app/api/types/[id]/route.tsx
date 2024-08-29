@@ -3,12 +3,28 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+// Helper function to set CORS headers
+function setCorsHeaders(response: NextResponse) {
+  response.headers.set('Access-Control-Allow-Origin', '*'); // Adjust to allow specific origins
+  response.headers.set('Access-Control-Allow-Methods', 'GET, PUT, DELETE, OPTIONS');
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  response.headers.set('Access-Control-Allow-Credentials', 'true');
+  return response;
+}
+
+// Handle OPTIONS method for CORS preflight
+export function OPTIONS() {
+  const response = new NextResponse(null, { status: 204 });
+  return setCorsHeaders(response);
+}
+
 // Get type by ID
 export async function GET(req: Request) {
   const id = req.url.split('/').pop();
 
   if (!id || isNaN(Number(id))) {
-    return NextResponse.json({ error: 'Invalid or missing ID' }, { status: 400 });
+    const response = NextResponse.json({ error: 'Invalid or missing ID' }, { status: 400 });
+    return setCorsHeaders(response);
   }
 
   try {
@@ -20,13 +36,16 @@ export async function GET(req: Request) {
     });
 
     if (!type) {
-      return NextResponse.json({ error: 'Type not found' }, { status: 404 });
+      const response = NextResponse.json({ error: 'Type not found' }, { status: 404 });
+      return setCorsHeaders(response);
     }
 
-    return NextResponse.json(type, { status: 200 });
+    const response = NextResponse.json(type, { status: 200 });
+    return setCorsHeaders(response);
   } catch (error) {
     console.error('Error fetching type by ID:', error.message || error);
-    return NextResponse.json({ error: 'Error fetching type by ID', details: error.message || error }, { status: 500 });
+    const response = NextResponse.json({ error: 'Error fetching type by ID', details: error.message || error }, { status: 500 });
+    return setCorsHeaders(response);
   }
 }
 
@@ -36,7 +55,8 @@ export async function PUT(req: Request) {
   const { type } = await req.json();
 
   if (!id || isNaN(Number(id))) {
-    return NextResponse.json({ error: 'Invalid or missing ID' }, { status: 400 });
+    const response = NextResponse.json({ error: 'Invalid or missing ID' }, { status: 400 });
+    return setCorsHeaders(response);
   }
 
   try {
@@ -45,10 +65,12 @@ export async function PUT(req: Request) {
       data: { type },
     });
 
-    return NextResponse.json(updatedType, { status: 200 });
+    const response = NextResponse.json(updatedType, { status: 200 });
+    return setCorsHeaders(response);
   } catch (error) {
     console.error('Error updating type:', error.message || error);
-    return NextResponse.json({ error: 'Error updating type', details: error.message || error }, { status: 500 });
+    const response = NextResponse.json({ error: 'Error updating type', details: error.message || error }, { status: 500 });
+    return setCorsHeaders(response);
   }
 }
 
@@ -57,7 +79,8 @@ export async function DELETE(req: Request) {
   const id = req.url.split('/').pop();
 
   if (!id || isNaN(Number(id))) {
-    return NextResponse.json({ error: 'Invalid or missing ID' }, { status: 400 });
+    const response = NextResponse.json({ error: 'Invalid or missing ID' }, { status: 400 });
+    return setCorsHeaders(response);
   }
 
   try {
@@ -65,9 +88,11 @@ export async function DELETE(req: Request) {
       where: { id: Number(id) },
     });
 
-    return NextResponse.json({ message: 'Type deleted successfully' }, { status: 200 });
+    const response = NextResponse.json({ message: 'Type deleted successfully' }, { status: 200 });
+    return setCorsHeaders(response);
   } catch (error) {
     console.error('Error deleting type:', error.message || error);
-    return NextResponse.json({ error: 'Error deleting type', details: error.message || error }, { status: 500 });
+    const response = NextResponse.json({ error: 'Error deleting type', details: error.message || error }, { status: 500 });
+    return setCorsHeaders(response);
   }
 }
