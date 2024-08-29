@@ -18,51 +18,7 @@ export function OPTIONS() {
   return setCorsHeaders(response);
 }
 
-export async function GET(req: Request) {
-  const url = new URL(req.url);
-  const categoryId = url.searchParams.get('categoryId');
-  const typeId = url.searchParams.get('typeId');
-  const statusParam = url.searchParams.get('status');
-  const minPrice = url.searchParams.get('minPrice');
-  const maxPrice = url.searchParams.get('maxPrice');
-
-  let status: Status | undefined;
-  if (statusParam) {
-    if (Object.values(Status).includes(statusParam as Status)) {
-      status = statusParam as Status;
-    } else {
-      const response = NextResponse.json({ error: 'Invalid status value' }, { status: 400 });
-      return setCorsHeaders(response);
-    }
-  }
-
-  try {
-    const posts = await prisma.post.findMany({
-      where: {
-        ...(categoryId && { categoryId: Number(categoryId) }),
-        ...(typeId && { typeId: Number(typeId) }),
-        ...(status && { status }),
-        ...(minPrice && { prix: { gte: Number(minPrice) } }),
-        ...(maxPrice && { prix: { lte: Number(maxPrice) } }),
-      },
-      include: {
-        category: true,
-        type: true,
-        Detail: true,
-        DateReserve: true,
-      },
-    });
-
-    const response = NextResponse.json(posts, { status: 200 });
-    return setCorsHeaders(response);
-  } catch (error) {
-    const message = (error instanceof Error) ? error.message : 'Unknown error';
-    console.error('Error fetching posts:', message);
-    const response = NextResponse.json({ error: 'Error fetching posts', details: message }, { status: 500 });
-    return setCorsHeaders(response);
-  }
-}
-
+// Create a new post with optional details
 export async function POST(req: Request) {
   const {
     img,
@@ -75,23 +31,36 @@ export async function POST(req: Request) {
     status,
     title,
     categoryId,
-    typeId
+    typeId,
+    Detail
   } = await req.json();
 
+  // Validate required fields
+  if (!img || !datePost || !lat || !lon || !prix || !adress || !ville || !status || !title) {
+    const response = NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    return setCorsHeaders(response);
+  }
+
   try {
+    // Ensure status is cast correctly
     const post = await prisma.post.create({
       data: {
         img,
-        datePost,
+        datePost: new Date(datePost),
         lat,
         lon,
         prix,
         adress,
         ville,
-        status,
+        status: status as Status, // Cast status to enum
         title,
         category: categoryId ? { connect: { id: categoryId } } : undefined,
         type: typeId ? { connect: { id: typeId } } : undefined,
+        Detail: Detail ? {
+          create: {
+            ...Detail,
+          }
+        } : undefined,
       },
       include: {
         category: true,
