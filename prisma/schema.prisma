@@ -16,7 +16,7 @@ model User {
 }
 
 model Post {
-  id          Int           @id @default(autoincrement())
+  id          Int          @id @default(autoincrement())
   img         String[]
   datePost    DateTime
   lat         Float
@@ -29,9 +29,9 @@ model Post {
   categoryId  Int?
   typeId      Int?
   Detail      Detail?
-  category    Category?     @relation(fields: [categoryId], references: [id])
-  type        Type?         @relation(fields: [typeId], references: [id])
-  DateReserve DateReserve[]
+  category    Category?    @relation(fields: [categoryId], references: [id])
+  type        Type?        @relation(fields: [typeId], references: [id])
+  DateReserve DateReserve?
 }
 
 model Partennaire {
@@ -80,7 +80,7 @@ model DateReserve {
   fullName  String
   CIN       String
   price     String
-  postId    Int?
+  postId    Int?      @unique
   post      Post?     @relation(fields: [postId], references: [id])
 }
 
