@@ -16,7 +16,7 @@ const corsOptions = {
     }
   },
   methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'ngrok-skip-browser-warning'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 };
 
@@ -33,7 +33,9 @@ app.get('/api/posts',(req,res)=>{
 app.use('/api/posts', (req, res) => {
   res.json({ message: 'Posts successful' });
 });
-
-app.listen(3000, () => {
-  console.log('Server is running on http://localhost:3000');
+app.use('api/categories',(req,res)=>{
+  res.json({message:"categorie"})
+})
+app.listen(3009, () => {
+  console.log('Server is running on http://localhost:3002');
 });
