@@ -3,11 +3,11 @@ import { Box, SimpleGrid, useMediaQuery } from '@chakra-ui/react'
 import Container from '../../components/Container'
 import Layout from '../../components/Layout'
 import HouseCard from '../../components/HouseCard'
-import House from '@/types/CmsCollectionTypes/house'
+import House from '../../types/CmsCollectionTypes/house'
 // import CmsRichText from '../../components/CmsRichText'
 // import SEO from '../../components/SEO'
 // import { metaDescriptionFromHtml } from '../../utils/pipes'
-import theme from '@/types/CmsSingleTypes/theme'
+import theme from '../../types/CmsSingleTypes/theme'
 import { ChakraBaseProvider } from '@chakra-ui/react'
 const Gallery = () => {
 	const [shouldHave2Columns] = useMediaQuery('(min-width: 45rem)')

@@ -3,11 +3,27 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+// Helper function to set CORS headers
+function setCorsHeaders(response: NextResponse) {
+  response.headers.set('Access-Control-Allow-Origin', '*'); // Allow all origins or specify your allowed origins
+  response.headers.set('Access-Control-Allow-Methods', 'GET, PUT, DELETE, OPTIONS');
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  response.headers.set('Access-Control-Allow-Credentials', 'true');
+  return response;
+}
+
+// Handle OPTIONS method for CORS preflight
+export function OPTIONS() {
+  const response = new NextResponse(null, { status: 204 });
+  return setCorsHeaders(response);
+}
+
 export async function GET(req: Request) {
   const id = req.url.split('/').pop();
 
   if (!id || isNaN(Number(id))) {
-    return NextResponse.json({ error: 'Invalid or missing ID' }, { status: 400 });
+    const response = NextResponse.json({ error: 'Invalid or missing ID' }, { status: 400 });
+    return setCorsHeaders(response);
   }
 
   try {
@@ -16,39 +32,43 @@ export async function GET(req: Request) {
     });
 
     if (!detail) {
-      return NextResponse.json({ error: 'Detail not found' }, { status: 404 });
+      const response = NextResponse.json({ error: 'Detail not found' }, { status: 404 });
+      return setCorsHeaders(response);
     }
 
-    return NextResponse.json(detail, { status: 200 });
+    const response = NextResponse.json(detail, { status: 200 });
+    return setCorsHeaders(response);
   } catch (error) {
     console.error('Error fetching detail:', error);
-    return NextResponse.json({ error: 'Error fetching detail' }, { status: 500 });
+    const response = NextResponse.json({ error: 'Error fetching detail' }, { status: 500 });
+    return setCorsHeaders(response);
   }
 }
 
 export async function PUT(req: Request) {
   const id = req.url.split('/').pop();
   const {
-    CONSTRUCTIONYEAR,
-    SURFACEm2,
-    ROOMS,
-    bedromms,
-    livingRooms,
+    constructionyear,
+    surface,
+    rooms,
+    bedromms, 
+    livingrooms,
     kitchen,
     bathrooms,
-    FURNISHED,
-    FLOOR,
-    ELEVATOR,
-    PARKING,
-    BALCONY,
-    POOL,
-    FACADE,
-    DOCUMENTS,
+    furnished,
+    floor,
+    elevator,
+    parking,
+    balcony,
+    pool,
+    facade,
+    documents,
     postId,
   } = await req.json();
 
   if (!id || isNaN(Number(id))) {
-    return NextResponse.json({ error: 'Invalid or missing ID' }, { status: 400 });
+    const response = NextResponse.json({ error: 'Invalid or missing ID' }, { status: 400 });
+    return setCorsHeaders(response);
   }
 
   try {
@@ -57,34 +77,38 @@ export async function PUT(req: Request) {
     });
 
     if (!existingDetail) {
-      return NextResponse.json({ error: 'Detail not found' }, { status: 404 });
+      const response = NextResponse.json({ error: 'Detail not found' }, { status: 404 });
+      return setCorsHeaders(response);
     }
 
     const updatedDetail = await prisma.detail.update({
       where: { id: Number(id) },
       data: {
-        CONSTRUCTIONYEAR,
-        SURFACEm2,
-        ROOMS,
-        bedromms,
-        livingRooms,
+        constructionyear,
+        surface,
+        rooms,
+        bedromms, 
+        livingrooms,
         kitchen,
         bathrooms,
-        FURNISHED,
-        FLOOR,
-        ELEVATOR,
-        PARKING,
-        BALCONY,
-        POOL,
-        FACADE,
-        DOCUMENTS,
+        furnished,
+        floor,
+        elevator,
+        parking,
+        balcony,
+        pool,
+        facade,
+        documents,
         post: { connect: { id: postId } },
       },
     });
-    return NextResponse.json(updatedDetail, { status: 200 });
+
+    const response = NextResponse.json(updatedDetail, { status: 200 });
+    return setCorsHeaders(response);
   } catch (error) {
     console.error('Error updating detail:', error);
-    return NextResponse.json({ error: 'Error updating detail' }, { status: 500 });
+    const response = NextResponse.json({ error: 'Error updating detail' }, { status: 500 });
+    return setCorsHeaders(response);
   }
 }
 
@@ -92,16 +116,20 @@ export async function DELETE(req: Request) {
   const id = req.url.split('/').pop();
 
   if (!id || isNaN(Number(id))) {
-    return NextResponse.json({ error: 'Invalid or missing ID' }, { status: 400 });
+    const response = NextResponse.json({ error: 'Invalid or missing ID' }, { status: 400 });
+    return setCorsHeaders(response);
   }
 
   try {
     await prisma.detail.delete({
       where: { id: Number(id) },
     });
-    return NextResponse.json({ message: 'Detail deleted successfully' }, { status: 200 });
+
+    const response = NextResponse.json({ message: 'Detail deleted successfully' }, { status: 200 });
+    return setCorsHeaders(response);
   } catch (error) {
     console.error('Error deleting detail:', error);
-    return NextResponse.json({ error: 'Error deleting detail' }, { status: 500 });
+    const response = NextResponse.json({ error: 'Error deleting detail' }, { status: 500 });
+    return setCorsHeaders(response);
   }
 }

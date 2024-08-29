@@ -14,17 +14,27 @@
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
     "@formspree/react": "^2.5.1",
+    "autoprefixer": "^10.4.20",
     "framer-motion": "^11.3.28",
+    "mdb-react-ui-kit": "^8.0.0",
     "next": "14.2.5",
     "react": "^18",
     "react-dom": "^18",
     "react-icons": "^5.3.0",
     "sass": "^1.77.8",
-    "swiper": "^11.1.9"
+    "swiper": "^11.1.9",
+    "@prisma/client": "^5.18.0",
+    "@types/express": "^4.17.21",
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "jsonwebtoken": "^9.0.2",
+    "typescript": "^5.5.4"
   },
   "devDependencies": {
     "@prisma/client": "^5.18.0",
     "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.17",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "22.4.1",
     "@types/react": "18.3.3",
@@ -34,10 +44,10 @@
     "eslint-config-next": "14.2.5",
     "jsonwebtoken": "^9.0.2",
     "next": "14.2.5",
-    "postcss": "^8",
+    "postcss": "^8.4.41",
     "react": "^18",
     "react-dom": "^18",
-    "tailwindcss": "^3.4.1",
+    "tailwindcss": "^3.4.10",
     "typescript": "5.5.4"
   }
 }

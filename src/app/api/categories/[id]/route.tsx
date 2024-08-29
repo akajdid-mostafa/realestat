@@ -18,7 +18,6 @@ export function OPTIONS() {
   return setCorsHeaders(response);
 }
 
-// Get type by ID
 export async function GET(req: Request) {
   const id = req.url.split('/').pop();
 
@@ -28,31 +27,30 @@ export async function GET(req: Request) {
   }
 
   try {
-    const type = await prisma.type.findUnique({
+    const category = await prisma.category.findUnique({
       where: { id: Number(id) },
       include: {
-        posts: true, // Include posts related to the type
+        posts: true,
       },
     });
 
-    if (!type) {
-      const response = NextResponse.json({ error: 'Type not found' }, { status: 404 });
+    if (!category) {
+      const response = NextResponse.json({ error: 'Category not found' }, { status: 404 });
       return setCorsHeaders(response);
     }
 
-    const response = NextResponse.json(type, { status: 200 });
+    const response = NextResponse.json(category, { status: 200 });
     return setCorsHeaders(response);
   } catch (error) {
-    console.error('Error fetching type by ID:', error.message || error);
-    const response = NextResponse.json({ error: 'Error fetching type by ID', details: error.message || error }, { status: 500 });
+    console.error('Error fetching category by ID:', error.message || error);
+    const response = NextResponse.json({ error: 'Error fetching category by ID', details: error.message || error }, { status: 500 });
     return setCorsHeaders(response);
   }
 }
 
-// Update type by ID
 export async function PUT(req: Request) {
   const id = req.url.split('/').pop();
-  const { type } = await req.json();
+  const { name } = await req.json();
 
   if (!id || isNaN(Number(id))) {
     const response = NextResponse.json({ error: 'Invalid or missing ID' }, { status: 400 });
@@ -60,21 +58,20 @@ export async function PUT(req: Request) {
   }
 
   try {
-    const updatedType = await prisma.type.update({
+    const updatedCategory = await prisma.category.update({
       where: { id: Number(id) },
-      data: { type },
+      data: { name },
     });
 
-    const response = NextResponse.json(updatedType, { status: 200 });
+    const response = NextResponse.json(updatedCategory, { status: 200 });
     return setCorsHeaders(response);
   } catch (error) {
-    console.error('Error updating type:', error.message || error);
-    const response = NextResponse.json({ error: 'Error updating type', details: error.message || error }, { status: 500 });
+    console.error('Error updating category:', error.message || error);
+    const response = NextResponse.json({ error: 'Error updating category', details: error.message || error }, { status: 500 });
     return setCorsHeaders(response);
   }
 }
 
-// Delete type by ID
 export async function DELETE(req: Request) {
   const id = req.url.split('/').pop();
 
@@ -84,15 +81,15 @@ export async function DELETE(req: Request) {
   }
 
   try {
-    await prisma.type.delete({
+    await prisma.category.delete({
       where: { id: Number(id) },
     });
 
-    const response = NextResponse.json({ message: 'Type deleted successfully' }, { status: 200 });
+    const response = NextResponse.json({ message: 'Category deleted successfully' }, { status: 200 });
     return setCorsHeaders(response);
   } catch (error) {
-    console.error('Error deleting type:', error.message || error);
-    const response = NextResponse.json({ error: 'Error deleting type', details: error.message || error }, { status: 500 });
+    console.error('Error deleting category:', error.message || error);
+    const response = NextResponse.json({ error: 'Error deleting category', details: error.message || error }, { status: 500 });
     return setCorsHeaders(response);
   }
 }

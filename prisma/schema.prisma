@@ -4,9 +4,9 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
-
 model User {
   id       Int     @id @default(autoincrement())
   email    String  @unique
@@ -16,21 +16,22 @@ model User {
 }
 
 model Post {
-  id         Int       @id @default(autoincrement())
-  img        String
-  datePost   DateTime
-  lat        Float
-  lon        Float
-  prix       Float
-  adress     String
-  ville      String
-  status     Status
-  title      String
-  categoryId Int?
-  typeId     Int?
-  Detail     Detail?
-  category   Category? @relation(fields: [categoryId], references: [id])
-  type       Type?     @relation(fields: [typeId], references: [id])
+  id          Int           @id @default(autoincrement())
+  img         String[]
+  datePost    DateTime
+  lat         Float
+  lon         Float
+  prix        Float
+  adress      String
+  ville       String
+  status      Status
+  title       String
+  categoryId  Int?
+  typeId      Int?
+  Detail      Detail?
+  category    Category?     @relation(fields: [categoryId], references: [id])
+  type        Type?         @relation(fields: [typeId], references: [id])
+  DateReserve DateReserve[]
 }
 
 model Partennaire {
@@ -53,28 +54,40 @@ model Type {
 
 model Detail {
   id               Int     @id @default(autoincrement())
-  CONSTRUCTIONYEAR String?
-  SURFACEm2        String?
-  ROOMS            String?
+  constructionyear String?
+  surface          String?
+  rooms            String?
   bedromms         String?
-  livingRooms      String?
+  livingrooms      String?
   kitchen          String?
   bathrooms        String?
-  FURNISHED        String?
-  FLOOR            String?
-  ELEVATOR         String?
-  PARKING          String?
-  BALCONY          String?
-  POOL             String?
-  FACADE           String?
-  DOCUMENTS        String?
+  furnished        String?
+  floor            String?
+  elevator         String?
+  parking          String?
+  balcony          String?
+  pool             String?
+  facade           String?
+  documents        String?
   postId           Int     @unique
   post             Post    @relation(fields: [postId], references: [id])
 }
 
+model DateReserve {
+  id        Int       @id @default(autoincrement())
+  dateDebut DateTime
+  dateFine  DateTime?
+  fullName  String
+  CIN       String
+  price     String
+  postId    Int?
+  post      Post?     @relation(fields: [postId], references: [id])
+}
+
 enum Status {
-  DateValide
-  DateInvalide
+  available
+  unavailable
+  taken
 }
 
 enum CategoryName {

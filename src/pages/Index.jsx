@@ -4,6 +4,8 @@ import Container from '../components/Container'
 import Layout from '../components/Layout'
 import theme from '../types/CmsSingleTypes/theme'
 import { ChakraBaseProvider } from '@chakra-ui/react'
+import Footer from '../components/Footer'
+import '../styles/globals.css';  
 // import getData, { getSiteInfo } from '../utils/data'
 // import CmsRichText from '../components/CmsRichText'
 // import ContactForm from '../components/ContactForm'
@@ -11,6 +13,10 @@ import { ChakraBaseProvider } from '@chakra-ui/react'
 // import SEO from '../components/SEO'
 // Ensure the path is correct
 import ContactForm from '../components/ContactForm'
+import Cta3 from '../components/cta'
+
+
+
 const HomePage = ({ homePage, galleryPage, houses, siteInfo }) => {
     return (
         <>
@@ -19,17 +25,14 @@ const HomePage = ({ homePage, galleryPage, houses, siteInfo }) => {
                 <Hero {...homePage} />
                 <Container>
                     <Stack direction={['column-reverse', 'row']}>
-                        <Box width={['full', '55%']} mt={'3rem'} mr={[0, '4rem']}>
-                          
-                        </Box>
-                        <Box width={['full', '45%']}>
+                        <Box >
                             <ContactForm
                                 siteInfo={siteInfo}
-                     
                                 shouldHaveNegativeTopMargin
                             />
                         </Box>
                     </Stack>
+                    
                     {/* Add Gallery section */}
                     {/* <Box mt={'4rem'}>
                         <Gallery galleryPage={galleryPage} houses={houses} siteInfo={siteInfo} />
@@ -48,9 +51,13 @@ const HomePage = ({ homePage, galleryPage, houses, siteInfo }) => {
                         )}
                     </VStack> */}
                 </Container>
+                <Cta3/>
             </Layout>
+            <Footer/>
             </ChakraBaseProvider>
+            
         </>
+        
     )
 }
 
@@ -72,4 +79,4 @@ const HomePage = ({ homePage, galleryPage, houses, siteInfo }) => {
 //     }
 // }
 
-export default HomePage
+export default HomePage
