@@ -18,6 +18,28 @@ export function OPTIONS() {
   return setCorsHeaders(response);
 }
 
+// Display all posts
+export async function GET() {
+  try {
+    const posts = await prisma.post.findMany({
+      include: {
+        category: true,
+        type: true,
+        Detail: true,
+        DateReserve: true,
+      },
+    });
+
+    const response = NextResponse.json(posts, { status: 200 });
+    return setCorsHeaders(response);
+  } catch (error) {
+    const message = (error instanceof Error) ? error.message : 'Unknown error';
+    console.error('Error fetching posts:', message);
+    const response = NextResponse.json({ error: 'Error fetching posts', details: message }, { status: 500 });
+    return setCorsHeaders(response);
+  }
+}
+
 // Create a new post with optional details
 export async function POST(req: Request) {
   const {
