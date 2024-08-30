@@ -30,7 +30,13 @@ export async function GET() {
       },
     });
 
-    const response = NextResponse.json(posts, { status: 200 });
+    // Format datePost to YYYY-MM-DD for each post
+    const formattedPosts = posts.map(post => ({
+      ...post,
+      datePost: post.datePost.toISOString().split('T')[0], // Format date to YYYY-MM-DD
+    }));
+
+    const response = NextResponse.json(formattedPosts, { status: 200 });
     return setCorsHeaders(response);
   } catch (error) {
     const message = (error instanceof Error) ? error.message : 'Unknown error';
@@ -58,17 +64,38 @@ export async function POST(req: Request) {
   } = await req.json();
 
   // Validate required fields
-  if (!img || !datePost || !lat || !lon || !prix || !adress || !ville || !status || !title) {
-    const response = NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+  const missingFields = [];
+  if (!img) missingFields.push('img');
+  if (!datePost) missingFields.push('datePost');
+  if (!lat) missingFields.push('lat');
+  if (!lon) missingFields.push('lon');
+  if (!prix) missingFields.push('prix');
+  if (!adress) missingFields.push('adress');
+  if (!ville) missingFields.push('ville');
+  if (!status) missingFields.push('status');
+  if (!title) missingFields.push('title');
+
+  if (missingFields.length > 0) {
+    const response = NextResponse.json({ error: 'Missing required fields', fields: missingFields }, { status: 400 });
     return setCorsHeaders(response);
   }
 
   try {
-    // Ensure status is cast correctly
+    // Parse and format the date to exclude time
+    const formattedDatePost = new Date(datePost);
+    formattedDatePost.setUTCHours(0, 0, 0, 0); 
+
+    // Ensure status is a valid enum value
+    if (!Object.values(Status).includes(status as Status)) {
+      const response = NextResponse.json({ error: 'Invalid status value' }, { status: 400 });
+      return setCorsHeaders(response);
+    }
+
+    // Create a new post
     const post = await prisma.post.create({
       data: {
         img,
-        datePost: new Date(datePost),
+        datePost: formattedDatePost, // Store date with time set to midnight
         lat,
         lon,
         prix,
