@@ -75,11 +75,11 @@ model Detail {
 
 model DateReserve {
   id        Int       @id @default(autoincrement())
-  dateDebut DateTime
+  dateDebut DateTime?
   dateFine  DateTime?
-  fullName  String
-  CIN       String
-  price     String
+  fullName  String?
+  CIN       String?
+  price     String?
   postId    Int?      @unique
   post      Post?     @relation(fields: [postId], references: [id])
 }
