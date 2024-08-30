@@ -32,7 +32,7 @@ export async function GET() {
     
     const formattedPosts = posts.map(post => ({
       ...post,
-      datePost: post.datePost.toISOString().split('T')[0], // Format date to YYYY-MM-DD
+      datePost: post.datePost.toISOString().split('T')[0],
     }));
 
     const response = NextResponse.json(formattedPosts, { status: 200 });
