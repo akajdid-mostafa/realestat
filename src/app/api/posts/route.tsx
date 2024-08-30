@@ -58,7 +58,7 @@ export async function POST(req: Request) {
   } = await req.json();
 
   // Validate required fields
-  if (!img || !datePost || !lat || !lon || !prix || !adress || !ville || !status || !title) {
+  if (!img  || !lat || !lon || !prix || !adress || !ville || !status || !title) {
     const response = NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     return setCorsHeaders(response);
   }

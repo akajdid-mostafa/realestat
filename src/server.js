@@ -27,9 +27,7 @@ app.use(cors(corsOptions));
 app.post('/api/login', (req, res) => {
   res.json({ message: 'Login successful' });
 });
-app.use('/api/posts', (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-});
+
 app.get('/api/posts',(req,res)=>{
   res.json({ message: 'posts successful' })
 })
