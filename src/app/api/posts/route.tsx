@@ -12,13 +12,12 @@ function setCorsHeaders(response: NextResponse) {
   return response;
 }
 
-// Handle OPTIONS method for CORS preflight
+
 export function OPTIONS() {
   const response = new NextResponse(null, { status: 204 });
   return setCorsHeaders(response);
 }
 
-// Display all posts
 export async function GET() {
   try {
     const posts = await prisma.post.findMany({
@@ -30,7 +29,7 @@ export async function GET() {
       },
     });
 
-    // Format datePost to YYYY-MM-DD for each post
+    
     const formattedPosts = posts.map(post => ({
       ...post,
       datePost: post.datePost.toISOString().split('T')[0], // Format date to YYYY-MM-DD
@@ -63,7 +62,7 @@ export async function POST(req: Request) {
     Detail
   } = await req.json();
 
-  // Validate required fields
+  
   const missingFields = [];
   if (!img) missingFields.push('img');
   if (!datePost) missingFields.push('datePost');
@@ -81,27 +80,27 @@ export async function POST(req: Request) {
   }
 
   try {
-    // Parse and format the date to exclude time
+    
     const formattedDatePost = new Date(datePost);
     formattedDatePost.setUTCHours(0, 0, 0, 0); 
 
-    // Ensure status is a valid enum value
+    
     if (!Object.values(Status).includes(status as Status)) {
       const response = NextResponse.json({ error: 'Invalid status value' }, { status: 400 });
       return setCorsHeaders(response);
     }
 
-    // Create a new post
+  
     const post = await prisma.post.create({
       data: {
         img,
-        datePost: formattedDatePost, // Store date with time set to midnight
+        datePost: formattedDatePost, 
         lat,
         lon,
         prix,
         adress,
         ville,
-        status: status as Status, // Cast status to enum
+        status: status as Status, 
         title,
         category: categoryId ? { connect: { id: categoryId } } : undefined,
         type: typeId ? { connect: { id: typeId } } : undefined,
@@ -119,7 +118,13 @@ export async function POST(req: Request) {
       },
     });
 
-    const response = NextResponse.json(post, { status: 201 });
+    
+    const formattedPost = {
+      ...post,
+      datePost: post.datePost.toISOString().split('T')[0], 
+    };
+
+    const response = NextResponse.json(formattedPost, { status: 201 });
     return setCorsHeaders(response);
   } catch (error) {
     const message = (error instanceof Error) ? error.message : 'Unknown error';
