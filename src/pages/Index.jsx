@@ -31,43 +31,20 @@ const HomePage = ({ homePage, galleryPage, houses, siteInfo }) => {
                 <Hero {...homePage} />
                 <Container>
                     <Stack direction={['column-reverse', 'row']}>
-                        <Box >
                             <ContactForm
                                 siteInfo={siteInfo}
                                 shouldHaveNegativeTopMargin
                             />
-                        </Box>
                     </Stack>
-                    
-                    {/* Add Gallery section */}
-                    {/* <Box mt={'4rem'}>
-                        <Gallery galleryPage={galleryPage} houses={houses} siteInfo={siteInfo} />
-                    </Box> */}
-                    {/* Uncomment to include testimonials */}
-                    {/* <Heading mt={'2rem'}>{homePage.featuredTestimonialsHeading}</Heading> */}
-                    {/* <VStack spacing={'3rem'} my={'3rem'}>
-                        {homePage.featuredTestimonials.data.map(
-                            (testimonialData, index) => (
-                                <TestimonialCard
-                                    key={index}
-                                    testimonial={testimonialData.attributes}
-                                    index={index}
-                                />
-                            )
-                        )}
-                    </VStack> */}
                 </Container>
+                <HomeFinancingSteps/>
                 <Popular/>
                 <Aboutt/>
-                <HomeFinancingSteps/>
                 <Cta3/>
-                
             </Layout> 
             <Footer/>
             </ChakraBaseProvider>
-            
         </>
-        
     )
 }
 

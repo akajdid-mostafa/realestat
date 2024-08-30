@@ -1,12 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
+import {
+    Box,
+    Button,
+    Flex,
+    Heading,
+    Text,
+    Image,
+    Grid,
+    IconButton,
+    useBreakpointValue,
+} from '@chakra-ui/react';
 import { CarouselProvider, Slider, Slide } from 'pure-react-carousel';
 import 'pure-react-carousel/dist/react-carousel.es.css';
-import Image from 'next/image';
 import { FaBed, FaBath, FaExpandArrowsAlt } from 'react-icons/fa';
 import { MdPhone } from 'react-icons/md';
 import { FaWhatsapp } from 'react-icons/fa';
 import { cardData } from './data';
-
 
 const Popular = () => {
     const [gridDisplay, setGridDisplay] = useState(false);
@@ -17,9 +26,9 @@ const Popular = () => {
 
     useEffect(() => {
         const handleResize = () => {
-            if (window.innerWidth >= 1224) {
+            if (window.innerWidth >= 1524) {
                 setGridDisplay(true);
-                setSlidesToShow(1);
+                setSlidesToShow(3);
             } else if (window.innerWidth >= 768) {
                 setGridDisplay(false);
                 setSlidesToShow(2);
@@ -36,175 +45,171 @@ const Popular = () => {
     }, []);
 
     useEffect(() => {
-        if (window.innerWidth >= 1224) {
+        const interval = () => {
+            if (window.innerWidth >= 768) {
+                setCurrentSlide(prev => (prev + 1) % (totalSlides-1));
+            } else {
+                setCurrentSlide(prev => (prev + 1) % totalSlides);
+            }
+
+            
+        };
+
+        if (gridDisplay) {
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+        } else {
+            intervalRef.current = setInterval(interval, 2000);
+        }
+
+        return () => {
             if (intervalRef.current) {
                 clearInterval(intervalRef.current);
-                intervalRef.current = null;
             }
-        } else if (window.innerWidth >= 768) {
-            intervalRef.current = setInterval(() => {
-                setCurrentSlide(prev => (prev + 1) % (totalSlides - 1));
-            }, 2000);
-
-            return () => {
-                if (intervalRef.current) {
-                    clearInterval(intervalRef.current);
-                }
-            };
-        } else {
-            intervalRef.current = setInterval(() => {
-                setCurrentSlide(prev => (prev + 1) % totalSlides);
-            }, 2000);
-
-            return () => {
-                if (intervalRef.current) {
-                    clearInterval(intervalRef.current);
-                }
-            };
-        }
+        };
     }, [gridDisplay, totalSlides]);
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen p-4 lg:p-8">
-            <div className="mt-8 grid grid-cols-1 pb-6 text-center">
-                <h1 className="font-bold text-4xl leading-normal mb-4 animate-fadeInUp">Annonces d'accueil dans Votre Immocean</h1>
-                <p className="text-slate-400 max-w-xl mx-auto mb-4 animate-fadeInUp">
+        <Box display="flex" flexDirection="column" alignItems="center" p={4}>
+            <Box textAlign="center" mt={8} mb={6}>
+                <Heading fontSize="4xl" mb={4}>Annonces d'accueil dans Votre Immocean</Heading>
+                <Text color="gray.400" maxWidth="xl" mx="auto">
                     Avec plus d'un million de locations disponibles, il est facile de trouver ce qui vous convient le mieux.
-                </p>
-            </div>
+                </Text>
+            </Box>
             {gridDisplay ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-7xl w-full">
-                    {cardData.slice(0, 6).map(card => (
-                        <div
-                            key={card.id}
-                            className="bg-white mb-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 animate-fadeInUp"
-                        >
-                            <Image
-                                src={card.imageSrc}
-                                alt={card.title}
-                                width={800}
-                                height={500}
-                                layout="responsive"
-                                objectFit="cover"
-                                className="rounded-t-lg"
-                            />
-                            <div className="px-6 py-4">
-                                <h2 className="text-2xl font-bold text-gray-900 mb-2">{card.title}</h2>
-                                <div className="flex items-center">
-                                    <div className="mr-3 mb-3 rounded-full bg-blue-600 py-1 px-2 text-xs font-bold text-white">For {card.type}</div>
-                                </div>
-                                <div className="flex justify-between mb-4">
-                                    <div className="flex items-center">
-                                        <FaBed size={24} className="text-gray-600" />
-                                        <p className="ml-2 text-sm font-medium text-gray-700">{card.bedrooms} Bedrooms</p>
-                                    </div>
-                                    <div className="flex items-center">
-                                        <FaBath size={24} className="text-gray-600" />
-                                        <p className="ml-2 text-sm font-medium text-gray-700">{card.bathrooms} Bathrooms</p>
-                                    </div>
-                                    <div className="flex items-center">
-                                        <FaExpandArrowsAlt size={24} className="text-gray-600" />
-                                        <p className="ml-2 text-sm font-medium text-gray-700">{card.area}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="px-6 py-4 flex justify-between items-center bg-gray-100 rounded-b-lg">
-                                <p className="text-2xl font-extrabold text-blue-800">{card.price}</p>
-                                <div className="flex">
-                                    <a
-                                        href={`tel:${card.phone}`}
-                                        className="mr-2 rounded-full bg-green-500 p-2 text-white hover:bg-green-700 transition-colors"
-                                    >
-                                        <MdPhone size={24} />
-                                    </a>
-                                    <a
-                                        href={`https://wa.me/${card.whatsapp}`}
-                                        className="rounded-full bg-green-500 p-2 text-white hover:bg-green-700 transition-colors"
-                                    >
-                                        <FaWhatsapp size={24} />
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            ) : (
-                <CarouselProvider
-                    naturalSlideWidth={100}
-                    naturalSlideHeight={125}
-                    totalSlides={totalSlides}
-                    visibleSlides={slidesToShow}
-                    infinite={true}
-                    isIntrinsicHeight={true}
-                    className="w-full max-w-7xl"
-                    currentSlide={currentSlide}
+                <Grid
+                    templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }}
+                    gap={6} // Increase gap for spacing
+                    maxW="7xl"
+                    w="full"
                 >
-                    <Slider className="relative">
-                        {cardData.map(card => (
-                            <Slide
-                                key={card.id}
-                                index={card.id}
-                                className="flex items-center justify-center px-2 animate-fadeInUp"
-                            >
-                                <div className="w-full max-w-lg bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-                                    <Image
-                                        src={card.imageSrc}
-                                        alt={card.title}
-                                        width={800}
-                                        height={500}
-                                        layout="responsive"
-                                        objectFit="cover"
-                                        className="rounded-t-lg"
+                    {cardData.slice(0, 6).map(card => (
+                        <Box
+                            key={card.id}
+                            bg="white"
+                            borderRadius="lg"
+                            boxShadow="lg"
+                            overflow="hidden"
+                            transition="0.3s"
+                            _hover={{ boxShadow: 'xl' }}
+                        >
+                            <Image src={card.imageSrc} alt={card.title} width={500} height={300} layout="responsive" objectFit="cover" borderTopRadius="lg" />
+                            <Box p={4}>
+                                <Heading size="md" mb={2}>{card.title}</Heading>
+                                <Text color="blue.600" mb={2}>For {card.type}</Text>
+                                <Flex justify="space-between" mb={4}>
+                                    <Flex align="center">
+                                        <FaBed size={24} />
+                                        <Text ml={2}>{card.bedrooms} Bedrooms</Text>
+                                    </Flex>
+                                    <Flex align="center">
+                                        <FaBath size={24} />
+                                        <Text ml={2}>{card.bathrooms} Bathrooms</Text>
+                                    </Flex>
+                                    <Flex align="center">
+                                        <FaExpandArrowsAlt size={24} />
+                                        <Text ml={2}>{card.area}</Text>
+                                    </Flex>
+                                </Flex>
+                            </Box>
+                            <Flex justify="space-between" align="center" bg="gray.100" p={4}>
+                                <Text fontWeight="bold" color="blue.800" fontSize="xl">{card.price}</Text>
+                                <Flex>
+                                    <IconButton
+                                        as="a"
+                                        href={`tel:${card.phone}`}
+                                        aria-label="Call"
+                                        icon={<MdPhone />}
+                                        colorScheme="green"
+                                        mr={2} // Add margin-right for spacing
                                     />
-                                    <div className="px-6 py-4">
-                                        <h2 className="text-2xl font-bold text-gray-900 mb-2">{card.title}</h2>
-                                        <div className="flex items-center">
-                                            <div className="mr-3 mb-3 rounded-full bg-blue-600 py-1 px-2 text-xs font-bold text-white">For {card.type}</div>
-                                        </div>
-                                        <div className="flex justify-between mb-4">
-                                            <div className="flex items-center">
-                                                <FaBed size={24} className="text-gray-600" />
-                                                <p className="ml-2 text-sm font-medium text-gray-700">{card.bedrooms} Bedrooms</p>
-                                            </div>
-                                            <div className="flex items-center">
-                                                <FaBath size={24} className="text-gray-600" />
-                                                <p className="ml-2 text-sm font-medium text-gray-700">{card.bathrooms} Bathrooms</p>
-                                            </div>
-                                            <div className="flex items-center">
-                                                <FaExpandArrowsAlt size={24} className="text-gray-600" />
-                                                <p className="ml-2 text-sm font-medium text-gray-700">{card.area}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="px-6 py-4 flex justify-between items-center bg-gray-100 rounded-b-lg">
-                                        <p className="text-2xl font-extrabold text-blue-800">{card.price}</p>
-                                        <div className="flex">
-                                            <a
-                                                href={`tel:${card.phone}`}
-                                                className="mr-2 rounded-full bg-green-500 p-2 text-white hover:bg-green-700 transition-colors"
-                                            >
-                                                <MdPhone size={24} />
-                                            </a>
-                                            <a
-                                                href={`https://wa.me/${card.whatsapp}`}
-                                                className="rounded-full bg-green-500 p-2 text-white hover:bg-green-700 transition-colors"
-                                            >
-                                                <FaWhatsapp size={24} />
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </Slide>
-                        ))}
-                    </Slider>
-                </CarouselProvider>
+                                    <IconButton
+                                        as="a"
+                                        href={`https://wa.me/${card.whatsapp}`}
+                                        aria-label="WhatsApp"
+                                        icon={<FaWhatsapp />}
+                                        colorScheme="green"
+                                    />
+                                </Flex>
+                            </Flex>
+                        </Box>
+                    ))}
+                </Grid>
+            ) : (
+<CarouselProvider
+    naturalSlideWidth={100}
+    naturalSlideHeight={125}
+    totalSlides={totalSlides}
+    visibleSlides={slidesToShow}
+    infinite={true}
+    isIntrinsicHeight={true}
+    className="w-full max-w-7xl"
+    currentSlide={currentSlide}
+>
+    <Slider>
+        {cardData.map(card => (
+            <Slide key={card.id} index={card.id} style={{ margin: '0 10px' }}>
+                <Box bg="white" borderRadius="lg" boxShadow="lg" overflow="hidden" transition="0.3s" _hover={{ boxShadow: 'xl' }}>
+                    <Image src={card.imageSrc} alt={card.title} width={800} height={500} layout="responsive" objectFit="cover" borderTopRadius="lg" />
+                    <Box p={4}>
+                        <Heading size="md" mb={2}>{card.title}</Heading>
+                        <Text color="blue.600" mb={2}>For {card.type}</Text>
+                        <Flex justify="space-between" mb={4}>
+                            <Flex align="center">
+                                <FaBed size={24} />
+                                <Text ml={2}>{card.bedrooms} Bedrooms</Text>
+                            </Flex>
+                            <Flex align="center">
+                                <FaBath size={24} />
+                                <Text ml={2}>{card.bathrooms} Bathrooms</Text>
+                            </Flex>
+                            <Flex align="center">
+                                <FaExpandArrowsAlt size={24} />
+                                <Text ml={2}>{card.area}</Text>
+                            </Flex>
+                        </Flex>
+                    </Box>
+                    <Flex justify="space-between" align="center" bg="gray.100" p={4}>
+                        <Text fontWeight="bold" color="blue.800" fontSize="xl">{card.price}</Text>
+                        <Flex>
+                            <IconButton 
+                                as="a" 
+                                href={`tel:${card.phone}`} 
+                                aria-label="Call" 
+                                icon={<MdPhone />} 
+                                colorScheme="green" 
+                                mr={2} // Add margin-right for spacing
+                            />
+                            <IconButton 
+                                as="a" 
+                                href={`https://wa.me/${card.whatsapp}`} 
+                                aria-label="WhatsApp" 
+                                icon={<FaWhatsapp />} 
+                                colorScheme="green" 
+                            />
+                        </Flex>
+                    </Flex>
+                </Box>
+            </Slide>
+        ))}
+    </Slider>
+</CarouselProvider>
             )}
-            <button
-                className="mt-6 px-6 py-3 w-80 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-transform transform hover:scale-105 animate-fadeInUp"
+            <Button
+                mt={6}
+                px={6}
+                py={3}
+                colorScheme="blue"
+                variant="solid"
+                size="lg"
+                borderRadius="md"
+                boxShadow="md"
+                _hover={{ bg: 'blue.700' }}
             >
                 SHOW ALL POST
-            </button>
-        </div>
+            </Button>
+        </Box>
     );
 };
 
