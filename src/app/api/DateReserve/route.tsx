@@ -3,18 +3,23 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-// Create a new DateReserve entry
+
+function formatDateToYYYYMMDD(date: Date): string {
+  return date.toISOString().split('T')[0];
+}
+
+
 export async function POST(req: Request) {
   try {
-    // Parse the incoming JSON request body
-    const { dateDebut, dateFine, fullName,price, CIN, postId } = await req.json();
+   
+    const { dateDebut, dateFine, fullName, price, CIN, postId } = await req.json();
 
-    // Validate required fields
-    if (!dateDebut || !dateFine || !fullName || !CIN || !postId) {
+    
+    if (!dateDebut || !fullName || !CIN || !postId) {
       throw new Error('Missing required fields');
     }
 
-    // Ensure that postId exists in the Post table
+    
     const postExists = await prisma.post.findUnique({
       where: { id: postId },
     });
@@ -23,42 +28,80 @@ export async function POST(req: Request) {
       throw new Error('Post with the given ID does not exist');
     }
 
-    // Create the DateReserve entry
+    
+    const formattedDateDebut = new Date(dateDebut);
+    formattedDateDebut.setUTCHours(0, 0, 0, 0); 
+
+    let formattedDateFine: Date | null = null;
+    if (dateFine) {
+      formattedDateFine = new Date(dateFine);
+      formattedDateFine.setUTCHours(0, 0, 0, 0); 
+    }
+
+   
+    const dateReserveData: {
+      dateDebut: Date;
+      dateFine?: Date; 
+      fullName: string;
+      price: string;
+      CIN: string;
+      post: { connect: { id: number } };
+    } = {
+      dateDebut: formattedDateDebut,
+      fullName,
+      price,
+      CIN,
+      post: { connect: { id: postId } },
+    };
+
+    
+    if (formattedDateFine) {
+      dateReserveData.dateFine = formattedDateFine;
+    }
+
+    
     const dateReserve = await prisma.dateReserve.create({
-      data: {
-        dateDebut: new Date(dateDebut),
-        dateFine: new Date(dateFine),
-        fullName,
-        price,
-        CIN,
-        post: { connect: { id: postId } }, // Connect the DateReserve to the Post
-      },
+      data: dateReserveData,
     });
 
-    // Return the created DateReserve as a JSON response
-    return NextResponse.json(dateReserve, { status: 201 });
+   
+    const formattedDateReserve = {
+      ...dateReserve,
+      dateDebut: formatDateToYYYYMMDD(dateReserve.dateDebut as Date),
+      dateFine: dateReserve.dateFine ? formatDateToYYYYMMDD(dateReserve.dateFine as Date) : null, // Ensure dateFine is a Date
+    };
+
+   
+    return NextResponse.json(formattedDateReserve, { status: 201 });
 
   } catch (error) {
-    // Log and return error
+    
     console.error('Detailed error:', error);
-    return NextResponse.json({ error: `Error creating DateReserve: ${error.message}` }, { status: 400 });
+    return NextResponse.json({ error: `Error creating DateReserve: ${error instanceof Error ? error.message : 'Unknown error'}` }, { status: 400 });
   }
 }
 
-// Get all DateReserve entries
-export async function GET(req: Request) {
+
+export async function GET() {
   try {
     const dateReserves = await prisma.dateReserve.findMany({
       include: {
-        post: true, // Include related post information
+        post: true,
       },
     });
 
-    // Return all DateReserve entries as a JSON response
-    return NextResponse.json(dateReserves, { status: 200 });
+    
+    const formattedDateReserves = dateReserves.map(dateReserve => ({
+      ...dateReserve,
+      dateDebut: formatDateToYYYYMMDD(dateReserve.dateDebut as Date), 
+      dateFine: dateReserve.dateFine ? formatDateToYYYYMMDD(dateReserve.dateFine as Date) : null, // Ensure dateFine is a Date
+    }));
+
+   
+    return NextResponse.json(formattedDateReserves, { status: 200 });
   } catch (error) {
-    // Log and return error
+    
     console.error('Detailed error:', error);
-    return NextResponse.json({ error: `Error fetching DateReserves: ${error.message}` }, { status: 500 });
+    return NextResponse.json({ error: `Error fetching DateReserves: ${error instanceof Error ? error.message : 'Unknown error'}` }, { status: 500 });
   }
 }
