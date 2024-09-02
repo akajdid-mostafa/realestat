@@ -48,10 +48,9 @@ import {Heading,Box,Button,	VStack,	Text,Input,	Textarea,Flex,} from '@chakra-ui
         mb={{ base: 4, md: 0 }}
         position="relative"
       >
-        <Box bg="blue.600" rounded="lg" overflow="hidden" p={4}>
+        <Box  rounded="lg"  p={4}>
           <iframe
 		   rounded="lg"
-		   overflow="hidden" 
             width="100%"
             height="300"
             frameBorder="0"

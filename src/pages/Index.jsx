@@ -21,14 +21,14 @@ import HomeFinancingSteps from '../components/home'
 
 
 
-
-
 const HomePage = ({ homePage, galleryPage, houses, siteInfo }) => {
     return (
         <>
         <ChakraBaseProvider theme={theme}>
-            <Layout siteInfo={siteInfo}>
-                <Hero {...homePage} />
+                
+                <Layout siteInfo={siteInfo}>
+                <Hero  />
+                
                 <Container>
                     <Stack direction={['column-reverse', 'row']}>
                             <ContactForm

@@ -12,7 +12,6 @@ import Stat from '../components/stat'
 
 
 
-
 const about = ({ siteInfo}) => {
     return (
         <>

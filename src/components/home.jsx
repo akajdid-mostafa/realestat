@@ -16,7 +16,7 @@ import { GrNext, GrPrevious } from 'react-icons/gr';
 
 export default function HomeFinancingSteps() {
     const [currentSlide, setCurrentSlide] = useState(0);
-    const visibleSlides = useBreakpointValue({ base: 1.2, md: 2.2, lg: 3.2 });
+    const visibleSlides = useBreakpointValue({ base: 1.2, md: 1.8, lg: 2.2 ,xl:3.2 });
     const naturalSlideHeight = 120;
 
     const handleAfterSlide = (index) => {
@@ -33,7 +33,7 @@ export default function HomeFinancingSteps() {
             borderRadius="lg"
             boxShadow="lg"
             w="full"
-            h="auto"
+            h="780"
             display="flex"
             flexDirection="column"
             alignItems="center"
@@ -91,7 +91,7 @@ export default function HomeFinancingSteps() {
                                         flexDirection="column"
                                         transition="transform 0.3s"
                                         _hover={{ transform: 'scale(1.05)', boxShadow: '2xl' }}
-                                        height="100%"
+                                        height="400"
                                         mx={2}
                                     >
                                         <Flex justifyContent="center" mb={4}>
