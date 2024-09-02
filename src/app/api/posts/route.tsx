@@ -12,13 +12,12 @@ function setCorsHeaders(response: NextResponse) {
   return response;
 }
 
-// Handle OPTIONS method for CORS preflight
+
 export function OPTIONS() {
   const response = new NextResponse(null, { status: 204 });
   return setCorsHeaders(response);
 }
 
-// Display all posts
 export async function GET() {
   try {
     const posts = await prisma.post.findMany({
@@ -30,7 +29,13 @@ export async function GET() {
       },
     });
 
-    const response = NextResponse.json(posts, { status: 200 });
+    
+    const formattedPosts = posts.map(post => ({
+      ...post,
+      datePost: post.datePost.toISOString().split('T')[0], // Format date to YYYY-MM-DD
+    }));
+
+    const response = NextResponse.json(formattedPosts, { status: 200 });
     return setCorsHeaders(response);
   } catch (error) {
     const message = (error instanceof Error) ? error.message : 'Unknown error';
@@ -57,24 +62,45 @@ export async function POST(req: Request) {
     Detail
   } = await req.json();
 
-  // Validate required fields
-  if (!img  || !lat || !lon || !prix || !adress || !ville || !status || !title) {
-    const response = NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+  
+  const missingFields = [];
+  if (!img) missingFields.push('img');
+  if (!datePost) missingFields.push('datePost');
+  if (!lat) missingFields.push('lat');
+  if (!lon) missingFields.push('lon');
+  if (!prix) missingFields.push('prix');
+  if (!adress) missingFields.push('adress');
+  if (!ville) missingFields.push('ville');
+  if (!status) missingFields.push('status');
+  if (!title) missingFields.push('title');
+
+  if (missingFields.length > 0) {
+    const response = NextResponse.json({ error: 'Missing required fields', fields: missingFields }, { status: 400 });
     return setCorsHeaders(response);
   }
 
   try {
-    // Ensure status is cast correctly
+    
+    const formattedDatePost = new Date(datePost);
+    formattedDatePost.setUTCHours(0, 0, 0, 0); 
+
+    
+    if (!Object.values(Status).includes(status as Status)) {
+      const response = NextResponse.json({ error: 'Invalid status value' }, { status: 400 });
+      return setCorsHeaders(response);
+    }
+
+  
     const post = await prisma.post.create({
       data: {
         img,
-        datePost: new Date(datePost),
+        datePost: formattedDatePost, 
         lat,
         lon,
         prix,
         adress,
         ville,
-        status: status as Status, // Cast status to enum
+        status: status as Status, 
         title,
         category: categoryId ? { connect: { id: categoryId } } : undefined,
         type: typeId ? { connect: { id: typeId } } : undefined,
@@ -92,7 +118,13 @@ export async function POST(req: Request) {
       },
     });
 
-    const response = NextResponse.json(post, { status: 201 });
+    
+    const formattedPost = {
+      ...post,
+      datePost: post.datePost.toISOString().split('T')[0], 
+    };
+
+    const response = NextResponse.json(formattedPost, { status: 201 });
     return setCorsHeaders(response);
   } catch (error) {
     const message = (error instanceof Error) ? error.message : 'Unknown error';
