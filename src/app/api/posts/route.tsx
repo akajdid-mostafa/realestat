@@ -8,9 +8,9 @@ dotenv.config();
 const prisma = new PrismaClient();
 
 cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
+  cloud_name: 'dab60xyhf',
+  api_key: '141321481661693',
+  api_secret: 'T9zFUC5NdH51iFiSeOpyfGUlO1I',
 });
 
 export async function POST(req: NextRequest) {
@@ -43,6 +43,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid status value' }, { status: 400 });
     }
 
+    
     const uploadedImages = await Promise.all(
       img.map(async (imageUrl: string) => {
         const result = await cloudinary.uploader.upload(imageUrl, {
@@ -59,12 +60,14 @@ export async function POST(req: NextRequest) {
     );
 
    
-    const formattedDatePost = new Date(datePost).toISOString().split('T')[0];
+    const date = new Date(datePost);
+    date.setHours(0, 0, 0, 0); 
 
+   
     const post = await prisma.post.create({
       data: {
         img: uploadedImages,
-        datePost: formattedDatePost, 
+        datePost: date,
         lat: parseFloat(lat),
         lon: parseFloat(lon),
         prix: parseFloat(prix),
@@ -103,7 +106,19 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    return NextResponse.json(posts, { status: 200 });
+   
+    const formattedPosts = posts.map(post => {
+      const date = new Date(post.datePost);
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return {
+        ...post,
+        datePost: `${day}-${month}-${year}`, 
+      };
+    });
+
+    return NextResponse.json(formattedPosts, { status: 200 });
   } catch (error: any) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     console.error('Error retrieving posts:', errorMessage);
