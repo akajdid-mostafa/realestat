@@ -17,6 +17,7 @@ import Cta3 from '../components/cta'
 import Popular from '../components/popular-post'
 import Aboutt from '../components/aboutt'
 import HomeFinancingSteps from '../components/home'
+import FilterMapSection from '../components/ero'
 
 
 
@@ -25,22 +26,14 @@ const HomePage = ({ homePage, galleryPage, houses, siteInfo }) => {
     return (
         <>
         <ChakraBaseProvider theme={theme}>
-                
+        
                 <Layout siteInfo={siteInfo}>
                 <Hero  />
-                
-                <Container>
-                    <Stack direction={['column-reverse', 'row']}>
-                            <ContactForm
-                                siteInfo={siteInfo}
-                                shouldHaveNegativeTopMargin
-                            />
-                    </Stack>
-                </Container>
-                <HomeFinancingSteps/>
                 <Popular/>
+                <HomeFinancingSteps/>
                 <Aboutt/>
                 <Cta3/>
+                <ContactForm  />
             </Layout> 
             <Footer/>
             </ChakraBaseProvider>

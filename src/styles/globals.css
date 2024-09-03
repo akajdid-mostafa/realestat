@@ -2,3 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+.item-text {
+    display: inline-block; /* Allow positioning */
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+}
+
+.animate-in {
+    transform: translateY(0); /* Original position */
+    opacity: 1; /* Fully visible */
+}
+
+.animate-out {
+    transform: translateY(-20px); /* Move up during exit */
+    opacity: 0; /* Fade out */
+}
