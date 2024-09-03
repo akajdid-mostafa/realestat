@@ -3,17 +3,15 @@ import { NextResponse, NextRequest } from 'next/server';
 import { PrismaClient, Status } from '@prisma/client';
 import dotenv from 'dotenv';
 
-dotenv.config(); 
+dotenv.config();
 
 const prisma = new PrismaClient();
 
-
-cloudinary.config({ 
-  cloud_name: 'dab60xyhf', 
-  api_key: '141321481661693', 
-  api_secret: 'T9zFUC5NdH51iFiSeOpyfGUlO1I' 
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
-
 
 export async function POST(req: NextRequest) {
   try {
@@ -22,12 +20,8 @@ export async function POST(req: NextRequest) {
 
     console.log('Received data:', body);
 
-    if (!img || !Array.isArray(img) || img.length === 0) {
-      console.error('Missing required fields: img');
-      return NextResponse.json({ error: 'Missing required fields', fields: ['img'] }, { status: 400 });
-    }
-
     const missingFields = [];
+    if (!img || !Array.isArray(img) || img.length === 0) missingFields.push('img');
     if (!datePost) missingFields.push('datePost');
     if (!lat) missingFields.push('lat');
     if (!lon) missingFields.push('lon');
@@ -49,19 +43,28 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid status value' }, { status: 400 });
     }
 
-      const uploadedImages = await Promise.all(
+    const uploadedImages = await Promise.all(
       img.map(async (imageUrl: string) => {
         const result = await cloudinary.uploader.upload(imageUrl, {
           folder: 'your_folder_name',
         });
-        return result.secure_url; 
+        return {
+          url: result.secure_url,
+          public_id: result.public_id,
+          format: result.format,
+          width: result.width,
+          height: result.height,
+        };
       })
     );
 
+   
+    const formattedDatePost = new Date(datePost).toISOString().split('T')[0];
+
     const post = await prisma.post.create({
       data: {
-        img: uploadedImages, 
-        datePost: new Date(datePost),
+        img: uploadedImages,
+        datePost: formattedDatePost, 
         lat: parseFloat(lat),
         lon: parseFloat(lon),
         prix: parseFloat(prix),
@@ -69,8 +72,8 @@ export async function POST(req: NextRequest) {
         ville,
         status: status as Status,
         title,
-        category: categoryId ? { connect: { id: parseInt(categoryId) } } : undefined,
-        type: typeId ? { connect: { id: parseInt(typeId) } } : undefined,
+        category: { connect: { id: parseInt(categoryId) } },
+        type: { connect: { id: parseInt(typeId) } },
         Detail: Detail ? { create: JSON.parse(Detail) } : undefined,
       },
       include: {
@@ -89,8 +92,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
     const posts = await prisma.post.findMany({
       include: {
