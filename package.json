@@ -19,6 +19,7 @@
     "autoprefixer": "^10.4.20",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
+    "cloudinary": "^2.4.0",
     "cors": "^2.8.5",
     "framer-motion": "^11.3.28",
     "jsonwebtoken": "^9.0.2",
