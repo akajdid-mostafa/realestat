@@ -20,7 +20,6 @@ export async function POST(req: NextRequest) {
 
     console.log('Received data:', body);
 
-    // Validate required fields
     const missingFields = [];
     if (!img || !Array.isArray(img) || img.length === 0) missingFields.push('img');
     if (!datePost) missingFields.push('datePost');
@@ -39,19 +38,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields', fields: missingFields }, { status: 400 });
     }
 
-    // Validate status value
     if (!Object.values(Status).includes(status as Status)) {
       console.error('Invalid status value:', status);
       return NextResponse.json({ error: 'Invalid status value' }, { status: 400 });
     }
 
-    // Upload images to Cloudinary and store complete data
+    // Upload images and prepare the JSON data to store
     const uploadedImages = await Promise.all(
       img.map(async (imageUrl: string) => {
         const result = await cloudinary.uploader.upload(imageUrl, {
-          folder: 'your_folder_name', // Update this to your specific folder
+          folder: 'your_folder_name',
         });
-        // Return full details of uploaded image
         return {
           url: result.secure_url,
           public_id: result.public_id,
@@ -62,11 +59,15 @@ export async function POST(req: NextRequest) {
       })
     );
 
-    // Create post with Prisma, including images and other data
+    // Parse datePost to a Date object and set time to midnight
+    const date = new Date(datePost);
+    date.setHours(0, 0, 0, 0); // Normalize to midnight
+
+    // Create the post and store img as JSON
     const post = await prisma.post.create({
       data: {
-        img: uploadedImages, // Store as JSON object in your Prisma schema
-        datePost: new Date(datePost),
+        img: uploadedImages,
+        datePost: date, // Store date with time set to midnight
         lat: parseFloat(lat),
         lon: parseFloat(lon),
         prix: parseFloat(prix),
@@ -86,11 +87,41 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    
     return NextResponse.json(post, { status: 201 });
   } catch (error: any) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     console.error('Error creating post:', errorMessage);
-    return NextResponse.json({ error: 'Error creating post', details: errorMessage }, { status: 500 });
+    return NextResponse.json({ error: 'Error creating post', details: errorMessage }, { status: 500 });
+  }
+}
+
+export async function GET(req: NextRequest) {
+  try {
+    const posts = await prisma.post.findMany({
+      include: {
+        category: true,
+        type: true,
+        DateReserve: true,
+        Detail: true,
+      },
+    });
+
+    // Format datePost to DD-MM-YYYY for display
+    const formattedPosts = posts.map(post => {
+      const date = new Date(post.datePost);
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+      const year = date.getFullYear();
+      return {
+        ...post,
+        datePost:` ${day}-${month}-${year}`, // Format date as DD-MM-YYYY
+      };
+    });
+
+    return NextResponse.json(formattedPosts, { status: 200 });
+  } catch (error: any) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('Error retrieving posts:', errorMessage);
+    return NextResponse.json({ error: 'Error retrieving posts', details: errorMessage }, { status: 500 });
   }
 }
