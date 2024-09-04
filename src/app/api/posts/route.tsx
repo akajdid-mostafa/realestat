@@ -1,6 +1,6 @@
 import { v2 as cloudinary } from 'cloudinary';
 import { NextResponse, NextRequest } from 'next/server';
-import { PrismaClient, Status } from '@prisma/client';
+import { PrismaClient,CategoryName, Status } from '@prisma/client';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -95,8 +95,10 @@ export async function POST(req: NextRequest) {
   }
 }
 
+// GET 
 export async function GET(req: NextRequest) {
   try {
+    // Fetch posts including related data
     const posts = await prisma.post.findMany({
       include: {
         category: true,
@@ -104,17 +106,37 @@ export async function GET(req: NextRequest) {
         DateReserve: true,
         Detail: true,
       },
+      where: {
+        OR: [
+          // Posts with no DateReserve
+          { DateReserve: null },
+          // Posts with DateReserve where both dateDebut and dateFine are not null
+          { DateReserve: { NOT: { dateDebut: null, dateFine: null } } },
+        ],
+      },
     });
 
-   
-    const formattedPosts = posts.map(post => {
+    // Update status for posts in 'Vente' category if they have DateReserve
+    await Promise.all(
+      posts.map(async (post) => {
+        if (post.category?.name === CategoryName.Vente && post.DateReserve) {
+          await prisma.post.update({
+            where: { id: post.id },
+            data: { status: Status.taken },
+          });
+        }
+      })
+    );
+
+    // Format the date for the response
+    const formattedPosts = posts.map((post) => {
       const date = new Date(post.datePost);
       const day = String(date.getDate()).padStart(2, '0');
       const month = String(date.getMonth() + 1).padStart(2, '0');
       const year = date.getFullYear();
       return {
         ...post,
-        datePost: `${day}-${month}-${year}`, 
+        datePost: `${day}-${month}-${year}`,
       };
     });
 
