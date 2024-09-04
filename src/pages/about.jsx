@@ -8,8 +8,6 @@ import Container from '../components/Container'
 import '../styles/globals.css';  
 import Footer from '../components/Footer'
 import Stat from '../components/stat'
-import FilterMapSection from '../components/ero'
-import CityInputSelect from '../components/city'
 
 
 
@@ -22,8 +20,6 @@ const about = ({ siteInfo}) => {
                 <Layout siteInfo={siteInfo}>
                 <About />
                 <Stat/>
-                <FilterMapSection/>
-                <CityInputSelect/>
                 <Footer/>
                 </Layout>
                 

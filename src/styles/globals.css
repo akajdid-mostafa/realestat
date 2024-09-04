@@ -2,17 +2,40 @@
 @tailwind components;
 @tailwind utilities;
 
-.item-text {
-    display: inline-block; /* Allow positioning */
-    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+.tf-text {
+    display: inline-block; /* Keeps it on the same line */
+    min-width: 200px; /* Set a minimum width based on the longest sentence */
+  }
+  
+  .item-text {
+    display: inline-block; /* Ensures it stays inline */
+    transition: opacity 0.5s ease-in-out; /* Smooth transition for visibility */
+  }
+  
+  .animate-in {
+    opacity: 1;
+  }
+  
+  .animate-out {
+    opacity: 0;
+  }
+  /* styles.css */
+  .card {
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transform: perspective(1000px) rotateX(0deg);
 }
 
-.animate-in {
-    transform: translateY(0); /* Original position */
-    opacity: 1; /* Fully visible */
+.card:hover {
+    transform: perspective(1000px) rotateX(5deg) translateY(-10px);
+    box-shadow: 0 12px 16px rgba(0, 0, 0, 0.2);
 }
 
-.animate-out {
-    transform: translateY(-20px); /* Move up during exit */
-    opacity: 0; /* Fade out */
+.show-all-button {
+    transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out;
+}
+
+.show-all-button:hover {
+    transform: scale(1.05);
+    background-color: #2c5282; /* Darker blue */
 }
