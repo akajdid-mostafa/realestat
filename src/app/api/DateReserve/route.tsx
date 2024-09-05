@@ -85,8 +85,7 @@ export async function GET() {
       },
       take: 10, 
     });
-
-    
+  
     const formattedDateReserves = dateReserves.map(dateReserve => ({
       ...dateReserve,
       dateDebut: dateReserve.dateDebut ? formatDateToYYYYMMDD(dateReserve.dateDebut) : null,
