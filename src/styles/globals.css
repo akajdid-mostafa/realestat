@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@media (max-width: 698px) {
+  .about {
+    margin-top: 16rem;
+  }
+}
+
 .tf-text {
     display: inline-block; /* Keeps it on the same line */
     min-width: 200px; /* Set a minimum width based on the longest sentence */

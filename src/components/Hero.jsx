@@ -3,6 +3,7 @@ import { Box, Flex, VStack, Text, Heading, Stack, Grid } from '@chakra-ui/react'
 import Filter from './Filter '; // Import the Filter component
 import homePageData from '../types/CmsSingleTypes/homePage';
 
+
 const sentences = ["Maison de rêve", "Un foyer parfait", "Rêve immobilier", "Luxe et confort"];
 
 const Hero = () => {

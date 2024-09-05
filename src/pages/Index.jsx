@@ -9,6 +9,10 @@ import Cta3 from '../components/cta';
 import Popular from '../components/popular-post';
 import Aboutt from '../components/aboutt';
 import HomeFinancingSteps from '../components/home';
+import Abouta from '../components/abou'
+import Stat from '../components/stat'
+import Counters from '../components/Counters'
+
 
 const HomePage = ({ homePage, galleryPage, houses, siteInfo }) => {
     return (
@@ -26,9 +30,10 @@ const HomePage = ({ homePage, galleryPage, houses, siteInfo }) => {
                 </Box>
                 <Popular />
                 <HomeFinancingSteps />
-                
+                <Abouta/>
+                <br></br>
+                <Counters/>
                 <Cta3 />
-                <Aboutt />
             </Layout>
             <Footer />
         </ChakraBaseProvider>

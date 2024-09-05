@@ -7,7 +7,7 @@ import theme from '../types/CmsSingleTypes/theme'
 import Container from '../components/Container'
 import '../styles/globals.css';  
 import Footer from '../components/Footer'
-import Stat from '../components/stat'
+
 
 
 
@@ -18,8 +18,9 @@ const about = ({ siteInfo}) => {
         <>
             <ChakraBaseProvider theme={theme}>
                 <Layout siteInfo={siteInfo}>
+
                 <About />
-                <Stat/>
+               
                 <Footer/>
                 </Layout>
                 

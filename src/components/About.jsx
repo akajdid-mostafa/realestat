@@ -5,6 +5,7 @@ import { FaSackDollar, FaClipboardList  } from "react-icons/fa6";
 import { BiSupport } from "react-icons/bi";
 import { RiTeamFill } from "react-icons/ri";
 import Aboutt from './aboutt';
+import Counters from './Counters'
 
 
 
@@ -12,6 +13,7 @@ const About = () => {
     return (
         <main>
             <Aboutt/>
+            <Counters/>
             <div className="2xl:container 2xl:mx-auto lg:py-16 lg:px-20 md:py-12 md:px-6 py-9 px-4">            
                 
                 <div className="flex lg:flex-row flex-col md:gap-14 gap-16 justify-between lg:mt-20 mt-16">
@@ -22,6 +24,7 @@ const About = () => {
                         <p className="font-normal text-base leading-6 text-gray-600 dark:text-gray-200 w-full lg:w-10/12 xl:w-9/12 mt-10">
                             Nous visons à être le partenaire immobilier de choix en offrant une expertise approfondie et un accompagnement complet à chaque étape du processus. Grâce à notre connaissance du marché et à notre engagement envers l'excellence, nous nous engageons à dépasser vos attentes et à réaliser vos projets immobiliers avec succès.                        </p>
                     </div>
+                    
                     <div className="w-full lg:w-6/12">
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 lg:gap-12 gap-10">
                             {/* Team Card */}
@@ -36,6 +39,7 @@ const About = () => {
                                     </p>
                                 </div>
                             </div>
+                            
                             {/* Board Card */}
                             <div className="flex p-4 shadow-md">
                                 <div className="mr-6">

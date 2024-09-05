@@ -118,9 +118,15 @@ const Popular = () => {
                                     </Flex>
                                 </Box>
                             </Link>
-                            <Box mt={4} p={4}>
+                            <Box mt={1} p={4}>
                                 <Text fontWeight="bold" fontSize="lg" isTruncated>
-                                    <Link href={`/properties/${card.id}.html`} title={card.title}>
+                                    <Link
+                                        href={`/properties/${card.id}.html`}
+                                        textDecoration="none" // Removes underline
+                                        color="blue.800" // Inherits color from parent (Text) or set a specific color
+                                        _hover={{ textDecoration: 'none', color: 'inherit' }} // Ensures no underline or color change on hover
+                                        title={card.title}
+                                    >
                                         {card.title}
                                     </Link>
                                 </Text>

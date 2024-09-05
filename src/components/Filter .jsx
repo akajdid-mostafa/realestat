@@ -123,7 +123,7 @@ const Filter = () => {
             align="center"
             gap={4}
           >
-            <FormControl flex="1" minWidth={{ base: '100%', md: 'auto' }}>
+            <FormControl ref={componentRef} flex="1" minWidth={{ base: '100%', md: 'auto' }}>
               <FormLabel fontSize={{ base: 'md', md: 'md' }} color="gray.600">Ville</FormLabel>
               <InputGroup>
                 <Input
@@ -176,7 +176,7 @@ const Filter = () => {
                 _focus={{ borderColor: "blue.500", boxShadow: "0 0 0 1px blue.500" }}
               >
                 <option value="">Tous</option>
-                <option value="1">Apartment</option>
+                <option value="1">Appartment</option>
                 <option value="2">Villa</option>
                 <option value="3">Condo</option>
                 <option value="4">House</option>
