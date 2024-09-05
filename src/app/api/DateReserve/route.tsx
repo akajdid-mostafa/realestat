@@ -80,12 +80,17 @@ export async function GET() {
       include: {
         post: true,
       },
+      orderBy: {
+        updatedAt: 'desc',
+      },
+      take: 10, 
     });
 
+    
     const formattedDateReserves = dateReserves.map(dateReserve => ({
       ...dateReserve,
-      dateDebut: formatDateToYYYYMMDD(dateReserve.dateDebut as Date),
-      dateFine: dateReserve.dateFine ? formatDateToYYYYMMDD(dateReserve.dateFine as Date) : null,
+      dateDebut: dateReserve.dateDebut ? formatDateToYYYYMMDD(dateReserve.dateDebut) : null,
+      dateFine: dateReserve.dateFine ? formatDateToYYYYMMDD(dateReserve.dateFine) : null,
     }));
 
     return NextResponse.json(formattedDateReserves, { status: 200 });
