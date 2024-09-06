@@ -1,12 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {
-    Box,
-    Button,
-    Flex,
-    Heading,
-    Text,
-    Image,
-    Grid,
+import {Box,Button,Flex,Heading,Text,Image,   Grid,
     IconButton,
     Tag,
     Link,
@@ -152,7 +145,12 @@ const Popular = () => {
                                 </HStack>
                             </Box>
                             <Flex justify="space-between" align="center" bg="gray.100" p={4}>
-                                <Text fontWeight="bold" color="blue.800" fontSize="xl">{card.price}</Text>
+                                {card.type === 'Vent' && (
+                                    <Text fontWeight="bold" color="blue.800" fontSize="xl">{card.price}</Text>
+                                )}
+                                {card.type === 'Location' && (
+                                    <Text fontWeight="bold" color="blue.800" fontSize="xl">{card.price}/month</Text>
+                                )}
                                 <Flex>
                                     <IconButton
                                         as="a"
@@ -239,7 +237,12 @@ const Popular = () => {
                                         </HStack>
                                     </Box>
                                     <Flex justify="space-between" align="center" bg="gray.100" p={4}>
-                                        <Text fontWeight="bold" color="blue.800" fontSize="xl">{card.price}</Text>
+                                        {card.type === 'Vent' && (
+                                            <Text fontWeight="bold" color="blue.800" fontSize="xl">{card.price}</Text>
+                                        )}
+                                        {card.type === 'Location' && (
+                                            <Text fontWeight="bold" color="blue.800" fontSize="xl">{card.price}/month</Text>
+                                        )}
                                         <Flex>
                                             <IconButton
                                                 as="a"

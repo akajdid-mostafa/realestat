@@ -2,7 +2,7 @@ import { Box, IconButton, Image, Text, Flex, Tag, Link } from '@chakra-ui/react'
 import { FaBed, FaEye, FaBath, FaExpandArrowsAlt, FaMapMarkerAlt, FaWhatsapp } from 'react-icons/fa';
 import { TbListDetails } from "react-icons/tb";
 
-const PropertyCard = ({ property }) => {
+const PropertyCard = ({ property, onClick }) => {
     return (
         <Box
             className="property-item homeya-box card" // Add 'card' class here if required for additional styling
@@ -13,8 +13,11 @@ const PropertyCard = ({ property }) => {
             transition="0.3s"
             p={4}
             maxW="sm"
+
         >
-            <Link href={`/properties/${property.id}.html`} className="images-group">
+            {/* // href={`/properties/${property.id}.html`} */}
+            <Link className="images-group" cursor="pointer"
+                onClick={() => onClick(property)}>
                 <Box position="relative">
                     <Image
                         src={property.imageSrc}
@@ -37,9 +40,10 @@ const PropertyCard = ({ property }) => {
                 </Box>
             </Link>
             <Box mt={2}>
-                <Text fontWeight="bold" fontSize="lg" isTruncated>
+                <Text fontWeight="bold" fontSize="lg" isTruncated cursor="pointer"
+                    onClick={() => onClick(property)}>
                     <Link
-                        href={`/properties/${property.id}.html`}
+                        // href={`/properties/${property.id}.html`}
                         textDecoration="none"
                         color="blue.800"
                         _hover={{ textDecoration: 'none', color: 'inherit' }}
@@ -48,13 +52,15 @@ const PropertyCard = ({ property }) => {
                         {property.title}
                     </Link>
                 </Text>
-                <Flex align="center" mt={1}>
+                <Flex align="center" mt={1} cursor="pointer"
+                    onClick={() => onClick(property)}>
                     <FaMapMarkerAlt />
                     <Text ml={1} isTruncated>
                         {property.location}
                     </Text>
                 </Flex>
-                <Flex justify="space-between" mt={2}>
+                <Flex justify="space-between" mt={2} cursor="pointer"
+                    onClick={() => onClick(property)}>
                     <Flex align="center">
                         <FaBed />
                         <Text ml={1}>{property.bedrooms} Bedrooms</Text>
@@ -74,6 +80,8 @@ const PropertyCard = ({ property }) => {
                     </Text>
                     <Flex >
                         <IconButton
+                            cursor="pointer"
+                            onClick={() => onClick(property)}
                             href="#"
                             aria-label="Details"
                             icon={<TbListDetails />}
