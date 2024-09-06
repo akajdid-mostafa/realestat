@@ -15,9 +15,9 @@ export const cardData = [
         phone: "+1234567890",
         whatsapp: "1234567890", // Added comma here
         images: [ // Corrected: Added comma after whatsapp property
-            {alt: 'image1', url: 'https://firebasestorage.googleapis.com/v0/b/oceangallery-d06ae.appspot.com/o/Gallery%2FglassCleaning-team1%2F6.jpg?alt=media&token=a6ef683e-9250-4147-acb2-b6a538f16790'},
-            {alt: 'image2', url: 'https://firebasestorage.googleapis.com/v0/b/oceangallery-d06ae.appspot.com/o/Gallery%2FglassCleaning-team1%2F2.jpg?alt=media&token=89f41d86-0294-4ac9-a646-e8127f751d4a'},
-            { alt: 'image3', url: 'https://firebasestorage.googleapis.com/v0/b/oceangallery-d06ae.appspot.com/o/Gallery%2Fevenement%20-%20infermiere%202024-06-02%2F3.jpg?alt=media&token=1ee28e5c-4382-43a8-8486-70a300389152' },
+        {alt: 'image1', url: 'https://firebasestorage.googleapis.com/v0/b/oceangallery-d06ae.appspot.com/o/Gallery%2FCenter-pictures%2FIMG_4075.jpg?alt=media&token=0fbbc107-22b2-4fed-bbfb-f680799d7075'},
+        {alt: 'image2', url: 'https://firebasestorage.googleapis.com/v0/b/oceangallery-d06ae.appspot.com/o/Gallery%2FCenter-pictures%2FIMG_4076.jpg?alt=media&token=4c3ee7dd-e27e-468d-8917-980f9423b292'},
+        { alt: 'image3', url: 'https://firebasestorage.googleapis.com/v0/b/oceangallery-d06ae.appspot.com/o/Gallery%2Fevenement%20-%20infermiere%202024-06-02%2F3.jpg?alt=media&token=1ee28e5c-4382-43a8-8486-70a300389152' },
             { alt: 'image4', url: 'https://firebasestorage.googleapis.com/v0/b/oceangallery-d06ae.appspot.com/o/Gallery%2Fevenement%20-%20infermiere%202024-06-02%2F4.jpg?alt=media&token=c743a9a4-fd9f-402a-aac8-2a43344d72c8' },
             { alt: 'image5', url: 'https://firebasestorage.googleapis.com/v0/b/oceangallery-d06ae.appspot.com/o/Gallery%2Fevenement%20-%20infermiere%202024-06-02%2F5.jpg?alt=media&token=3db9b4fe-05de-49e4-a3ba-0c56756ab4b9' },
             { alt: 'image6', url: 'https://firebasestorage.googleapis.com/v0/b/oceangallery-d06ae.appspot.com/o/Gallery%2Fevenement%20-%20infermiere%202024-06-02%2F6.jpg?alt=media&token=cd3f5727-dd69-495d-be36-a476990c0a1e' },

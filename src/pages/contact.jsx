@@ -4,9 +4,11 @@ import Layout from '../components/Layout'
 import { ChakraBaseProvider } from '@chakra-ui/react'
 import ContactForm from '../components/ContactForm'
 import Footer from '../components/Footer'
-
 import theme from '../types/CmsSingleTypes/theme'
-const ContactUsPage = () => {
+import '../styles/globals.css';
+
+
+const ContactUsPage = ({ siteInfo }) => {
 	return (
 		<>
         <ChakraBaseProvider theme={theme}>
@@ -17,7 +19,8 @@ const ContactUsPage = () => {
 				}}
 				siteInfo={siteInfo}
 			/> */}
-			<Layout >
+			<Layout siteInfo={siteInfo} >
+				<Box>
 				<Container>
 					<Stack direction={['column', 'row']} mt={[0, '2rem']} mb={'3rem'}>
 							<ContactForm/>
@@ -25,7 +28,9 @@ const ContactUsPage = () => {
 					</Stack>
 				</Container>
 				<Footer/>
+				</Box>
 			</Layout>
+			
             </ChakraBaseProvider>
 		</>
 	)
