@@ -1,11 +1,15 @@
 import React, { useState } from "react";
-import { Box, IconButton } from "@chakra-ui/react";
-import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
+import { Box, IconButton, Text, useBreakpointValue } from "@chakra-ui/react";
+import { GrPrevious, GrNext } from "react-icons/gr";
+import { MdOutlinePhotoLibrary } from "react-icons/md";
 
 const Carousel = ({ items = [] }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const itemsToShow = 2; // Number of items to show
+
+  // Responsive itemsToShow
+  const itemsToShow = useBreakpointValue({ base: 1, md: 1, lg: 2 }); // 1 item for small and medium screens, 2 items for large screens
   const totalItems = items.length;
+
 
   const handlePrev = () => {
     setCurrentIndex((prevIndex) => Math.max(0, prevIndex - 1));
@@ -13,38 +17,38 @@ const Carousel = ({ items = [] }) => {
 
   const handleNext = () => {
     setCurrentIndex((prevIndex) =>
-      Math.min(totalItems - itemsToShow, prevIndex + 1)
+      Math.min(totalItems - (itemsToShow || 1), prevIndex + 1)
     );
   };
 
   return (
-    <Box position="relative" w="full" h="400px" bg="gray.200">
+    <Box position="relative" w="full" h={{ base: "300px", md: "400px", lg: "500px" }} bg="gray.200">
       <Box
         display="flex"
         w="full"
         h="full"
         overflow="hidden"
         position="relative"
-        bg="gray.200" // Ensure background color for extra space
+        bg="gray.200"
       >
         <Box
           display="flex"
-          transform={`translateX(-${currentIndex * (100 / itemsToShow)}%)`}
+          transform={`translateX(-${currentIndex * (100 / (itemsToShow || 1))}%)`}
           transition="transform 0.7s ease-in-out"
-          w={`${totalItems * (100 / itemsToShow)}%`}
+          w={`${totalItems * (100 / (itemsToShow || 1))}%`}
           h="full"
         >
           {items.map((item, index) => (
             <Box
               key={index}
-              minW={`${100 / itemsToShow}%`}
+              minW={`${100 / (itemsToShow || 1)}%`}
               h="full"
               p={1}
               boxSizing="border-box"
               display="flex"
               alignItems="center"
               justifyContent="center"
-              bg="gray.200" // Background color for extra space
+              bg="gray.200"
             >
               <img
                 src={item.url}
@@ -52,8 +56,8 @@ const Carousel = ({ items = [] }) => {
                 style={{
                   width: "100%",
                   height: "100%",
-                  objectFit: "contain", // Ensure the entire image fits within the frame
-                  backgroundColor: "gray", // Background color for extra space
+                  objectFit: "contain",
+                  backgroundColor: "gray",
                 }}
               />
             </Box>
@@ -62,25 +66,52 @@ const Carousel = ({ items = [] }) => {
       </Box>
       <IconButton
         aria-label="Previous Slide"
-        icon={<ChevronLeftIcon />}
+        icon={<GrPrevious />}
         position="absolute"
         top="50%"
         left="0"
         transform="translateY(-50%)"
         onClick={handlePrev}
-        isDisabled={currentIndex <= 0} // Disable button at the start
+        isDisabled={currentIndex <= 0}
+        bg="blue.600"
+        color="white"
+        size={{ base:"sm" , md:"sm"  , lg:"lg"   }}
+        _hover={{ bg: "gray.300", color: "black" }}
       />
       <IconButton
         aria-label="Next Slide"
-        icon={<ChevronRightIcon />}
+        icon={<GrNext />}
         position="absolute"
-        backgroundColor="blue.600"
         top="50%"
         right="0"
         transform="translateY(-50%)"
         onClick={handleNext}
-        isDisabled={currentIndex >= totalItems - itemsToShow} // Disable button at the end
+        isDisabled={currentIndex >= totalItems - (itemsToShow || 1)}
+        bg="blue.600"
+        color="white"
+        size={{ base:"sm" , md:"sm"  , lg:"lg"   }}
+        _hover={{ bg: "gray.300", color: "black" }}
       />
+      <Box
+        position="absolute"
+        bottom="0"
+        left="50%"
+        transform="translateX(-50%)"
+        p={2}
+        bg="blue.600"
+        color="white"
+        borderRadius="md"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <MdOutlinePhotoLibrary   style={{ marginRight: "8px"   }} />
+        <Text fontSize={{ base: "xs", md: "md", lg: "lg" }}  fontWeight="Bold">
+          {currentIndex + 1} -{" "}
+          {Math.min(currentIndex + (itemsToShow || 1), totalItems)} of {totalItems}{" "}
+          Images
+        </Text>
+      </Box>
     </Box>
   );
 };
