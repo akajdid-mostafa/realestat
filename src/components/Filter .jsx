@@ -93,6 +93,7 @@ const Filter = () => {
           <TabList
             justifyContent="center"
             color="white"
+            fontWeight="bold"
           >
             <Tab
               bgColor="rgba(128, 128, 128, 0.4)"
