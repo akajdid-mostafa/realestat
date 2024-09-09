@@ -51,7 +51,7 @@ export async function POST(req: Request) {
           data: { status: Status.taken },
         });
       }
-    } else if (post.category?.name === CategoryName.Vente && isDateNull) {
+    } else if (post.category?.name === CategoryName.Vente || isDateNull) {
       await prisma.post.update({
         where: { id: postId },
         data: { status: Status.taken },

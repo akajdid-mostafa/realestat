@@ -13,7 +13,6 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
       return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
     }
 
-    
     const dateReserve = await prisma.dateReserve.findUnique({
       where: { id },
       include: {
@@ -25,7 +24,6 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
       return NextResponse.json({ error: 'DateReserve not found' }, { status: 404 });
     }
 
-    
     return NextResponse.json(dateReserve, { status: 200 });
   } catch (error: unknown) {
     console.error('Error fetching DateReserve by ID:', error);
@@ -34,17 +32,14 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
   }
 }
 
-
 export async function DELETE(req: Request, { params }: { params: { id: string } }) {
   try {
     const id = parseInt(params.id, 10);
 
-    
     if (isNaN(id)) {
       return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
     }
 
-   
     const dateReserve = await prisma.dateReserve.delete({
       where: { id },
     });
@@ -68,7 +63,6 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
       CIN,
     } = await req.json();
 
-   
     if (isNaN(id)) {
       return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
     }
@@ -84,7 +78,6 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
       },
     });
 
-   
     return NextResponse.json(updatedDateReserve, { status: 200 });
   } catch (error: unknown) {
     console.error('Error updating DateReserve by ID:', error);

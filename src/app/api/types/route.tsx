@@ -3,28 +3,25 @@ import { PrismaClient, TypeName } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-// Helper function to set CORS headers
+
 function setCorsHeaders(response: NextResponse) {
-  response.headers.set('Access-Control-Allow-Origin', '*'); // Adjust according to your needs
+  response.headers.set('Access-Control-Allow-Origin', '*'); 
   response.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   response.headers.set('Access-Control-Allow-Credentials', 'true');
   return response;
 }
 
-// Handle OPTIONS method for CORS preflight
 export function OPTIONS() {
   const response = new NextResponse(null, { status: 204 });
   return setCorsHeaders(response);
 }
 
-// Fetch posts by type
 export async function GET(req: Request) {
   const url = new URL(req.url);
   const typeName = url.searchParams.get('name') as TypeName;
 
   if (!typeName) {
-    // If no type name is provided, display all types
     try {
       const types = await prisma.type.findMany({
         include: {
@@ -71,7 +68,6 @@ export async function GET(req: Request) {
   }
 }
 
-// Create a new type
 export async function POST(req: Request) {
   const { type } = await req.json();
 
