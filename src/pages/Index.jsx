@@ -7,14 +7,12 @@ import "../styles/globals.css";
 import ContactForm from "../components/ContactForm";
 import Cta3 from "../components/cta";
 import Popular from "../components/popular-post";
-import Aboutt from "../components/aboutt";
 import HomeFinancingSteps from "../components/home";
 import Abouta from "../components/abou";
-import Stat from "../components/stat";
 import Counters from "../components/Counters";
-import Naavbar from "../components/Naavbar";
+import Map from '../components/PropertyLocationMap';
 
-const HomePage = ({ homePage, galleryPage, houses, siteInfo }) => {
+const HomePage = ({ siteInfo }) => {
   return (
     <ChakraBaseProvider theme={theme}>
       <Layout siteInfo={siteInfo}>
@@ -31,6 +29,7 @@ const HomePage = ({ homePage, galleryPage, houses, siteInfo }) => {
         <br></br>
         <Counters />
         <Cta3 />
+        <Map height="400px" center={{ lat: 37.7749, lng: -122.4194 }} zoom={12} />
       </Layout>
       <Footer />
     </ChakraBaseProvider>
