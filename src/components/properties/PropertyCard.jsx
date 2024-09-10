@@ -68,7 +68,6 @@ const PropertyCard = ({ property, onClick }) => {
           fontSize="lg"
           isTruncated
           cursor="pointer"
-          onClick={() => onClick(property)}
         >
           <Link
             // href={`/properties/${property.id}.html`}
@@ -84,7 +83,7 @@ const PropertyCard = ({ property, onClick }) => {
           align="center"
           mt={1}
           cursor="pointer"
-          onClick={() => onClick(property)}
+          
         >
           <FaMapMarkerAlt />
           <Text ml={1} isTruncated>
@@ -95,7 +94,6 @@ const PropertyCard = ({ property, onClick }) => {
           justify="space-between"
           mt={2}
           cursor="pointer"
-          onClick={() => onClick(property)}
         >
           <Flex align="center">
             <FaBed />
@@ -124,7 +122,6 @@ const PropertyCard = ({ property, onClick }) => {
           <Flex>
             <IconButton
               cursor="pointer"
-              onClick={() => onClick(property)}
               href="#"
               aria-label="Details"
               icon={<TbListDetails />}

@@ -1,8 +1,6 @@
 import Naavbar from './Naavbar'
-import Footer from './Footer'
-import SiteInformation from '../types/CmsSingleTypes/siteInformation'
-import Head from 'next/head'
 import { Flex } from '@chakra-ui/react'
+import Footer from './Footer'
 
 
 const Layout = ({ siteInfo, children }) => {

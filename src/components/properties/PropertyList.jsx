@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Box, Grid, Button, Flex } from '@chakra-ui/react';
 import PropertyCard from './PropertyCard'; // Import your PropertyCard component
 import PropertyDetailModal from './PropertyDetailModal'; // Import the PropertyDetailModal component
-import { blue } from '@mui/material/colors';
+
+
 
 const PropertyList = ({ properties = [] }) => {
     const [currentPage, setCurrentPage] = useState(1);

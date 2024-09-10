@@ -9,7 +9,7 @@ import {
   Grid,
 } from "@chakra-ui/react";
 import Filter from "./Filter "; // Import the Filter component
-import homePageData from "../types/CmsSingleTypes/homePage";
+import homePageData from "../../types/CmsSingleTypes/homePage";
 
 const sentences = [
   "Maison de rêve",
@@ -40,7 +40,7 @@ const Hero = () => {
   return (
     <Flex
       w="full"
-      h={{ base: "100vh", md: "100vh" }} // Adjust height for smaller screens
+      h={{ base: "auto", md: "100vh" }} // Adjust height for smaller screens
       minHeight={{ base: "40vh", md: "31rem" }} // Minimum height for different screens
       maxHeight={{ base: "none", md: "50rem" }} // Maximum height for medium screens and up
       backgroundImage={`url(${heroImage.data.attributes.url})`}

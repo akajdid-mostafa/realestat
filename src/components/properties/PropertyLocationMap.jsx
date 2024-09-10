@@ -17,6 +17,7 @@ const defaultCenter = {
 
 const Map = ({ height = "400px", center = defaultCenter, zoom = 15 }) => {
   const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_API || "";
+  console.log("API Key:", API_KEY); // Add this line to debug API Key issues
 
   const [map, setMap] = useState(null);
 

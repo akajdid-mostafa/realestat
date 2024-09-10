@@ -10,7 +10,7 @@ import 'pure-react-carousel/dist/react-carousel.es.css';
 import { FaBed, FaBath, FaExpandArrowsAlt, FaMapMarkerAlt } from 'react-icons/fa';
 import { MdPhone } from 'react-icons/md';
 import { FaWhatsapp } from 'react-icons/fa';
-import { cardData } from './data';
+import { cardData } from '../data';
 
 const Popular = () => {
     const [gridDisplay, setGridDisplay] = useState(false);
@@ -89,7 +89,7 @@ const Popular = () => {
                             boxShadow="lg"
                             transition="0.3s"
                         >
-                            <Link href={`/properties/${card.id}.html`} className="images-group">
+                            <Link href={`/Detaillproperties/${card.id}`} className="images-group">
                                 <Box position="relative">
                                     <Image
                                         src={card.imageSrc}

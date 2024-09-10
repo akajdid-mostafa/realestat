@@ -17,7 +17,7 @@ import {
 import { HamburgerIcon } from "@chakra-ui/icons";
 import { ReactNode } from "react";
 import Image from "next/image";
-import siteInfo from "../types/CmsSingleTypes/siteInformation";
+import siteInfo from "../../types/CmsSingleTypes/siteInformation";
 import { MdOutlineArrowOutward } from "react-icons/md";
 
 const Naavbar = () => {

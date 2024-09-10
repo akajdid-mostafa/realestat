@@ -19,10 +19,21 @@ import {
 } from '@chakra-ui/react';
 
 const citiesInMorocco = [
-  "Casablanca", "Rabat", "Marrakech", "Fes", "Tangier", "Agadir",
-  "Oujda", "Kenitra", "Meknes", "Tétouan", "Safi", "El Jadida",
-  "Beni Mellal", "Khouribga", "Settat", "Nador", "Laayoune",
-  "Dakhla", "Tiznit", "Taroudant",
+  "Agadir","Aïn Harrouda",  "Ben Yakhlef",  "Bouskoura",  "Casablanca",  "Médiouna",  "Mohammadia",  "Tit Mellil",  "Bejaad",  "Ben Ahmed",  "Benslimane",  "Berrechid",
+  "Boujniba",  "Boulanouare",  "Bouznika",  "Deroua",  "El Borouj",  "El Gara",  "Guisser",  "Hattane",  "Khouribga",  "Loulad",  "Oued Zem",  "Oulad Abbou",
+  "Oulad H'Riz Sahel",  "Oulad M'rah",  "Oulad Said",  "Oulad Sidi Ben Daoud",  "Ras El Ain",  "Settat",  "Sidi Rahhal Chataï",  "Soualem",  "Azemmour",  "Bir Jdid",
+  "El Jadida",  "Hrara",  "Ighoud",  "Jamaat Shaim",  "Jorf Lasfar",  "Khemis Zemamra",  "Laaounate",  "Moulay Abdallah",  "Oualidia",  "Oulad Amrane",  "Oulad Frej",
+  "Oulad Ghadbane",  "Safi",  "Sebt El Maârif",  "Sebt Gzoula",  "Sidi Ahmed",  "Sidi Ali Ban Hamdouche",  "Sidi Bennour",  "Sidi Bouzid",  "Sidi Smaïl",  "Youssoufia",
+  "Fès",  "Ain Cheggag",  "Bhalil",  "Boulemane",  "El Menzel",  "Guigou",  "Imouzzer Kandar",  "Imouzzer Marmoucha",  "Missour",  "Moulay Yaacoub",  "Ouled Tayeb",
+  "Ribate El Kheir",  "Séfrou",  "Skhinate",  "Tafajight",  "Arbaoua",  "Ain Dorij",  "Dar Gueddari",  "Had Kourt",  "Jorf El Melha",  "Kénitra",  "Khenichet",
+  "Lalla Mimouna",  "Mechra Bel Ksiri",  "Mehdia",  "Moulay Bousselham",  "Sidi Allal Tazi",  "Sidi Kacem",  "Sidi Slimane",  "Sidi Taibi", "Sidi Yahya El Gharb",
+  "Souk El Arbaa",  "Akka",  "Assa",  "Bouizakarne",  "El Ouatia",  "Es-Semara",  "Fam El Hisn",  "Foum Zguid",  "Guelmim",  "Taghjijt",  "Tan-Tan",  "Tata",
+  "Zag",  "Marrakech",  "Ait Daoud",  "Amizmiz",  "Assahrij",  "Ait Ourir",  "Ben Guerir",  "Chichaoua",  "El Hanchane",  "El Kelaâ des Sraghna",  "Fraïta",
+  "Ghmate",  "Imintanoute",  "Kattara",  "Lalla Takerkoust",  "Loudaya",  "Laatataouia",  "Moulay Brahim",  "Mzouda",  "Sid L'Mokhtar",  "Sid Zouin",  "Sidi Abdallah Ghiat",
+  "Sidi Bou Othmane",  "Sidi Rahhal",  "Skhour Rehamna",  "Smimou",  "Tafetachte",  "Tahannaout",  "Talmest",  "Tamallalt",  "Tamanar",  "Tamansourt",  "Tameslouht",
+  "Tanalt",  "Meknes",  "Khenifra",  "Agourai",  "Ain Taoujdate",  "MyAliCherif",  "Rissani",  "Amalou Ighriben",  "Aoufous",  "Arfoud",  "Azrou",  "Ain Jemaa",
+  "Ain Karma",  "Ain Leuh",  "Ait Boubidmane",  "Ait Ishaq",  "Boudnib",  "Boumia",  "El Hajeb",  "Elkbab",  "Er-Rich",  "Errachidia",  "Gardmit",  "Goulmima",
+  "Gourrama",  "Had Bouhssoussen"
 ];
 
 const Filter = () => {

@@ -24,7 +24,7 @@ const PropertyMoreDetail = ({
             >
                 Property More Detail
             </Text>
-            <Box className="property-details-chart my-10" width="100%">
+            <Box className="property-details-chart mt-2 " width="100%">
                 <Box bg="gray.50" p={4} rounded="md" shadow="md">
                     <Flex
                         direction={["column", "row"]}
