@@ -1,6 +1,6 @@
 import { v2 as cloudinary } from 'cloudinary';
 import { NextResponse, NextRequest } from 'next/server';
-import { PrismaClient,CategoryName, Status } from '@prisma/client';
+import { PrismaClient, CategoryName, Status } from '@prisma/client';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -13,10 +13,11 @@ cloudinary.config({
   api_secret: 'T9zFUC5NdH51iFiSeOpyfGUlO1I',
 });
 
+// POST 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { datePost, lat, lon, prix, adress, ville, status, title, categoryId, typeId, Detail, img } = body;
+    const { datePost, lat, lon, prix, adress, ville, status, title, categoryId, typeId, Detail, img, youtub } = body; 
 
     console.log('Received data:', body);
 
@@ -43,7 +44,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid status value' }, { status: 400 });
     }
 
-    
     const uploadedImages = await Promise.all(
       img.map(async (imageUrl: string) => {
         const result = await cloudinary.uploader.upload(imageUrl, {
@@ -59,14 +59,12 @@ export async function POST(req: NextRequest) {
       })
     );
 
-   
     const date = new Date(datePost);
     date.setHours(0, 0, 0, 0); 
 
-   
     const post = await prisma.post.create({
       data: {
-        img: uploadedImages,
+        img: uploadedImages.map((image) => image.url),
         datePost: date,
         lat: parseFloat(lat),
         lon: parseFloat(lon),
@@ -75,6 +73,7 @@ export async function POST(req: NextRequest) {
         ville,
         status: status as Status,
         title,
+        youtub,
         category: { connect: { id: parseInt(categoryId) } },
         type: { connect: { id: parseInt(typeId) } },
         Detail: Detail ? { create: JSON.parse(Detail) } : undefined,
@@ -142,6 +141,7 @@ export async function GET(req: NextRequest) {
       return {
         ...post,
         datePost: `${day}-${month}-${year}`,
+        youtub: post.youtub,
       };
     });
 

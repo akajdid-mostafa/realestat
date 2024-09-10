@@ -26,6 +26,7 @@ model Post {
   ville       String
   status      Status
   title       String
+  youtub      String?
   categoryId  Int?
   typeId      Int?
   Detail      Detail?
@@ -85,7 +86,6 @@ model DateReserve {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
-
 
 enum Status {
   available

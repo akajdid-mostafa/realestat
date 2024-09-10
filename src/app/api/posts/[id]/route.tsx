@@ -1,36 +1,15 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient, Status } from '@prisma/client';
+import { v2 as cloudinary } from 'cloudinary';
 
 const prisma = new PrismaClient();
 
-export async function GET(req: Request) {
-  const id = req.url.split('/').pop();
 
-  if (!id || isNaN(Number(id))) {
-    return NextResponse.json({ error: 'Invalid or missing ID' }, { status: 400 });
-  }
-
-  try {
-    const post = await prisma.post.findUnique({
-      where: { id: Number(id) },
-      include: {
-        category: true,
-        type: true,
-        Detail: true,
-        DateReserve: true,
-      },
-    });
-
-    if (!post) {
-      return NextResponse.json({ error: 'Post not found' }, { status: 404 });
-    }
-
-    return NextResponse.json(post, { status: 200 });
-  } catch (error) {
-    console.error('Error fetching post:', error.message || error);
-    return NextResponse.json({ error: 'Error fetching post', details: error.message || error }, { status: 500 });
-  }
-}
+cloudinary.config({
+  cloud_name: 'dab60xyhf',
+  api_key: '141321481661693',
+  api_secret: 'T9zFUC5NdH51iFiSeOpyfGUlO1I',
+});
 
 export async function PUT(req: Request) {
   const id = req.url.split('/').pop();
@@ -45,14 +24,24 @@ export async function PUT(req: Request) {
     status,
     title,
     categoryId,
-    typeId
+    typeId,
+    youtub,
   } = await req.json();
 
   if (!id || isNaN(Number(id))) {
     return NextResponse.json({ error: 'Invalid or missing ID' }, { status: 400 });
   }
 
+  if (!datePost || !lat || !lon || !prix || !adress || !ville || !status || !title) {
+    return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+  }
+
+  if (!Object.values(Status).includes(status as Status)) {
+    return NextResponse.json({ error: 'Invalid status value' }, { status: 400 });
+  }
+
   try {
+    
     if (categoryId) {
       const categoryExists = await prisma.category.findUnique({
         where: { id: categoryId },
@@ -63,6 +52,7 @@ export async function PUT(req: Request) {
       }
     }
 
+   
     if (typeId) {
       const typeExists = await prisma.type.findUnique({
         where: { id: typeId },
@@ -73,6 +63,7 @@ export async function PUT(req: Request) {
       }
     }
 
+    
     const existingPost = await prisma.post.findUnique({
       where: { id: Number(id) },
     });
@@ -81,18 +72,49 @@ export async function PUT(req: Request) {
       return NextResponse.json({ error: 'Post not found' }, { status: 404 });
     }
 
+    let uploadedImages = existingPost.img;
+
+   
+    if (img && Array.isArray(img) && img.length > 0) {
+      if (existingPost.img && Array.isArray(existingPost.img)) {
+        await Promise.all(
+          existingPost.img.map(async (image) => {
+            if (image) { 
+              const publicId = image.split('/').pop()?.split('.')[0]; 
+              if (publicId) {
+                await cloudinary.uploader.destroy(publicId);
+              }
+            }
+          })
+        );
+      }
+    
+      
+      uploadedImages = await Promise.all(
+        img.map(async (imageUrl) => {
+          const result = await cloudinary.uploader.upload(imageUrl, {
+            folder: 'your_folder_name',
+          });
+          return result.secure_url;
+        })
+      );
+    }
+    
+
+   
     const updatedPost = await prisma.post.update({
       where: { id: Number(id) },
       data: {
-        img,
-        datePost,
-        lat,
-        lon,
-        prix,
+        img: uploadedImages, 
+        datePost: datePost ? new Date(datePost) : existingPost.datePost,
+        lat: lat !== undefined ? parseFloat(lat) : existingPost.lat,
+        lon: lon !== undefined ? parseFloat(lon) : existingPost.lon,
+        prix: prix !== undefined ? parseFloat(prix) : existingPost.prix,
         adress,
         ville,
-        status,
+        status: status as Status,
         title,
+        youtub,
         category: categoryId ? { connect: { id: categoryId } } : undefined,
         type: typeId ? { connect: { id: typeId } } : undefined,
       },
@@ -105,27 +127,9 @@ export async function PUT(req: Request) {
     });
 
     return NextResponse.json(updatedPost, { status: 200 });
-  } catch (error) {
-    console.error('Error updating post:', error.message || error);
-    return NextResponse.json({ error: 'Error updating post', details: error.message || error }, { status: 500 });
-  }
-}
-
-export async function DELETE(req: Request) {
-  const id = req.url.split('/').pop();
-
-  if (!id || isNaN(Number(id))) {
-    return NextResponse.json({ error: 'Invalid or missing ID' }, { status: 400 });
-  }
-
-  try {
-    await prisma.post.delete({
-      where: { id: Number(id) },
-    });
-
-    return NextResponse.json({ message: 'Post deleted successfully' }, { status: 200 });
-  } catch (error) {
-    console.error('Error deleting post:', error.message || error);
-    return NextResponse.json({ error: 'Error deleting post', details: error.message || error }, { status: 500 });
+  } catch (error: any) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('Error updating post:', errorMessage);
+    return NextResponse.json({ error: 'Error updating post', details: errorMessage }, { status: 500 });
   }
 }

@@ -12,19 +12,18 @@ function setCorsHeaders(response: NextResponse) {
   return response;
 }
 
-// Handle OPTIONS method for CORS preflight
+
 export function OPTIONS() {
   const response = new NextResponse(null, { status: 204 });
   return setCorsHeaders(response);
 }
 
-// Fetch posts by category or all categories if no category name is provided
+
 export async function GET(req: Request) {
   const url = new URL(req.url);
   const categoryName = url.searchParams.get('name') as CategoryName;
 
   if (!categoryName) {
-    // Display all categories
     try {
       const categories = await prisma.category.findMany({
         include: {
