@@ -4,7 +4,19 @@ import dotenv from 'dotenv';
 import cloudinary from 'cloudinary';
 
 dotenv.config();
+function setCorsHeaders(response: NextResponse) {
+  response.headers.set('Access-Control-Allow-Origin', '*'); // Adjust according to your needs
+  response.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  response.headers.set('Access-Control-Allow-Credentials', 'true');
+  return response;
+}
 
+// Handle OPTIONS method for CORS preflight
+export function OPTIONS() {
+  const response = new NextResponse(null, { status: 204 });
+  return setCorsHeaders(response);
+}
 const prisma = new PrismaClient();
 
 cloudinary.config({
@@ -101,6 +113,41 @@ export async function POST(req: NextRequest) {
 // GET handler
 export async function GET(req: NextRequest) {
   try {
+    const url = new URL(req.url);
+    const postId = url.searchParams.get('id');
+
+    // Fetch a specific post by ID
+    if (postId) {
+      const post = await prisma.post.findUnique({
+        where: { id: parseInt(postId) },
+        include: {
+          category: true,
+          type: true,
+          DateReserve: true,
+          Detail: true,
+        },
+      });
+
+      if (!post) {
+        return NextResponse.json({ error: 'Post not found' }, { status: 404 });
+      }
+
+      // Formatting the date of the post
+      const date = new Date(post.datePost);
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      
+      const formattedPost = {
+        ...post,
+        datePost: `${day}-${month}-${year}`,  // Fixed template literal usage
+        youtub: post.youtub, // Keeping existing data
+      };
+
+      return NextResponse.json(formattedPost, { status: 200 });
+    }
+
+    // Fetch multiple posts
     const posts = await prisma.post.findMany({
       include: {
         category: true,
@@ -118,6 +165,7 @@ export async function GET(req: NextRequest) {
 
     const currentDate = new Date();
 
+    // Update status of posts based on DateReserve
     await Promise.all(
       posts.map(async (post) => {
         if (post.category?.name === CategoryName.Vente && post.DateReserve) {
@@ -137,6 +185,7 @@ export async function GET(req: NextRequest) {
       })
     );
 
+    // Format the date of multiple posts
     const formattedPosts = posts.map((post) => {
       const date = new Date(post.datePost);
       const day = String(date.getDate()).padStart(2, '0');
@@ -144,8 +193,8 @@ export async function GET(req: NextRequest) {
       const year = date.getFullYear();
       return {
         ...post,
-        datePost: `${day}-${month}-${year}`,
-        youtub: post.youtub,
+        datePost: `${day}-${month}-${year}`, // Fixed template literal usage
+        youtub: post.youtub, // Keeping existing data
       };
     });
 

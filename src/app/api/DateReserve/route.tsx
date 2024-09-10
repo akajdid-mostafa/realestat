@@ -15,6 +15,13 @@ export async function POST(req: Request) {
       throw new Error('Missing required fields');
     }
 
+    const parsedDateDebut = dateDebut ? new Date(dateDebut) : null;
+    const parsedDateFine = dateFine ? new Date(dateFine) : null;
+
+    if (parsedDateDebut && parsedDateFine && parsedDateDebut >= parsedDateFine) {
+      throw new Error('dateDebut must be less than dateFine');
+    }
+
     const post = await prisma.post.findUnique({
       where: { id: postId },
       include: { category: true },
@@ -24,11 +31,11 @@ export async function POST(req: Request) {
       throw new Error('Post with the given ID does not exist');
     }
 
-    const isDateNull = dateDebut === null && dateFine === null;
+    const isDateNull = parsedDateDebut === null && parsedDateFine === null;
 
     const dateReserveData = {
-      dateDebut: dateDebut ? new Date(dateDebut) : null,
-      dateFine: dateFine ? new Date(dateFine) : null,
+      dateDebut: parsedDateDebut,
+      dateFine: parsedDateFine,
       fullName,
       price,
       CIN,
@@ -40,7 +47,7 @@ export async function POST(req: Request) {
     });
 
     if (post.category?.name === CategoryName.Location) {
-      if (dateFine) {
+      if (parsedDateFine) {
         await prisma.post.update({
           where: { id: postId },
           data: { status: Status.available },
@@ -73,6 +80,7 @@ export async function POST(req: Request) {
     );
   }
 }
+
 
 export async function GET() {
   try {
