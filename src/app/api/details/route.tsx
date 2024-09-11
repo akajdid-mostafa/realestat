@@ -91,20 +91,20 @@ export async function GET() {
   }
 }
 
-export async function GET() {
-  try {
-    const details = await prisma.detail.findMany({
-      include: {
-        post: true,
-      },
-    });
+// export async function GET() {
+//   try {
+//     const details = await prisma.detail.findMany({
+//       include: {
+//         post: true,
+//       },
+//     });
 
-    const response = NextResponse.json(details, { status: 200 });
-    return setCorsHeaders(response);
-  } catch (error: unknown) {
-    console.error('Error fetching details:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    const response = NextResponse.json({ error: 'Error fetching details', details: errorMessage }, { status: 500 });
-    return setCorsHeaders(response);
-  }
-}
+//     const response = NextResponse.json(details, { status: 200 });
+//     return setCorsHeaders(response);
+//   } catch (error: unknown) {
+//     console.error('Error fetching details:', error);
+//     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+//     const response = NextResponse.json({ error: 'Error fetching details', details: errorMessage }, { status: 500 });
+//     return setCorsHeaders(response);
+//   }
+// }
