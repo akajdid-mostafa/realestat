@@ -32,7 +32,7 @@
     "types/next-connect.d.ts",
     "types/extend-api.d.ts",
     ".next/types/**/*.ts"
-  ],
+, "src/app/api/login/route.jsx"  ],
   "exclude": [
     "node_modules"
   ]
