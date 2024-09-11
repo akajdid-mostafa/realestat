@@ -20,16 +20,16 @@ export function OPTIONS() {
 const prisma = new PrismaClient();
 
 cloudinary.config({
-  cloud_name: 'dab60xyhf',
-  api_key: '141321481661693',
-  api_secret: 'T9zFUC5NdH51iFiSeOpyfGUlO1I',
+  cloud_name: 'dtcfvpu6n',
+  api_key: '813952658855993',
+  api_secret: '41BFZx9tensYKPnhu3CppsmU9Ng',
 });
 
-// POST 
+// POST handler
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { datePost, lat, lon, prix, adress, ville, status, title, categoryId, typeId, Detail, img, youtub } = body; 
+    const { datePost, lat, lon, prix, adress, ville, status, title, categoryId, typeId, Detail, img, youtub } = body;
 
     console.log('Received data:', body);
 
@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
     );
 
     const date = new Date(datePost);
-    date.setHours(0, 0, 0, 0); 
+    date.setHours(0, 0, 0, 0);
 
     // Create the post in the database
     const post = await prisma.post.create({
@@ -110,7 +110,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// GET 
+// GET handler
 export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
@@ -138,9 +138,28 @@ export async function GET(req: NextRequest) {
 
       const formattedPost = {
         ...post,
-        datePost: `${day}-${month}-${year}`,  // Corrected interpolation
+        datePost: `${day}-${month}-${year}`, // Fixed template literal
         youtub: post.youtub,
       };
+
+      if (post.category?.name === CategoryName.Location) {
+        if (post.DateReserve && post.DateReserve.dateFine) {
+          await prisma.post.update({
+            where: { id: post.id },
+            data: { status: Status.available },
+          });
+        } else {
+          await prisma.post.update({
+            where: { id: post.id },
+            data: { status: Status.taken },
+          });
+        }
+      } else if (post.category?.name === CategoryName.Vente || !post.DateReserve || (post.DateReserve.dateDebut === null && post.DateReserve.dateFine === null)) {
+        await prisma.post.update({
+          where: { id: parseInt(postId) },
+          data: { status: Status.taken },
+        });
+      }
 
       return NextResponse.json(formattedPost, { status: 200 });
     }
@@ -164,7 +183,7 @@ export async function GET(req: NextRequest) {
 
     await Promise.all(
       posts.map(async (post) => {
-        if (post.category?.name === CategoryName.Vente && post.DateReserve) {
+        if (post.category?.name === CategoryName.Location && post.DateReserve) {
           const dateFine = post.DateReserve.dateFine;
           if (dateFine && new Date(dateFine) < currentDate) {
             await prisma.post.update({
@@ -177,6 +196,11 @@ export async function GET(req: NextRequest) {
               data: { status: Status.taken },
             });
           }
+        } else if (post.category?.name === CategoryName.Vente || (post.DateReserve && post.DateReserve.dateDebut === null && post.DateReserve.dateFine === null)) {
+          await prisma.post.update({
+            where: { id: post.id },
+            data: { status: Status.taken },
+          });
         }
       })
     );
@@ -188,7 +212,7 @@ export async function GET(req: NextRequest) {
       const year = date.getFullYear();
       return {
         ...post,
-        datePost: `${day}-${month}-${year}`,
+        datePost: `${day}-${month}-${year}`, // Fixed template literal
         youtub: post.youtub,
       };
     });
