@@ -136,7 +136,7 @@ const Filter = () => {
             gap={4}
           >
             <FormControl ref={componentRef} flex="1" minWidth={{ base: '100%', md: 'auto' }}>
-              <FormLabel fontSize={{ base: 'md', md: 'md' }} color="gray.600">Ville</FormLabel>
+              <FormLabel ref={componentRef}  fontSize={{ base: 'md', md: 'md' }} color="gray.600">Ville</FormLabel>
               <InputGroup>
                 <Input
                   id="city-input"

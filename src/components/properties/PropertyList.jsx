@@ -1,15 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Grid, Button, Flex } from '@chakra-ui/react';
-import PropertyCard from './PropertyCard'; // Import your PropertyCard component
-import PropertyDetailModal from './PropertyDetailModal'; // Import the PropertyDetailModal component
-
-
+import PropertyCard from './PropertyCard';
+import PropertyDetailModal from './PropertyDetailModal'; // Ensure this is your detailed modal component
+import { useRouter } from 'next/router';
+import { cardData } from '../data'; // Import your data
 
 const PropertyList = ({ properties = [] }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedProperty, setSelectedProperty] = useState(null);
+    const router = useRouter();
     const itemsPerPage = 6;
     const totalPages = Math.ceil(properties.length / itemsPerPage);
+
+    useEffect(() => {
+        const { query } = router;
+        if (query.modal === 'yes' && query.id) {
+            const propertyId = parseInt(query.id, 10);
+            const property = cardData.find(item => item.id === propertyId);
+            if (property) {
+                setSelectedProperty(property);
+            } else {
+                setSelectedProperty(null);
+            }
+        } else {
+            setSelectedProperty(null);
+        }
+    }, [router.query]);
 
     // Handle page changes
     const handlePageChange = (pageNumber) => {
@@ -34,7 +50,13 @@ const PropertyList = ({ properties = [] }) => {
                         <PropertyCard
                             key={property.id}
                             property={property}
-                            onClick={(selected) => setSelectedProperty(selected)}
+                            onClick={(selected) => {
+                                setSelectedProperty(selected);
+                                router.push({
+                                    pathname: '/properties',
+                                    query: { modal: 'yes', id: selected.id },
+                                });
+                            }}
                         />
                     ))}
                 </Grid>
@@ -49,8 +71,8 @@ const PropertyList = ({ properties = [] }) => {
                         bg="blue.600"
                         borderColor="white"
                         _hover={{
-                            bg: 'blue.400',  // Background color on hover
-                            color: 'white'   // Text color on hover
+                            bg: 'blue.400',
+                            color: 'white'
                         }}
                     >
                         Previous
@@ -66,7 +88,7 @@ const PropertyList = ({ properties = [] }) => {
                             borderColor="white"
                             _hover={{
                                 bg: currentPage === index + 1 ? 'blue.400' : 'blue.600',
-                                color: 'white'  // Set text color to white on hover
+                                color: 'white'
                             }}
                         >
                             {index + 1}
@@ -81,8 +103,8 @@ const PropertyList = ({ properties = [] }) => {
                         bg="blue.600"
                         borderColor="white"
                         _hover={{
-                            bg: 'blue.400',  // Background color on hover
-                            color: 'white'   // Text color on hover
+                            bg: 'blue.400',
+                            color: 'white'
                         }}
                     >
                         Next
@@ -93,7 +115,10 @@ const PropertyList = ({ properties = [] }) => {
             {/* Property Detail Modal */}
             <PropertyDetailModal
                 isOpen={!!selectedProperty}
-                onClose={() => setSelectedProperty(null)}
+                onClose={() => {
+                    setSelectedProperty(null);
+                    router.push('/properties'); // Clear URL parameters
+                }}
                 property={selectedProperty}
             />
         </Box>

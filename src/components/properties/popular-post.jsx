@@ -89,7 +89,7 @@ const Popular = () => {
                             boxShadow="lg"
                             transition="0.3s"
                         >
-                            <Link href={`/Detaillproperties/${card.id}`} className="images-group">
+                            <Link href={`/properties?modal=yes&id=${card.id}`} className="images-group"> 
                                 <Box position="relative">
                                     <Image
                                         src={card.imageSrc}

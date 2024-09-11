@@ -497,6 +497,25 @@ export const cardData = [
         phone: "+1234567890",
         whatsapp: "1234567890"
     },
+    {
+        "id": "29",
+        "title": "Property 1",
+        "images": ["/images/property1.jpg"],
+        "location": "Location 1",
+        "category": "Residential",
+        "bedrooms": 3,
+        "kitchens": 1,
+        "bathrooms": 2,
+        "area": 1200,
+        "price": "$300,000",
+        "latitude": 40.7128,
+        "longitude": -74.0060,
+        "urltube": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "yearBuilt": 2000,
+        "floor": 1,
+        "facing": "North",
+        "legalDocuments": "Available"
+      },
     // Add more card objects as needed
 ];
 export const steps = [

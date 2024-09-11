@@ -18,46 +18,52 @@ const PropertyMoreDetail = ({
 }) => {
     return (
         <Flex direction="column" gap={4}>
-            <Text
-                fontSize={{ base: "xl", md: "2xl" }}
-                fontWeight="bold"
-            >
-                Property More Detail
-            </Text>
-            <Box className="property-details-chart mt-2 " width="100%">
-                <Box bg="gray.50" p={4} rounded="md" shadow="md">
+            <Box position="relative" mt={4} mb={4}>
+                <Box position="absolute" left={0} top="50%" transform="translateY(-50%)" width="4px" height="100%" bg="blue.600"></Box>
+                <Text
+                    fontSize={{ base: "xl", md: "2xl" }}
+                    fontWeight="bold"
+                    pl={6}
+                     // Padding left to give space for the red line
+                >
+                    Propriété Plus de détails
+                </Text>
+            </Box>
+
+            <Box className="property-details-chart mt-2" width="95%" mb={8}>
+                <Box bg="blue.50" p={4} rounded="md" shadow="md">
                     <Flex
                         direction={["column", "row"]}
                         justify="space-between"
                         align={["flex-start", "center"]}
                     >
-                        <Box flex="1" pr={4}>
+                        <Box flex="1" pr={4} fontWeight={{ base: "semibold", md: "bold" }}>
                             <Flex direction="row" gap={14} my={4}>
                                 <Box>
-                                    <Text fontSize="md" color="gray.600" lineHeight="2">
+                                    <Text fontSize="md" lineHeight="2">
                                         Chambres à coucher :
                                     </Text>
-                                    <Text fontSize="md" color="gray.600" lineHeight="2">
+                                    <Text fontSize="md" lineHeight="2">
                                         Cuisine :
                                     </Text>
-                                    <Text fontSize="md" color="gray.600" lineHeight="2">
+                                    <Text fontSize="md" lineHeight="2">
                                         Salles de bains :
                                     </Text>
-                                    <Text fontSize="md" color="gray.600" lineHeight="2">
+                                    <Text fontSize="md" lineHeight="2">
                                         Surface :
                                     </Text>
                                 </Box>
                                 <Box>
-                                    <Text fontSize="md" fontWeight="semibold" lineHeight="2">
+                                    <Text fontSize="md" lineHeight="2">
                                         {bedrooms}
                                     </Text>
-                                    <Text fontSize="md" fontWeight="semibold" lineHeight="2">
+                                    <Text fontSize="md" lineHeight="2">
                                         {kitchens}
                                     </Text>
-                                    <Text fontSize="md" fontWeight="semibold" lineHeight="2">
+                                    <Text fontSize="md" lineHeight="2">
                                         {bathrooms}
                                     </Text>
-                                    <Text fontSize="md" fontWeight="semibold" lineHeight="2">
+                                    <Text fontSize="md" lineHeight="2">
                                         {area}
                                     </Text>
                                 </Box>
@@ -66,39 +72,39 @@ const PropertyMoreDetail = ({
                         {/* Vertical Divider */}
                         <Divider
                             orientation="vertical"
-                            borderColor="gray.800"
+                            borderColor="blue.800" // Updated divider color
                             display={["none", "block"]}
                             minHeight="150px" // Set a specific minimum height
                             borderWidth="1.5px"
                             mr={6}
                         />
-                        <Box flex="1">
+                        <Box flex="1" fontWeight={{ base: "semibold", md: "bold" }}>
                             <Flex direction="row" gap={8} my={4}>
                                 <Box>
-                                    <Text fontSize="md" color="gray.600" lineHeight="2">
+                                    <Text fontSize="md" lineHeight="2">
                                         Construction year :
                                     </Text>
-                                    <Text fontSize="md" color="gray.600" lineHeight="2">
+                                    <Text fontSize="md" lineHeight="2">
                                         Floor :
                                     </Text>
-                                    <Text fontSize="md" color="gray.600" lineHeight="2">
+                                    <Text fontSize="md" lineHeight="2">
                                         Faces :
                                     </Text>
-                                    <Text fontSize="md" color="gray.600" lineHeight="2">
+                                    <Text fontSize="md" lineHeight="2">
                                         Les documents juridiques :
                                     </Text>
                                 </Box>
                                 <Box>
-                                    <Text fontSize="md" fontWeight="semibold" lineHeight="2">
+                                    <Text fontSize="md" lineHeight="2">
                                         {yearBuilt}
                                     </Text>
-                                    <Text fontSize="md" fontWeight="semibold" lineHeight="2">
+                                    <Text fontSize="md" lineHeight="2">
                                         {floor}
                                     </Text>
-                                    <Text fontSize="md" fontWeight="semibold" lineHeight="2">
+                                    <Text fontSize="md" lineHeight="2">
                                         {facing}
                                     </Text>
-                                    <Text fontSize="md" fontWeight="semibold" lineHeight="2">
+                                    <Text fontSize="md" lineHeight="2">
                                         {legalDocuments}
                                     </Text>
                                 </Box>

@@ -1,26 +1,22 @@
-import {
-  Box,
-  IconButton,
-  Image,
-  Text,
-  Flex,
-  Tag,
-  Link,
-} from "@chakra-ui/react";
-import {
-  FaBed,
-  FaEye,
-  FaBath,
-  FaExpandArrowsAlt,
-  FaMapMarkerAlt,
-  FaWhatsapp,
-} from "react-icons/fa";
+import React from 'react';
+import { Box, IconButton, Image, Text, Flex, Tag, Link } from "@chakra-ui/react";
+import { FaBed, FaEye, FaBath, FaExpandArrowsAlt, FaMapMarkerAlt } from "react-icons/fa";
 import { TbListDetails } from "react-icons/tb";
+import { useRouter } from 'next/router';
 
 const PropertyCard = ({ property, onClick }) => {
+  const router = useRouter();
+
+  const handleClick = () => {
+    onClick(property);
+    router.push({
+      pathname: '/properties',
+      query: { modal: 'yes', id: property.id },
+    });
+  };
+
   return (
     <Box
-      className="property-item homeya-box card" // Add 'card' class here if required for additional styling
       bg="white"
       borderRadius="md"
       overflow="hidden"
@@ -29,11 +25,9 @@ const PropertyCard = ({ property, onClick }) => {
       p={4}
       maxW="sm"
     >
-      {/* // href={`/properties/${property.id}.html`} */}
       <Link
-        className="images-group"
         cursor="pointer"
-        onClick={() => onClick(property)}
+        onClick={handleClick}
       >
         <Box position="relative">
           <Image
@@ -70,7 +64,6 @@ const PropertyCard = ({ property, onClick }) => {
           cursor="pointer"
         >
           <Link
-            // href={`/properties/${property.id}.html`}
             textDecoration="none"
             color="blue.800"
             _hover={{ textDecoration: "none", color: "inherit" }}
@@ -82,8 +75,6 @@ const PropertyCard = ({ property, onClick }) => {
         <Flex
           align="center"
           mt={1}
-          cursor="pointer"
-          
         >
           <FaMapMarkerAlt />
           <Text ml={1} isTruncated>
@@ -93,7 +84,6 @@ const PropertyCard = ({ property, onClick }) => {
         <Flex
           justify="space-between"
           mt={2}
-          cursor="pointer"
         >
           <Flex align="center">
             <FaBed />
@@ -121,8 +111,6 @@ const PropertyCard = ({ property, onClick }) => {
           )}
           <Flex>
             <IconButton
-              cursor="pointer"
-              href="#"
               aria-label="Details"
               icon={<TbListDetails />}
               colorScheme="blue"
@@ -130,7 +118,6 @@ const PropertyCard = ({ property, onClick }) => {
               mr={2}
             />
             <IconButton
-              href="#"
               aria-label="View"
               icon={<FaEye />}
               colorScheme="blue"

@@ -7,36 +7,49 @@ import {
   useBreakpointValue,
   SimpleGrid
 } from '@chakra-ui/react';
-import { 
-    MdPool , 
-  MdBathroom, 
-  MdFitnessCenter, 
-  MdGarden, 
-  MdBalcony ,
-  MdLocalParking, 
+import {
+  MdPool,
+  MdBathroom,
+  MdFitnessCenter,
+  MdGarden,
+  MdBalcony,
+  MdLocalParking,
   MdRealEstateAgent,
 } from 'react-icons/md'; // Replace these with actual icons if they are different
 import { RiSofaFill } from "react-icons/ri";
-import { GiElevator , GiSecurityGate } from "react-icons/gi";
+import { GiElevator, GiSecurityGate } from "react-icons/gi";
 import { IoDocumentsSharp } from "react-icons/io5";
 
 const FactsAndFeatures = () => {
+  const iconColor = "blue.600"; // Define a consistent icon color
+  const bgColor = "blue.100"; // Define a consistent background color for circles
+
   return (
-    <Box mb={8}>
-      <Text fontSize="2xl" fontWeight="bold" mb={4}>Facts And Features</Text>
+    <Box mb={8} width="90%">
+      <Box position="relative" mt={2} mb={8}>
+        <Box position="absolute"  left={0} top="50%" transform="translateY(-50%)" width="4px" height="100%" bg="blue.600"></Box>
+        <Text
+          fontSize={{ base: "xl", md: "2xl" }}
+          fontWeight="bold"
+          pl={6} // Padding left to give space for the red line
+           
+        >
+          Faits et caractéristiques
+        </Text>
+      </Box>
       <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={6}>
         <Flex align="center" spacing={4}>
-          <Box 
-            display="flex" 
-            alignItems="center" 
-            justifyContent="center" 
-            w={12} 
-            h={12} 
-            bg="blue.100" 
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            w={12}
+            h={12}
+            bg={bgColor} // Use consistent background color
             borderRadius="full"
             mr={4}
           >
-            <Icon as={RiSofaFill} color="blue.600" w={6} h={6}  />
+            <Icon as={RiSofaFill} color={iconColor} w={6} h={6} />
           </Box>
           <Box>
             <Text fontWeight="semibold">Furniture </Text>
@@ -44,17 +57,17 @@ const FactsAndFeatures = () => {
           </Box>
         </Flex>
         <Flex align="center" spacing={4}>
-          <Box 
-            display="flex" 
-            alignItems="center" 
-            justifyContent="center" 
-            w={12} 
-            h={12} 
-            bg="blue.100" 
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            w={12}
+            h={12}
+            bg={bgColor} // Use consistent background color
             borderRadius="full"
             mr={4}
           >
-            <Icon as={GiElevator} color="blue.600" w={6} h={6} />
+            <Icon as={GiElevator} color={iconColor} w={6} h={6} />
           </Box>
           <Box>
             <Text fontWeight="semibold">Elevator</Text>
@@ -62,17 +75,17 @@ const FactsAndFeatures = () => {
           </Box>
         </Flex>
         <Flex align="center" spacing={4}>
-          <Box 
-            display="flex" 
-            alignItems="center" 
-            justifyContent="center" 
-            w={12} 
-            h={12} 
-            bg="blue.100" 
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            w={12}
+            h={12}
+            bg={bgColor} // Use consistent background color
             borderRadius="full"
             mr={4}
           >
-            <Icon as={MdLocalParking} color="blue.600" w={6} h={6} />
+            <Icon as={MdLocalParking} color={iconColor} w={6} h={6} />
           </Box>
           <Box>
             <Text fontWeight="semibold">Parking </Text>
@@ -80,17 +93,17 @@ const FactsAndFeatures = () => {
           </Box>
         </Flex>
         <Flex align="center" spacing={4}>
-          <Box 
-            display="flex" 
-            alignItems="center" 
-            justifyContent="center" 
-            w={12} 
-            h={12} 
-            bg="blue.100" 
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            w={12}
+            h={12}
+            bg={bgColor} // Use consistent background color
             borderRadius="full"
             mr={4}
           >
-            <Icon as={MdBalcony} color="blue.600" w={6} h={6} />
+            <Icon as={MdBalcony} color={iconColor} w={6} h={6} />
           </Box>
           <Box>
             <Text fontWeight="semibold">Balcon </Text>
@@ -98,17 +111,17 @@ const FactsAndFeatures = () => {
           </Box>
         </Flex>
         <Flex align="center" spacing={4}>
-          <Box 
-            display="flex" 
-            alignItems="center" 
-            justifyContent="center" 
-            w={12} 
-            h={12} 
-            bg="blue.100" 
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            w={12}
+            h={12}
+            bg={bgColor} // Use consistent background color
             borderRadius="full"
             mr={4}
           >
-            <Icon as={MdPool} color="blue.600" w={6} h={6} />
+            <Icon as={MdPool} color={iconColor} w={6} h={6} />
           </Box>
           <Box>
             <Text fontWeight="semibold">Pool </Text>
@@ -116,17 +129,17 @@ const FactsAndFeatures = () => {
           </Box>
         </Flex>
         <Flex align="center" spacing={4}>
-          <Box 
-            display="flex" 
-            alignItems="center" 
-            justifyContent="center" 
-            w={12} 
-            h={12} 
-            bg="blue.100" 
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            w={12}
+            h={12}
+            bg={bgColor} // Use consistent background color
             borderRadius="full"
             mr={4}
           >
-            <Icon as={GiSecurityGate} color="blue.600" w={6} h={6} />
+            <Icon as={GiSecurityGate} color={iconColor} w={6} h={6} />
           </Box>
           <Box>
             <Text fontWeight="semibold">Guard </Text>
@@ -134,17 +147,17 @@ const FactsAndFeatures = () => {
           </Box>
         </Flex>
         <Flex align="center" spacing={4}>
-          <Box 
-            display="flex" 
-            alignItems="center" 
-            justifyContent="center" 
-            w={12} 
-            h={12} 
-            bg="blue.100" 
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            w={12}
+            h={12}
+            bg={bgColor} // Use consistent background color
             borderRadius="full"
             mr={4}
           >
-            <Icon as={MdRealEstateAgent} color="blue.600" w={6} h={6} />
+            <Icon as={MdRealEstateAgent} color={iconColor} w={6} h={6} />
           </Box>
           <Box>
             <Text fontWeight="semibold">Proprietary</Text>
@@ -152,17 +165,17 @@ const FactsAndFeatures = () => {
           </Box>
         </Flex>
         <Flex align="center" spacing={4}>
-          <Box 
-            display="flex" 
-            alignItems="center" 
-            justifyContent="center" 
-            w={12} 
-            h={12} 
-            bg="blue.100" 
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            w={12}
+            h={12}
+            bg={bgColor} // Use consistent background color
             borderRadius="full"
             mr={4}
           >
-            <Icon as={IoDocumentsSharp } color="blue.600" w={6} h={6} />
+            <Icon as={IoDocumentsSharp} color={iconColor} w={6} h={6} />
           </Box>
           <Box>
             <Text fontWeight="semibold">The documents Legal</Text>

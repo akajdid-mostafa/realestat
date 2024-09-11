@@ -8,7 +8,7 @@ import PropertyCard from '../components/properties/PropertyCard';
 import { cardData } from '../components/data';
 import '../styles/globals.css';
 import Layout from '../components/Index/Layout';
-import PropertyList from '../components/properties/PropertyList'
+import PropertyList from '../components/properties/PropertyList';
 
 
 
@@ -18,6 +18,7 @@ const Properties = ({ siteInfo }) => {
             <Layout siteInfo={siteInfo}>
                 <Box>
                     <Header />
+
                     <Flex direction={{ base: 'column', lg: 'row' }}>
                         <Box p={4} flex="1">
                             <PropertyList properties={cardData} />

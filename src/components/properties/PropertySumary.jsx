@@ -7,6 +7,7 @@ import {
     Tag,
     Button,
     Icon,
+    useBreakpointValue
 } from '@chakra-ui/react';
 import {
     FaBed,
@@ -16,9 +17,13 @@ import {
     FaPhone,
     FaWhatsapp,
 } from 'react-icons/fa';
+import { SiWhatsapp } from "react-icons/si";
 import { FaKitchenSet } from 'react-icons/fa6';
 
 const PropertySummary = ({ title, location, category, bedrooms, kitchens, bathrooms, area, price }) => {
+    const callButtonText = useBreakpointValue({ base: "appel", md: "Passer un appel", lg: "Passer un appel" });
+    const whatssapButtonText = useBreakpointValue({ base: "WhatsApp", md: "Envoyer WhatsApp", lg: "Envoyer WhatsApp" });
+
     return (
         <Box
             border="1px solid #e2e8f0"
@@ -70,46 +75,30 @@ const PropertySummary = ({ title, location, category, bedrooms, kitchens, bathro
                     </Flex>
                 </Flex> */}
             </Box>
-            <Box mt={{ base: 2, md: 0 }} textAlign="right">
-                <Text fontSize={{ base: "lg", md: "xl", lg: "3xl" }} color="blue.600" fontWeight="bold">
+            <Box mt={{ base: 2, md: 0 }} textAlign={{ base: "left", md: "right", lg: "right" }} >
+                <Text fontSize={{ base: "xl", md: "xl", lg: "3xl" }} color="blue.600" fontWeight="bold">
                     {price}
                 </Text>
-                <Flex mt={2}>
+                <Flex mt={{ base: 2, md: 4 }} mb={{ base: 2, md: 0 }} textAlign="right" >
                     <Button
                         leftIcon={<Icon as={FaPhone} />}
                         colorScheme="teal"
                         onClick={() => window.location.href = "tel:123456789"}
                         mr={3}
-                    >
-                        Make a Call
-                    </Button>
-                    <Button
-                        leftIcon={<Icon as={FaWhatsapp} />}
-                        colorScheme="green"
-                        onClick={() => window.open("https://wa.me/123456789", "_blank")}
-                    >
-                        Send WhatsApp
-                    </Button>
-                </Flex>
-                <Box position="relative" display="inline-block">
-                    <Button
-                        leftIcon={<Icon as={FaWhatsapp} />}
-                        colorScheme="green"
-                        onClick={() => window.open("https://wa.me/123456789", "_blank")}
                         position="relative"
                         zIndex="1"
-                        px="6"
-                        py="3"
-                        color="#212121"
-                        fontWeight="extrabold"
-                        fontSize="lg"
-                        bg="#e8e8e8"
+                        px="4" // Reduced padding on x-axis
+                        py="2" // Reduced padding on y-axis
+                        color="white"
+                        fontWeight="bold"
+                        fontSize={{ base: "xs", md: "sm", lg: "md" }} // Smaller font sizes
+                        bg="#198754"
                         borderRadius="15px"
                         boxShadow="md"
                         overflow="hidden"
                         transition="all 0.25s"
                         _hover={{
-                            color: "#e8e8e8",
+                            color: "#white",
                             _before: {
                                 width: "100%",
                             },
@@ -122,15 +111,53 @@ const PropertySummary = ({ title, location, category, bedrooms, kitchens, bathro
                             height: "100%",
                             width: "0",
                             borderRadius: "15px",
-                            bg: "#212121",
+                            bg: "#20c997",
                             zIndex: "-1",
                             boxShadow: "md",
                             transition: "all 0.25s",
                         }}
                     >
-                        Send WhatsApp
+                        {callButtonText}
                     </Button>
-                </Box>
+                    <Button
+                        leftIcon={<Icon as={SiWhatsapp} />}
+                        colorScheme="green"
+                        onClick={() => window.open("https://wa.me/123456789", "_blank")}
+                        position="relative"
+                        zIndex="1"
+                        px="4" // Reduced padding on x-axis
+                        py="2" // Reduced padding on y-axis
+                        color="white"
+                        fontWeight="bold"
+                        fontSize={{ base: "xs", md: "sm", lg: "md" }} // Smaller font sizes
+                        bg="#198754"
+                        borderRadius="15px"
+                        boxShadow="md"
+                        overflow="hidden"
+                        transition="all 0.25s"
+                        _hover={{
+                            color: "#white",
+                            _before: {
+                                width: "100%",
+                            },
+                        }}
+                        _before={{
+                            content: '""',
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                            height: "100%",
+                            width: "0",
+                            borderRadius: "15px",
+                            bg: "#20c997",
+                            zIndex: "-1",
+                            boxShadow: "md",
+                            transition: "all 0.25s",
+                        }}
+                    >
+                        {whatssapButtonText}
+                    </Button>
+                </Flex>
             </Box>
         </Box>
     );
