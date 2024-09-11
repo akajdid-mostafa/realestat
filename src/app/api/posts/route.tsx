@@ -20,16 +20,16 @@ export function OPTIONS() {
 const prisma = new PrismaClient();
 
 cloudinary.config({
-  cloud_name: 'dtcfvpu6n',
-  api_key: '813952658855993',
-  api_secret: '41BFZx9tensYKPnhu3CppsmU9Ng',
+  cloud_name: 'dab60xyhf',
+  api_key: '141321481661693',
+  api_secret: 'T9zFUC5NdH51iFiSeOpyfGUlO1I',
 });
 
-// POST handler
+// POST 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { datePost, lat, lon, prix, adress, ville, status, title, categoryId, typeId, Detail, img, youtub } = body;
+    const { datePost, lat, lon, prix, adress, ville, status, title, categoryId, typeId, Detail, img, youtub } = body; 
 
     console.log('Received data:', body);
 
@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
     );
 
     const date = new Date(datePost);
-    date.setHours(0, 0, 0, 0);
+    date.setHours(0, 0, 0, 0); 
 
     // Create the post in the database
     const post = await prisma.post.create({
@@ -110,7 +110,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// GET handler
+// GET 
 export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
@@ -164,26 +164,8 @@ export async function GET(req: NextRequest) {
 
     await Promise.all(
       posts.map(async (post) => {
-        const dateFine = post.DateReserve?.dateFine;
-
-        if (post.category?.name === CategoryName.Location) {
-          if (dateFine) {
-            await prisma.post.update({
-              where: { id: post.id },
-              data: { status: Status.available },
-            });
-          } else {
-            await prisma.post.update({
-              where: { id: post.id },
-              data: { status: Status.taken },
-            });
-          }
-        } else if (post.category?.name === CategoryName.Vente || (post.DateReserve && (post.DateReserve.dateDebut === null || post.DateReserve.dateFine === null))) {
-          await prisma.post.update({
-            where: { id: post.id },
-            data: { status: Status.taken },
-          });
-        } else if (post.category?.name === CategoryName.Vente && post.DateReserve) {
+        if (post.category?.name === CategoryName.Vente && post.DateReserve) {
+          const dateFine = post.DateReserve.dateFine;
           if (dateFine && new Date(dateFine) < currentDate) {
             await prisma.post.update({
               where: { id: post.id },
@@ -204,10 +186,9 @@ export async function GET(req: NextRequest) {
       const day = String(date.getDate()).padStart(2, '0');
       const month = String(date.getMonth() + 1).padStart(2, '0');
       const year = date.getFullYear();
-
       return {
         ...post,
-        datePost: `${day}-${month}-${year}`,  // Corrected interpolation
+        datePost: `${day}-${month}-${year}`,
         youtub: post.youtub,
       };
     });
