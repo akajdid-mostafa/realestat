@@ -10,7 +10,7 @@ export async function OPTIONS(req: Request) {
   return new NextResponse(null, {
     status: 204,
     headers: {
-      'Access-Control-Allow-Origin': 'http://localhost:3000', // Replace with your frontend's origin
+      'Access-Control-Allow-Origin': 'http://localhost:3000', 
       'Access-Control-Allow-Methods': 'POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization',
       'Access-Control-Allow-Credentials': 'true',

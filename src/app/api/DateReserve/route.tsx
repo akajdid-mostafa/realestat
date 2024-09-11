@@ -1,64 +1,100 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, CategoryName, Status } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-// Create a new DateReserve entry
+function formatDateToYYYYMMDD(date: Date): string {
+  return date.toISOString().split('T')[0];
+}
+
 export async function POST(req: Request) {
   try {
-    // Parse the incoming JSON request body
-    const { dateDebut, dateFine, fullName,price, CIN, postId } = await req.json();
+    const { dateDebut, dateFine, fullName, price, CIN, postId } = await req.json();
 
-    // Validate required fields
-    if (!dateDebut || !dateFine || !fullName || !CIN || !postId) {
+    if (!fullName || !CIN || !postId) {
       throw new Error('Missing required fields');
     }
 
-    // Ensure that postId exists in the Post table
-    const postExists = await prisma.post.findUnique({
+    const post = await prisma.post.findUnique({
       where: { id: postId },
+      include: { category: true },
     });
 
-    if (!postExists) {
+    if (!post) {
       throw new Error('Post with the given ID does not exist');
     }
 
-    // Create the DateReserve entry
+    const isDateNull = dateDebut === null && dateFine === null;
+
+    const dateReserveData = {
+      dateDebut: dateDebut ? new Date(dateDebut) : null,
+      dateFine: dateFine ? new Date(dateFine) : null,
+      fullName,
+      price,
+      CIN,
+      post: { connect: { id: postId } },
+    };
+
     const dateReserve = await prisma.dateReserve.create({
-      data: {
-        dateDebut: new Date(dateDebut),
-        dateFine: new Date(dateFine),
-        fullName,
-        price,
-        CIN,
-        post: { connect: { id: postId } }, // Connect the DateReserve to the Post
-      },
+      data: dateReserveData,
     });
 
-    // Return the created DateReserve as a JSON response
-    return NextResponse.json(dateReserve, { status: 201 });
+    if (post.category?.name === CategoryName.Location) {
+      if (dateFine) {
+        await prisma.post.update({
+          where: { id: postId },
+          data: { status: Status.available },
+        });
+      } else {
+        await prisma.post.update({
+          where: { id: postId },
+          data: { status: Status.taken },
+        });
+      }
+    } else if (post.category?.name === CategoryName.Vente || isDateNull) {
+      await prisma.post.update({
+        where: { id: postId },
+        data: { status: Status.taken },
+      });
+    }
 
+    const formattedDateReserve = {
+      ...dateReserve,
+      dateDebut: dateReserve.dateDebut ? formatDateToYYYYMMDD(dateReserve.dateDebut) : null,
+      dateFine: dateReserve.dateFine ? formatDateToYYYYMMDD(dateReserve.dateFine) : null,
+    };
+
+    return NextResponse.json(formattedDateReserve, { status: 201 });
   } catch (error) {
-    // Log and return error
     console.error('Detailed error:', error);
-    return NextResponse.json({ error: `Error creating DateReserve: ${error.message}` }, { status: 400 });
+    return NextResponse.json(
+      { error: `Error creating DateReserve: ${error instanceof Error ? error.message : 'Unknown error'}` },
+      { status: 400 }
+    );
   }
 }
 
-// Get all DateReserve entries
-export async function GET(req: Request) {
+export async function GET() {
   try {
     const dateReserves = await prisma.dateReserve.findMany({
       include: {
-        post: true, // Include related post information
+        post: true,
       },
+      orderBy: {
+        updatedAt: 'desc',
+      },
+      take: 10, 
     });
+  
+    const formattedDateReserves = dateReserves.map(dateReserve => ({
+      ...dateReserve,
+      dateDebut: dateReserve.dateDebut ? formatDateToYYYYMMDD(dateReserve.dateDebut) : null,
+      dateFine: dateReserve.dateFine ? formatDateToYYYYMMDD(dateReserve.dateFine) : null,
+    }));
 
-    // Return all DateReserve entries as a JSON response
-    return NextResponse.json(dateReserves, { status: 200 });
+    return NextResponse.json(formattedDateReserves, { status: 200 });
   } catch (error) {
-    // Log and return error
     console.error('Detailed error:', error);
-    return NextResponse.json({ error: `Error fetching DateReserves: ${error.message}` }, { status: 500 });
+    return NextResponse.json({ error: `Error fetching DateReserves: ${error instanceof Error ? error.message : 'Unknown error'}` }, { status: 500 });
   }
 }
