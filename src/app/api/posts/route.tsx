@@ -183,7 +183,7 @@ export async function GET(req: NextRequest) {
             where: { id: post.id },
             data: { status: Status.taken },
           });
-        } else if (post.category?.name === CategoryName.Location && post.DateReserve) {
+        } else if (post.category?.name === CategoryName.Vente && post.DateReserve) {
           if (dateFine && new Date(dateFine) < currentDate) {
             await prisma.post.update({
               where: { id: post.id },
