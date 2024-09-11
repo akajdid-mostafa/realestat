@@ -16,8 +16,9 @@ function setCorsHeaders(response) {
 }
 
 // Handle OPTIONS request
+// Handle OPTIONS request
 export async function OPTIONS(req) {
-  return NextResponse.json(null, {
+  return new NextResponse(null, {
     status: 204,
     headers: {
       'Access-Control-Allow-Origin': '*',
@@ -27,6 +28,7 @@ export async function OPTIONS(req) {
     },
   });
 }
+
 
 // Handle POST request
 export async function POST(req) {
