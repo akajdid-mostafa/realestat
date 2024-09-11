@@ -125,3 +125,74 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: 'Error updating post', details: errorMessage }, { status: 500 });
   }
 }
+export async function GET(req: Request) {
+  const id = req.url.split('/').pop();
+
+  if (!id || isNaN(Number(id))) {
+    return NextResponse.json({ error: 'Invalid or missing ID' }, { status: 400 });
+  }
+
+  try {
+    const post = await prisma.post.findUnique({
+      where: { id: Number(id) },
+      include: {
+        category: true,
+        type: true,
+        Detail: true,
+        DateReserve: true,
+      },
+    });
+
+    if (!post) {
+      return NextResponse.json({ error: 'Post not found' }, { status: 404 });
+    }
+
+    return NextResponse.json(post, { status: 200 });
+  } catch (error: any) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('Error fetching post:', errorMessage);
+    return NextResponse.json({ error: 'Error fetching post', details: errorMessage }, { status: 500 });
+  }
+}
+export async function DELETE(req: Request) {
+  const id = req.url.split('/').pop();
+
+  if (!id || isNaN(Number(id))) {
+    return NextResponse.json({ error: 'Invalid or missing ID' }, { status: 400 });
+  }
+
+  try {
+    const post = await prisma.post.findUnique({
+      where: { id: Number(id) },
+    });
+
+    if (!post) {
+      return NextResponse.json({ error: 'Post not found' }, { status: 404 });
+    }
+
+    
+    if (post.img && Array.isArray(post.img)) {
+      await Promise.all(
+        post.img.map(async (image) => {
+          if (image) {
+            const publicId = image.split('/').pop()?.split('.')[0];
+            if (publicId) {
+              await cloudinary.uploader.destroy(publicId);
+            }
+          }
+        })
+      );
+    }
+
+    
+    await prisma.post.delete({
+      where: { id: Number(id) },
+    });
+
+    return NextResponse.json({ message: 'Post deleted successfully' }, { status: 200 });
+  } catch (error: any) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('Error deleting post:', errorMessage);
+    return NextResponse.json({ error: 'Error deleting post', details: errorMessage }, { status: 500 });
+  }
+}
