@@ -8,7 +8,7 @@ import { RiTeamFill } from 'react-icons/ri';
 const About = () => {
     return (
         <main>
-           
+           <p>dws</p>
         </main>
     );
 };
