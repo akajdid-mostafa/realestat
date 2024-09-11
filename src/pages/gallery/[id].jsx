@@ -54,7 +54,7 @@ const HouseDetails = ({ house, siteInfo }) => {
 						{house.title}
 					</Heading>
 
-					<Carousel photos={photos} />
+				
 
 					<Stack
 						direction={['column', 'row']}
@@ -128,9 +128,7 @@ const HouseDetails = ({ house, siteInfo }) => {
 
 					</Stack>
 
-					<Box mb={'3rem'}>
-						<CmsRichText text={house.description} siteInfo={siteInfo} />
-					</Box>
+					
 				</Container>
 			</Layout>
 		</>
