@@ -115,8 +115,7 @@ export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
     const postId = url.searchParams.get('id');
-
-    // Fetch a specific post by ID
+    
     if (postId) {
       const post = await prisma.post.findUnique({
         where: { id: parseInt(postId) },
@@ -132,22 +131,20 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ error: 'Post not found' }, { status: 404 });
       }
 
-      // Formatting the date of the post
       const date = new Date(post.datePost);
       const day = String(date.getDate()).padStart(2, '0');
       const month = String(date.getMonth() + 1).padStart(2, '0');
       const year = date.getFullYear();
-      
+
       const formattedPost = {
         ...post,
-        datePost: `${day}-${month}-${year}`,  // Fixed template literal usage
-        youtub: post.youtub, // Keeping existing data
+        datePost: `${day}-${month}-${year}`,  // Corrected interpolation
+        youtub: post.youtub,
       };
 
       return NextResponse.json(formattedPost, { status: 200 });
     }
 
-    // Fetch multiple posts
     const posts = await prisma.post.findMany({
       include: {
         category: true,
@@ -165,11 +162,28 @@ export async function GET(req: NextRequest) {
 
     const currentDate = new Date();
 
-    // Update status of posts based on DateReserve
     await Promise.all(
       posts.map(async (post) => {
-        if (post.category?.name === CategoryName.Vente && post.DateReserve) {
-          const dateFine = post.DateReserve.dateFine;
+        const dateFine = post.DateReserve?.dateFine;
+
+        if (post.category?.name === CategoryName.Location) {
+          if (dateFine) {
+            await prisma.post.update({
+              where: { id: post.id },
+              data: { status: Status.available },
+            });
+          } else {
+            await prisma.post.update({
+              where: { id: post.id },
+              data: { status: Status.taken },
+            });
+          }
+        } else if (post.category?.name === CategoryName.Vente || (post.DateReserve && (post.DateReserve.dateDebut === null || post.DateReserve.dateFine === null))) {
+          await prisma.post.update({
+            where: { id: post.id },
+            data: { status: Status.taken },
+          });
+        } else if (post.category?.name === CategoryName.Location && post.DateReserve) {
           if (dateFine && new Date(dateFine) < currentDate) {
             await prisma.post.update({
               where: { id: post.id },
@@ -185,16 +199,16 @@ export async function GET(req: NextRequest) {
       })
     );
 
-    // Format the date of multiple posts
     const formattedPosts = posts.map((post) => {
       const date = new Date(post.datePost);
       const day = String(date.getDate()).padStart(2, '0');
       const month = String(date.getMonth() + 1).padStart(2, '0');
       const year = date.getFullYear();
+
       return {
         ...post,
-        datePost: `${day}-${month}-${year}`, // Fixed template literal usage
-        youtub: post.youtub, // Keeping existing data
+        datePost: `${day}-${month}-${year}`,  // Corrected interpolation
+        youtub: post.youtub,
       };
     });
 
