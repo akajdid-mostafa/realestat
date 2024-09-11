@@ -42,8 +42,9 @@ export async function GET(req: Request) {
     const response = NextResponse.json(category, { status: 200 });
     return setCorsHeaders(response);
   } catch (error) {
-    console.error('Error fetching category by ID:', error.message || error);
-    const response = NextResponse.json({ error: 'Error fetching category by ID', details: error.message || error }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('Error fetching category by ID:', errorMessage);
+    const response = NextResponse.json({ error: 'Error fetching category by ID', details: errorMessage }, { status: 500 });
     return setCorsHeaders(response);
   }
 }
@@ -66,8 +67,9 @@ export async function PUT(req: Request) {
     const response = NextResponse.json(updatedCategory, { status: 200 });
     return setCorsHeaders(response);
   } catch (error) {
-    console.error('Error updating category:', error.message || error);
-    const response = NextResponse.json({ error: 'Error updating category', details: error.message || error }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('Error updating category:', errorMessage);
+    const response = NextResponse.json({ error: 'Error updating category', details: errorMessage }, { status: 500 });
     return setCorsHeaders(response);
   }
 }
@@ -88,8 +90,9 @@ export async function DELETE(req: Request) {
     const response = NextResponse.json({ message: 'Category deleted successfully' }, { status: 200 });
     return setCorsHeaders(response);
   } catch (error) {
-    console.error('Error deleting category:', error.message || error);
-    const response = NextResponse.json({ error: 'Error deleting category', details: error.message || error }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('Error deleting category:', errorMessage);
+    const response = NextResponse.json({ error: 'Error deleting category', details: errorMessage }, { status: 500 });
     return setCorsHeaders(response);
   }
 }

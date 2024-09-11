@@ -6,13 +6,13 @@ import jwt from 'jsonwebtoken';
 const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET || 'a5f719ac8b4b73f2a620fd73c85a7d5f79b52fcfcdc5d57c8e8f749ad7e315c47230483d7db1525f20c5c4fd65423e9c9c8244d4f7bc9cfd5753fbb4f8439f60';
 
-export function setCorsHeaders(response: NextResponse): NextResponse {
-  response.headers.set('Access-Control-Allow-Origin', '*'); // Allow all origins
-  response.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS'); // Allowed methods
-  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Allowed headers
-  response.headers.set('Access-Control-Allow-Credentials', 'true'); // Allow credentials
-  return response;
-}
+// export function setCorsHeaders(response: NextResponse): NextResponse {
+//   response.headers.set('Access-Control-Allow-Origin', '*'); // Allow all origins
+//   response.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS'); // Allowed methods
+//   response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Allowed headers
+//   response.headers.set('Access-Control-Allow-Credentials', 'true'); // Allow credentials
+//   return response;
+// }
 
 export async function OPTIONS(req: Request) {
   return NextResponse.json(null, {
@@ -52,10 +52,10 @@ export async function POST(req: Request) {
     );
 
     // Use setCorsHeaders utility or set headers manually
-    return setCorsHeaders(response);  // Applying CORS headers
+    return response;  // Applying CORS headers
   } catch (error) {
-    console.error('Error during login:', error.message);
-    console.error('Stack trace:', error.stack);
+    console.error('Error during login:',  error instanceof Error ? error.message : 'Unknown error');
+    console.error('Stack trace:',  error instanceof Error ? error.message : 'Unknown error');
 
     return NextResponse.json({ error: 'Error logging in' }, { status: 500 });
   }

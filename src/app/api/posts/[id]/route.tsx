@@ -4,7 +4,6 @@ import { v2 as cloudinary } from 'cloudinary';
 
 const prisma = new PrismaClient();
 
-
 cloudinary.config({
   cloud_name: 'dab60xyhf',
   api_key: '141321481661693',
@@ -28,7 +27,7 @@ export async function PUT(req: Request) {
     youtub,
   } = await req.json();
 
-  if (!id || isNaN(Number(id))) {
+  if (typeof id !== 'string' || isNaN(Number(id))) {
     return NextResponse.json({ error: 'Invalid or missing ID' }, { status: 400 });
   }
 
@@ -41,7 +40,6 @@ export async function PUT(req: Request) {
   }
 
   try {
-    
     if (categoryId) {
       const categoryExists = await prisma.category.findUnique({
         where: { id: categoryId },
@@ -52,7 +50,6 @@ export async function PUT(req: Request) {
       }
     }
 
-   
     if (typeId) {
       const typeExists = await prisma.type.findUnique({
         where: { id: typeId },
@@ -63,7 +60,6 @@ export async function PUT(req: Request) {
       }
     }
 
-    
     const existingPost = await prisma.post.findUnique({
       where: { id: Number(id) },
     });
@@ -72,13 +68,12 @@ export async function PUT(req: Request) {
       return NextResponse.json({ error: 'Post not found' }, { status: 404 });
     }
 
-    let uploadedImages = existingPost.img;
+    let uploadedImages: string[] = existingPost.img as string[]; // Ensure `img` is an array of strings
 
-   
     if (img && Array.isArray(img) && img.length > 0) {
       if (existingPost.img && Array.isArray(existingPost.img)) {
         await Promise.all(
-          existingPost.img.map(async (image) => {
+          (existingPost.img as string[]).map(async (image) => {
             if (image) { 
               const publicId = image.split('/').pop()?.split('.')[0]; 
               if (publicId) {
@@ -88,10 +83,9 @@ export async function PUT(req: Request) {
           })
         );
       }
-    
-      
+
       uploadedImages = await Promise.all(
-        img.map(async (imageUrl) => {
+        img.map(async (imageUrl: string) => {
           const result = await cloudinary.uploader.upload(imageUrl, {
             folder: 'your_folder_name',
           });
@@ -99,9 +93,7 @@ export async function PUT(req: Request) {
         })
       );
     }
-    
 
-   
     const updatedPost = await prisma.post.update({
       where: { id: Number(id) },
       data: {
