@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import { MdOutgoingMail ,MdPhoneInTalk ,MdLocationOn ,MdAccessTimeFilled  } from 'react-icons/md';
+import { MdOutgoingMail, MdPhoneInTalk, MdLocationOn, MdAccessTimeFilled } from 'react-icons/md';
 import { FaFacebookF, FaInstagram } from 'react-icons/fa';
 import { FiYoutube } from 'react-icons/fi';
 import { BsTwitterX } from 'react-icons/bs';
@@ -27,7 +27,7 @@ export default function Footer() {
                         <ul className="flex space-x-3">
                             {/* Social Icons */}
                             <li>
-                                <a href="mailto:maroc.immocean@gmail.com" title="Twitter" className="flex items-center justify-center text-white transition-all duration-200 bg-gray-800 rounded-full w-8 h-8 hover:bg-blue-600 focus:bg-blue-600">
+                                <a href="mailto:maroc.immocean@gmail.com" title="Email" className="flex items-center justify-center text-white transition-all duration-200 bg-gray-800 rounded-full w-8 h-8 hover:bg-blue-600 focus:bg-blue-600">
                                     <MdOutgoingMail className="w-5 h-5" />
                                 </a>
                             </li>
@@ -37,7 +37,7 @@ export default function Footer() {
                                 </a>
                             </li>
                             <li>
-                                <a href="#" title="Instagram" className="flex items-center justify-center text-white transition-all duration-200 bg-gray-800 rounded-full w-8 h-8 hover:bg-blue-600 focus:bg-blue-600">
+                                <a href="https://www.instagram.com/immocean" title="Instagram" className="flex items-center justify-center text-white transition-all duration-200 bg-gray-800 rounded-full w-8 h-8 hover:bg-blue-600 focus:bg-blue-600">
                                     <FaInstagram className="w-5 h-5" />
                                 </a>
                             </li>
@@ -47,7 +47,7 @@ export default function Footer() {
                                 </a>
                             </li>
                             <li>
-                                <a href="#" title="Twitter" className="flex items-center justify-center text-white transition-all duration-200 bg-gray-800 rounded-full w-8 h-8 hover:bg-blue-600 focus:bg-blue-600">
+                                <a href="https://twitter.com/immocean" title="Twitter" className="flex items-center justify-center text-white transition-all duration-200 bg-gray-800 rounded-full w-8 h-8 hover:bg-blue-600 focus:bg-blue-600">
                                     <BsTwitterX className="w-5 h-5" />
                                 </a>
                             </li>
@@ -56,7 +56,7 @@ export default function Footer() {
                     
                     {/* Contact Information */}
                     <div>
-                        <p className="text-sm font-semibold tracking-widest text-gray-400 uppercase">CNTACT US</p>
+                        <p className="text-sm font-semibold tracking-widest text-gray-400 uppercase">Contact Us</p>
                         <ul className="mt-6 space-y-4">
                             <li className="flex items-center text-base text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600">
                                 <a href="mailto:maroc.immocean@gmail.com" className="flex items-center space-x-2">
@@ -65,7 +65,7 @@ export default function Footer() {
                                 </a>
                             </li>
                             <li className="flex items-center text-base text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600">
-                                <a href="tel:(+212)808649090" className="flex items-center space-x-2">
+                                <a href="tel:+212808649090" className="flex items-center space-x-2">
                                     <MdPhoneInTalk className="w-5 h-5" />
                                     <span>(+212) 808 649 090</span>
                                 </a>
@@ -79,7 +79,7 @@ export default function Footer() {
                             <li className="flex items-center text-base text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600">
                                 <a href="#" className="flex items-center space-x-2">
                                     <MdAccessTimeFilled className="w-5 h-5" />
-                                    <span>9:00 PM TO 18:00 PM</span>
+                                    <span>9:00 AM to 6:00 PM</span>
                                 </a>
                             </li>
                         </ul>
@@ -87,7 +87,7 @@ export default function Footer() {
                     
                     {/* Newsletter Subscription */}
                     <div className="flex flex-col space-y-6">
-                        <p className="text-sm font-semibold tracking-widest text-gray-400 uppercase">Subscribe to newsletter</p>
+                        <p className="text-sm font-semibold tracking-widest text-gray-400 uppercase">Subscribe to Newsletter</p>
                         <form action="#" method="POST" className="flex flex-col space-y-4">
                             <div>
                                 <label htmlFor="email" className="sr-only">Email</label>
