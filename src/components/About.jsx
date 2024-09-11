@@ -9,6 +9,7 @@ const About = () => {
     return (
         <main>
            <p>dws</p>
+           <p>dws</p>
         </main>
     );
 };
