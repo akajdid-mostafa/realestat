@@ -7,15 +7,39 @@ import {
 } from "@chakra-ui/react";
 
 const PropertyMoreDetail = ({
+    rooms,
     bedrooms,
     kitchens,
     bathrooms,
     area,
     yearBuilt,
     floor,
-    facing,
-    legalDocuments
+    facing
 }) => {
+    // Check if all props are null
+    if (!rooms && !bedrooms && !kitchens && !bathrooms && !area && !yearBuilt && !floor && !facing) {
+        return null; // Do not render the component
+    }
+
+    // Collect all items in an array
+    const items = [
+        rooms && { label: "Nombre de pièces", value: rooms },
+        bedrooms && { label: "Chambres à coucher :", value: bedrooms },
+        kitchens && { label: "Cuisine :", value: kitchens },
+        bathrooms && { label: "Salles de bains :", value: bathrooms },
+        area && { label: "Surface :", value: `${area} m²` },
+        yearBuilt && { label: "Construction year :", value: yearBuilt },
+        floor && { label: "Floor :", value: floor },
+        facing && { label: "Faces :", value: facing }
+    ].filter(Boolean); // Filter out undefined items
+
+    // Determine the split point for the items
+    const splitIndex = Math.ceil(items.length / 2);
+
+    // Split items into two groups
+    const firstBoxItems = items.slice(0, splitIndex);
+    const secondBoxItems = items.slice(splitIndex);
+
     return (
         <Flex direction="column" gap={4}>
             <Box position="relative" mt={4} mb={4}>
@@ -24,7 +48,7 @@ const PropertyMoreDetail = ({
                     fontSize={{ base: "xl", md: "2xl" }}
                     fontWeight="bold"
                     pl={6}
-                     // Padding left to give space for the red line
+                // Padding left to give space for the red line
                 >
                     Propriété Plus de détails
                 </Text>
@@ -35,79 +59,33 @@ const PropertyMoreDetail = ({
                     <Flex
                         direction={["column", "row"]}
                         justify="space-between"
-                        align={["flex-start", "center"]}
+                        align="flex-start"
                     >
                         <Box flex="1" pr={4} fontWeight={{ base: "semibold", md: "bold" }}>
-                            <Flex direction="row" gap={14} my={4}>
-                                <Box>
-                                    <Text fontSize="md" lineHeight="2">
-                                        Chambres à coucher :
-                                    </Text>
-                                    <Text fontSize="md" lineHeight="2">
-                                        Cuisine :
-                                    </Text>
-                                    <Text fontSize="md" lineHeight="2">
-                                        Salles de bains :
-                                    </Text>
-                                    <Text fontSize="md" lineHeight="2">
-                                        Surface :
-                                    </Text>
-                                </Box>
-                                <Box>
-                                    <Text fontSize="md" lineHeight="2">
-                                        {bedrooms}
-                                    </Text>
-                                    <Text fontSize="md" lineHeight="2">
-                                        {kitchens}
-                                    </Text>
-                                    <Text fontSize="md" lineHeight="2">
-                                        {bathrooms}
-                                    </Text>
-                                    <Text fontSize="md" lineHeight="2">
-                                        {area}
-                                    </Text>
-                                </Box>
+                            <Flex direction="column" gap={2} my={4}>
+                                {firstBoxItems.map(item => (
+                                    <Flex justify="space-between" key={item.label}>
+                                        <Text fontSize="md" lineHeight="2">{item.label}</Text>
+                                        <Text fontSize="md" lineHeight="2">{item.value}</Text>
+                                    </Flex>
+                                ))}
                             </Flex>
                         </Box>
-                        {/* Vertical Divider */}
                         <Divider
                             orientation="vertical"
-                            borderColor="blue.800" // Updated divider color
+                            borderColor="blue.800"
                             display={["none", "block"]}
-                            minHeight="150px" // Set a specific minimum height
                             borderWidth="1.5px"
                             mr={6}
                         />
                         <Box flex="1" fontWeight={{ base: "semibold", md: "bold" }}>
-                            <Flex direction="row" gap={8} my={4}>
-                                <Box>
-                                    <Text fontSize="md" lineHeight="2">
-                                        Construction year :
-                                    </Text>
-                                    <Text fontSize="md" lineHeight="2">
-                                        Floor :
-                                    </Text>
-                                    <Text fontSize="md" lineHeight="2">
-                                        Faces :
-                                    </Text>
-                                    <Text fontSize="md" lineHeight="2">
-                                        Les documents juridiques :
-                                    </Text>
-                                </Box>
-                                <Box>
-                                    <Text fontSize="md" lineHeight="2">
-                                        {yearBuilt}
-                                    </Text>
-                                    <Text fontSize="md" lineHeight="2">
-                                        {floor}
-                                    </Text>
-                                    <Text fontSize="md" lineHeight="2">
-                                        {facing}
-                                    </Text>
-                                    <Text fontSize="md" lineHeight="2">
-                                        {legalDocuments}
-                                    </Text>
-                                </Box>
+                            <Flex direction="column" gap={2} my={4}>
+                                {secondBoxItems.map(item => (
+                                    <Flex justify="space-between" key={item.label}>
+                                        <Text fontSize="md" lineHeight="2">{item.label}</Text>
+                                        <Text fontSize="md" lineHeight="2">{item.value}</Text>
+                                    </Flex>
+                                ))}
                             </Flex>
                         </Box>
                     </Flex>

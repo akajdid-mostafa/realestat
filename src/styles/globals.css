@@ -45,3 +45,42 @@
     transform: scale(1.05);
     background-color: #2c5282; /* Darker blue */
 }
+
+/* styles.css */
+@keyframes box1 {
+  0%, 50% { transform: translate(100%, 0); }
+  100% { transform: translate(200%, 0); }
+}
+
+@keyframes box2 {
+  0% { transform: translate(0, 100%); }
+  50% { transform: translate(0, 0); }
+  100% { transform: translate(100%, 0); }
+}
+
+@keyframes box3 {
+  0%, 50% { transform: translate(100%, 100%); }
+  100% { transform: translate(0, 100%); }
+}
+
+@keyframes box4 {
+  0% { transform: translate(200%, 0); }
+  50% { transform: translate(200%, 100%); }
+  100% { transform: translate(100%, 100%); }
+}
+
+.boxes .box:nth-child(1) {
+  animation: box1 var(--duration) linear infinite;
+}
+
+.boxes .box:nth-child(2) {
+  animation: box2 var(--duration) linear infinite;
+}
+
+.boxes .box:nth-child(3) {
+  animation: box3 var(--duration) linear infinite;
+}
+
+.boxes .box:nth-child(4) {
+  animation: box4 var(--duration) linear infinite;
+}

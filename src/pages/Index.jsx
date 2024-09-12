@@ -12,25 +12,28 @@ import Abouta from "../components/Index/abou";
 import Counters from "../components/Index/Counters";
 import CardService from '../components/service';
 
-const HomePage = ({ siteInfo }) => {
+
+
+const HomePage = ({ siteInfo, isLoading }) => { // Added isLoading to the function parameters
   return (
     <ChakraBaseProvider theme={theme}>
-      <Layout siteInfo={siteInfo}>
-        <Hero />
-        <Popular />
-        <CardService />
-        <HomeFinancingSteps />
-        <Abouta />
-        <br></br>
-        <Counters />
-        <Cta3 />
-        <Box  >
-          <Container maxW="container.xl" py={4}>
-            <ContactForm />
-          </Container>
-        </Box>
-      </Layout>
-      <Footer />
+      
+        <Layout siteInfo={siteInfo}>
+          <Hero />
+          <Popular />
+          <CardService />
+          <HomeFinancingSteps />
+          <Abouta />
+          <br />
+          <Counters />
+          <Cta3 />
+          <Box>
+            <Container maxW="container.xl" py={4}>
+              <ContactForm />
+            </Container>
+          </Box>
+          <Footer /> // Moved inside the Layout component
+        </Layout>
     </ChakraBaseProvider>
   );
 };

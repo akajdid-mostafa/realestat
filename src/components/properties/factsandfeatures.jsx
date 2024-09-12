@@ -20,7 +20,14 @@ import { RiSofaFill } from "react-icons/ri";
 import { GiElevator, GiSecurityGate } from "react-icons/gi";
 import { IoDocumentsSharp } from "react-icons/io5";
 
-const FactsAndFeatures = () => {
+const FactsAndFeatures = ({
+  furnished,
+  elevator,
+  parking,
+  balcony,
+  pool,
+  documents
+}) => {
   const iconColor = "blue.600"; // Define a consistent icon color
   const bgColor = "blue.100"; // Define a consistent background color for circles
 
@@ -53,7 +60,7 @@ const FactsAndFeatures = () => {
           </Box>
           <Box>
             <Text fontWeight="semibold">Furniture </Text>
-            <Text color="gray.500">Available</Text>
+            <Text color="gray.500">{furnished}</Text>
           </Box>
         </Flex>
         <Flex align="center" spacing={4}>
@@ -70,8 +77,8 @@ const FactsAndFeatures = () => {
             <Icon as={GiElevator} color={iconColor} w={6} h={6} />
           </Box>
           <Box>
-            <Text fontWeight="semibold">Elevator</Text>
-            <Text color="gray.500">Available</Text>
+            <Text fontWeight="semibold">Ascenseur</Text>
+            <Text color="gray.500">{elevator}</Text>
           </Box>
         </Flex>
         <Flex align="center" spacing={4}>
@@ -89,7 +96,7 @@ const FactsAndFeatures = () => {
           </Box>
           <Box>
             <Text fontWeight="semibold">Parking </Text>
-            <Text color="gray.500">Available</Text>
+          <Text color="gray.500">{parking}</Text>
           </Box>
         </Flex>
         <Flex align="center" spacing={4}>
@@ -107,7 +114,7 @@ const FactsAndFeatures = () => {
           </Box>
           <Box>
             <Text fontWeight="semibold">Balcon </Text>
-            <Text color="gray.500">Available</Text>
+            <Text color="gray.500">{balcony}</Text>
           </Box>
         </Flex>
         <Flex align="center" spacing={4}>
@@ -124,8 +131,8 @@ const FactsAndFeatures = () => {
             <Icon as={MdPool} color={iconColor} w={6} h={6} />
           </Box>
           <Box>
-            <Text fontWeight="semibold">Pool </Text>
-            <Text color="gray.500">Available</Text>
+            <Text fontWeight="semibold">Piscine </Text>
+            <Text color="gray.500">{pool}</Text>
           </Box>
         </Flex>
         <Flex align="center" spacing={4}>
@@ -142,7 +149,7 @@ const FactsAndFeatures = () => {
             <Icon as={GiSecurityGate} color={iconColor} w={6} h={6} />
           </Box>
           <Box>
-            <Text fontWeight="semibold">Guard </Text>
+            <Text fontWeight="semibold">Garde </Text>
             <Text color="gray.500">Available</Text>
           </Box>
         </Flex>
@@ -160,7 +167,7 @@ const FactsAndFeatures = () => {
             <Icon as={MdRealEstateAgent} color={iconColor} w={6} h={6} />
           </Box>
           <Box>
-            <Text fontWeight="semibold">Proprietary</Text>
+            <Text fontWeight="semibold">Propriétaire</Text>
             <Text color="gray.500">Available</Text>
           </Box>
         </Flex>
@@ -178,8 +185,8 @@ const FactsAndFeatures = () => {
             <Icon as={IoDocumentsSharp} color={iconColor} w={6} h={6} />
           </Box>
           <Box>
-            <Text fontWeight="semibold">The documents Legal</Text>
-            <Text color="gray.500">Available</Text>
+            <Text fontWeight="semibold">Les documents juridiques</Text>
+            <Text color="gray.500">{documents}</Text>
           </Box>
         </Flex>
       </SimpleGrid>

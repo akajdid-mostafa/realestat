@@ -1,22 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Grid, Button, Flex } from '@chakra-ui/react';
 import PropertyCard from './PropertyCard';
-import PropertyDetailModal from './PropertyDetailModal'; // Ensure this is your detailed modal component
+import PropertyDetailModal from './PropertyDetailModal';
 import { useRouter } from 'next/router';
-import { cardData } from '../data'; // Import your data
 
-const PropertyList = ({ properties = [] }) => {
-    const [currentPage, setCurrentPage] = useState(1);
+const POSTS_API_URL = 'https://immoceanrepo.vercel.app/api/posts';
+
+const PropertyList = () => {
+    const [properties, setProperties] = useState([]);
     const [selectedProperty, setSelectedProperty] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
     const router = useRouter();
     const itemsPerPage = 6;
-    const totalPages = Math.ceil(properties.length / itemsPerPage);
+
+    useEffect(() => {
+        const fetchProperties = async () => {
+            try {
+                const response = await fetch(POSTS_API_URL);
+                const data = await response.json();
+                setProperties(data);
+            } catch (error) {
+                console.error('Error fetching properties:', error);
+            }
+        };
+        fetchProperties();
+    }, []);
 
     useEffect(() => {
         const { query } = router;
         if (query.modal === 'yes' && query.id) {
             const propertyId = parseInt(query.id, 10);
-            const property = cardData.find(item => item.id === propertyId);
+            const property = properties.find(item => item.id === propertyId);
             if (property) {
                 setSelectedProperty(property);
             } else {
@@ -25,14 +39,12 @@ const PropertyList = ({ properties = [] }) => {
         } else {
             setSelectedProperty(null);
         }
-    }, [router.query]);
+    }, [router.query, properties]);
 
-    // Handle page changes
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
     };
 
-    // Calculate the items to display on the current page
     const currentItems = properties.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
@@ -77,7 +89,7 @@ const PropertyList = ({ properties = [] }) => {
                     >
                         Previous
                     </Button>
-                    {Array.from({ length: totalPages }, (_, index) => (
+                    {Array.from({ length: Math.ceil(properties.length / itemsPerPage) }, (_, index) => (
                         <Button
                             key={index}
                             onClick={() => handlePageChange(index + 1)}
@@ -96,7 +108,7 @@ const PropertyList = ({ properties = [] }) => {
                     ))}
                     <Button
                         onClick={() => handlePageChange(currentPage + 1)}
-                        isDisabled={currentPage === totalPages}
+                        isDisabled={currentPage === Math.ceil(properties.length / itemsPerPage)}
                         variant="outline"
                         ml={2}
                         textColor="white"

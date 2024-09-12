@@ -32,11 +32,18 @@ import PropertyMoreDetail from './propertymoredetail';
 import Map from './PropertyLocationMap';
 import PopularCard from './PopularPropertyCard';
 import PropertySummary from './PropertySumary';
-import { cardData } from '../data'; // Import JSON data
 
-const PropertyDetailModal = ({ isOpen, onClose, property }) => {
+const POSTS_API_URL = 'https://immoceanrepo.vercel.app/api/posts';
+const DETAILS_API_URL = 'https://immoceanrepo.vercel.app/api/details';
+
+const PropertyDetailModal = ({ isOpen, onClose }) => {
     const router = useRouter();
     const { query } = router;
+
+    const [property, setProperty] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [message, setMessage] = useState('');
 
     const modalWidth = useBreakpointValue({
         base: "90vw",
@@ -45,14 +52,59 @@ const PropertyDetailModal = ({ isOpen, onClose, property }) => {
     });
 
     useEffect(() => {
-        if (query.modal === 'yes' && query.id) {
-            const fetchedProperty = cardData.find(item => item.id === parseInt(query.id, 10));
-            if (fetchedProperty) {
-                // If fetchedProperty exists, it means data should be present
-                // You might want to update state or similar here if needed
+        const fetchData = async () => {
+            try {
+                if (query.modal === 'yes' && query.id) {
+                    const postId = parseInt(query.id, 10);
+
+                    // Fetch posts data
+                    const postsResponse = await fetch(POSTS_API_URL);
+                    const postsData = await postsResponse.json();
+
+                    // Fetch details data
+                    const detailsResponse = await fetch(DETAILS_API_URL);
+                    const detailsData = await detailsResponse.json();
+
+                    // Find the property from posts
+                    const post = postsData.find(item => item.id === postId);
+                    if (post) {
+                        // Find the corresponding detail
+                        const detail = detailsData.find(d => d.postId === postId);
+
+                        // Combine post and detail data
+                        setProperty({
+                            ...post,
+                            ...detail,
+                            images: post.img, // Assuming images are from the post
+                            youtubeUrl: post.youtub,
+                            location: post.adress,
+                            price: post.prix,
+                            category: post.category.name,
+                            type: post.type.type,
+                        });
+                    } else {
+                        setError('Property not found');
+                    }
+                }
+            } catch (error) {
+                setError('Failed to fetch data');
+                console.error('Error fetching property data:', error);
+            } finally {
+                setLoading(false);
             }
-        }
+        };
+
+        fetchData();
     }, [query]);
+
+    useEffect(() => {
+        if (property) {
+            setMessage(`Je suis intéressé par ${property.title} avec l'ID de référence ${property.id}, au prix de ${property.price} et ...`);
+        }
+    }, [property]);
+
+    if (loading) return <Text>Loading...</Text>;
+    if (error) return <Text>{error}</Text>;
 
     return (
         <Modal isOpen={isOpen} onClose={onClose} size="full">
@@ -78,7 +130,7 @@ const PropertyDetailModal = ({ isOpen, onClose, property }) => {
                         <Text
                             fontSize={{ base: "xl", md: "2xl" }}
                             fontWeight="bold"
-                            pl={6} // Padding left to give space for the blue line
+                            pl={6}
                         >
                             {property?.title || "Loading..."}
                         </Text>
@@ -88,58 +140,65 @@ const PropertyDetailModal = ({ isOpen, onClose, property }) => {
                 <ModalBody>
                     <Flex direction="column" gap={4}>
                         <Box>
-                            {/* Carousel with images */}
                             <Carousel items={property?.images || []} />
                         </Box>
                         <Box>
                             <PropertySummary
                                 title={property?.title}
                                 location={property?.location}
-                                category={property?.category}
+                                category={property?.type}
                                 bedrooms={property?.bedrooms}
-                                kitchens={property?.kitchens}
+                                kitchens={property?.kitchen}
                                 bathrooms={property?.bathrooms}
-                                area={property?.area}
+                                area={property?.surface}
                                 price={property?.price}
                             />
                         </Box>
                         <Flex direction={{ base: "column", lg: "row" }} gap={4}>
                             <Box flex={{ base: "1", lg: "0.7" }}>
                                 <PropertyMoreDetail
-                                    bedrooms={property?.bedrooms}
-                                    kitchens={property?.kitchens}
+                                    rooms={property?.rooms}
+                                    bedrooms={property?.livingrooms}
+                                    kitchens={property?.kitchen}
                                     bathrooms={property?.bathrooms}
-                                    area={property?.area}
-                                    yearBuilt={property?.yearBuilt}
+                                    area={property?.surface}
+                                    yearBuilt={property?.constructionyear}
                                     floor={property?.floor}
-                                    facing={property?.facing}
-                                    legalDocuments={property?.legalDocuments}
+                                    facing={property?.facade}
+
                                 />
-                                <FactsAndFeatures />
+                                <FactsAndFeatures
+                                    furnished={property?.furnished}
+                                    elevator={property?.elevator}
+                                    parking={property?.parking}
+                                    balcony={property?.balcony}
+                                    pool={property?.pool}
+                                    documents={property?.documents}
+                                />
                                 <Box position="relative" mt={4} mb={8}>
                                     <Box position="absolute" left={0} top="50%" transform="translateY(-50%)" width="4px" height="100%" bg="blue.600"></Box>
                                     <Text
                                         fontSize={{ base: "xl", md: "2xl" }}
                                         fontWeight="bold"
-                                        pl={6} // Padding left to give space for the blue line
+                                        pl={6}
                                     >
                                         Localisation sur Google Map
                                     </Text>
                                 </Box>
-                                <Map center={{ lat: property?.latitude, lng: property?.longitude }} zoom={14} />
+                                <Map center={{ lat: property?.lat, lng: property?.lon }} zoom={14} />
                                 <Box>
                                     <Box position="relative" mt={8} mb={8}>
                                         <Box position="absolute" left={0} top="50%" transform="translateY(-50%)" width="4px" height="100%" bg="blue.600"></Box>
                                         <Text
                                             fontSize={{ base: "xl", md: "2xl" }}
                                             fontWeight="bold"
-                                            pl={6} // Padding left to give space for the blue line
+                                            pl={6}
                                         >
                                             Vidéo YouTube
                                         </Text>
                                     </Box>
                                     <VideoSection
-                                        src={property?.urltube}
+                                        src={property?.youtubeUrl}
                                         heading={property?.title}
                                     />
                                 </Box>
@@ -181,8 +240,9 @@ const PropertyDetailModal = ({ isOpen, onClose, property }) => {
                                 <FormControl mb={4}>
                                     <FormLabel>Message</FormLabel>
                                     <Textarea
+                                        value={message}
+                                        onChange={(e) => setMessage(e.target.value)}
                                         placeholder="Your Message"
-                                        defaultValue={`Je suis intéressé par ${property?.title} avec l'ID de référence ${property?.id}, au prix de ${property?.price} et ...`}
                                         style={{
                                             fontWeight: "semibold",
                                             borderColor: 'blue.600',
@@ -211,23 +271,23 @@ const PropertyDetailModal = ({ isOpen, onClose, property }) => {
                             </Box>
                         </Flex>
 
-                         <Box position="relative" mt={8} mb={8}>
-                                        <Box position="absolute" left={0} top="50%" transform="translateY(-50%)" width="4px" height="100%" bg="blue.600"></Box>
-                                        <Text
-                                            fontSize={{ base: "xl", md: "2xl" }}
-                                            fontWeight="bold"
-                                            pl={6} // Padding left to give space for the blue line
-                                        >
-                                            Les plus populaires
-                                        </Text>
-                                    </Box>
+                        <Box position="relative" mt={8} mb={8}>
+                            <Box position="absolute" left={0} top="50%" transform="translateY(-50%)" width="4px" height="100%" bg="blue.600"></Box>
+                            <Text
+                                fontSize={{ base: "xl", md: "2xl" }}
+                                fontWeight="bold"
+                                pl={6}
+                            >
+                                Les plus populaires
+                            </Text>
+                        </Box>
                         <PopularCard />
                         <Image
-                                src="/images/footer-art.svg"
-                                alt=""
-                                width="1200" 
-                                height="160"
-                            />
+                            src="/images/footer-art.svg"
+                            alt=""
+                            width="1200"
+                            height="160"
+                        />
                     </Flex>
                 </ModalBody>
             </ModalContent>

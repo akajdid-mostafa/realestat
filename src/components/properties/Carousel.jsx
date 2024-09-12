@@ -6,10 +6,12 @@ import { MdOutlinePhotoLibrary } from "react-icons/md";
 const Carousel = ({ items = [] }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Responsive itemsToShow
-  const itemsToShow = useBreakpointValue({ base: 1, md: 1, lg: 2 }); // 1 item for small and medium screens, 2 items for large screens
+  const itemsToShow = useBreakpointValue({
+    base: 1,
+    md: 1,
+    lg: items.length > 1 ? 2 : 1
+  });
   const totalItems = items.length;
-
 
   const handlePrev = () => {
     setCurrentIndex((prevIndex) => Math.max(0, prevIndex - 1));
@@ -38,7 +40,7 @@ const Carousel = ({ items = [] }) => {
           w={`${totalItems * (100 / (itemsToShow || 1))}%`}
           h="full"
         >
-          {items.map((item, index) => (
+          {items.map((url, index) => (
             <Box
               key={index}
               minW={`${100 / (itemsToShow || 1)}%`}
@@ -51,7 +53,7 @@ const Carousel = ({ items = [] }) => {
               bg="gray.200"
             >
               <img
-                src={item.url}
+                src={url}
                 alt={`Slide ${index + 1}`}
                 style={{
                   width: "100%",
@@ -75,7 +77,7 @@ const Carousel = ({ items = [] }) => {
         isDisabled={currentIndex <= 0}
         bg="blue.600"
         color="white"
-        size={{ base:"sm" , md:"sm"  , lg:"lg"   }}
+        size={{ base: "sm", md: "sm", lg: "lg" }}
         _hover={{ bg: "gray.300", color: "black" }}
       />
       <IconButton
@@ -89,7 +91,7 @@ const Carousel = ({ items = [] }) => {
         isDisabled={currentIndex >= totalItems - (itemsToShow || 1)}
         bg="blue.600"
         color="white"
-        size={{ base:"sm" , md:"sm"  , lg:"lg"   }}
+        size={{ base: "sm", md: "sm", lg: "lg" }}
         _hover={{ bg: "gray.300", color: "black" }}
       />
       <Box
@@ -105,11 +107,9 @@ const Carousel = ({ items = [] }) => {
         alignItems="center"
         justifyContent="center"
       >
-        <MdOutlinePhotoLibrary   style={{ marginRight: "8px"   }} />
-        <Text fontSize={{ base: "xs", md: "md", lg: "lg" }}  fontWeight="Bold">
-          {currentIndex + 1} -{" "}
-          {Math.min(currentIndex + (itemsToShow || 1), totalItems)} of {totalItems}{" "}
-          Images
+        <MdOutlinePhotoLibrary style={{ marginRight: "8px" }} />
+        <Text fontSize={{ base: "xs", md: "md", lg: "lg" }} fontWeight="bold">
+          {currentIndex + 1} - {Math.min(currentIndex + (itemsToShow || 1), totalItems)} of {totalItems} Images
         </Text>
       </Box>
     </Box>

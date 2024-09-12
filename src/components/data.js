@@ -49,7 +49,10 @@ export const cardData = [
         floor: "Floor 1",
         price: "$300,000",
         phone: "+1234567890",
-        whatsapp: "1234567890"
+        whatsapp: "1234567890",
+        images: [ // Corrected: Added comma after whatsapp property
+            {alt: 'image1', url: 'https://firebasestorage.googleapis.com/v0/b/oceangallery-d06ae.appspot.com/o/Gallery%2FCenter-pictures%2FIMG_4075.jpg?alt=media&token=0fbbc107-22b2-4fed-bbfb-f680799d7075'},
+            ]
     },
     {
         id: 3,
