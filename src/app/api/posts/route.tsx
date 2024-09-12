@@ -19,7 +19,7 @@ export function OPTIONS() {
 }
 const prisma = new PrismaClient();
 
-cloudinary.v2.config({
+cloudinary.config({
   cloud_name: 'dtcfvpu6n',
   api_key: '813952658855993',
   api_secret: '41BFZx9tensYKPnhu3CppsmU9Ng',
@@ -118,7 +118,7 @@ export async function GET(req: NextRequest) {
     
     if (postId) {
       const post = await prisma.post.findUnique({
-        where: { id: parseInt(postId) },
+        where: { id: parseInt(postId, 10) },
         include: {
           category: true,
           type: true,
@@ -126,19 +126,19 @@ export async function GET(req: NextRequest) {
           Detail: true,
         },
       });
-
+      
       if (!post) {
         return NextResponse.json({ error: 'Post not found' }, { status: 404 });
       }
-
+      
       const date = new Date(post.datePost);
       const day = String(date.getDate()).padStart(2, '0');
       const month = String(date.getMonth() + 1).padStart(2, '0');
       const year = date.getFullYear();
-
+      
       const formattedPost = {
         ...post,
-        datePost: `${day}-${month}-${year}`, // Fixed template literal
+        datePost: `${day}-${month}-${year}`, // Fixed template literal syntax
         youtub: post.youtub,
       };
 
@@ -155,9 +155,9 @@ export async function GET(req: NextRequest) {
           });
         }
       } 
-       if (post.category?.name === CategoryName.Vente || !post.DateReserve || (post.DateReserve.dateDebut === null && post.DateReserve.dateFine === null)) {
+      if (post.category?.name === CategoryName.Vente || !post.DateReserve || (post.DateReserve.dateDebut === null && post.DateReserve.dateFine === null)) {
         await prisma.post.update({
-          where: { id: parseInt(postId) },
+          where: { id: parseInt(postId, 10) },
           data: { status: Status.taken },
         });
       }
@@ -197,8 +197,7 @@ export async function GET(req: NextRequest) {
               data: { status: Status.taken },
             });
           }
-        }
-        if (post.category?.name === CategoryName.Vente || (post.DateReserve && post.DateReserve.dateDebut === null && post.DateReserve.dateFine === null)) {
+        } else if (post.category?.name === CategoryName.Vente || (post.DateReserve && post.DateReserve.dateDebut === null && post.DateReserve.dateFine === null)) {
           await prisma.post.update({
             where: { id: post.id },
             data: { status: Status.taken },
@@ -214,13 +213,13 @@ export async function GET(req: NextRequest) {
       const year = date.getFullYear();
       return {
         ...post,
-        datePost: `${day}-${month}-${year}`, // Fixed template literal
+        datePost: `${day}-${month}-${year}`, // Fixed template literal syntax
         youtub: post.youtub,
       };
     });
 
     return NextResponse.json(formattedPosts, { status: 200 });
-  } catch (error: any) {
+  } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     console.error('Error retrieving posts:', errorMessage);
     return NextResponse.json({ error: 'Error retrieving posts', details: errorMessage }, { status: 500 });
