@@ -115,10 +115,10 @@ export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
     const postId = url.searchParams.get('id');
-    
+
     if (postId) {
       const post = await prisma.post.findUnique({
-        where: { id: parseInt(postId) },
+        where: { id: parseInt(postId, 10) },
         include: {
           category: true,
           type: true,
@@ -138,12 +138,12 @@ export async function GET(req: NextRequest) {
 
       const formattedPost = {
         ...post,
-        datePost: `${day}-${month}-${year}`, // Fixed template literal
+        datePost: `${day}-${month}-${year}`,
         youtub: post.youtub,
       };
 
       if (post.category?.name === CategoryName.Location) {
-        if (post.DateReserve && post.DateReserve.dateFine) {
+        if (post.DateReserve?.dateFine) {
           await prisma.post.update({
             where: { id: post.id },
             data: { status: Status.available },
@@ -154,9 +154,13 @@ export async function GET(req: NextRequest) {
             data: { status: Status.taken },
           });
         }
-      } else if (post.category?.name === CategoryName.Vente || !post.DateReserve || (post.DateReserve.dateDebut === null && post.DateReserve.dateFine === null)) {
+      } else if (
+        post.category?.name === CategoryName.Vente ||
+        !post.DateReserve ||
+        (post.DateReserve.dateDebut === null && post.DateReserve.dateFine === null)
+      ) {
         await prisma.post.update({
-          where: { id: parseInt(postId) },
+          where: { id: post.id },
           data: { status: Status.taken },
         });
       }
@@ -196,7 +200,10 @@ export async function GET(req: NextRequest) {
               data: { status: Status.taken },
             });
           }
-        } else if (post.category?.name === CategoryName.Vente || (post.DateReserve && post.DateReserve.dateDebut === null && post.DateReserve.dateFine === null)) {
+        } else if (
+          post.category?.name === CategoryName.Vente ||
+          (post.DateReserve && post.DateReserve.dateDebut === null && post.DateReserve.dateFine === null)
+        ) {
           await prisma.post.update({
             where: { id: post.id },
             data: { status: Status.taken },
@@ -212,7 +219,7 @@ export async function GET(req: NextRequest) {
       const year = date.getFullYear();
       return {
         ...post,
-        datePost: `${day}-${month}-${year}`, // Fixed template literal
+        datePost: `${day}-${month}-${year}`,
         youtub: post.youtub,
       };
     });

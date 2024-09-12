@@ -154,6 +154,7 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: 'Error fetching post', details: errorMessage }, { status: 500 });
   }
 }
+// delete
 export async function DELETE(req: Request) {
   const id = req.url.split('/').pop();
 
