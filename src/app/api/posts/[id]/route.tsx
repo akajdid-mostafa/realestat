@@ -175,15 +175,18 @@ export async function DELETE(req: Request) {
     if (post.img && Array.isArray(post.img)) {
       await Promise.all(
         post.img.map(async (image) => {
-          if (image) {
+          if (typeof image === 'string') {
             const publicId = image.split('/').pop()?.split('.')[0];
             if (publicId) {
               await cloudinary.uploader.destroy(publicId);
             }
+          } else {
+            console.warn(`Expected a string for image, but received: ${typeof image}`);
           }
         })
       );
     }
+    
 
     
     await prisma.post.delete({
