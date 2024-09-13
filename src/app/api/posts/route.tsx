@@ -154,15 +154,6 @@ export async function GET(req: NextRequest) {
             data: { status: Status.taken },
           });
         }
-      } else if (
-        post.category?.name === CategoryName.Vente ||
-        !post.DateReserve ||
-        (post.DateReserve.dateDebut === null && post.DateReserve.dateFine === null)
-      ) {
-        await prisma.post.update({
-          where: { id: post.id },
-          data: { status: Status.taken },
-        });
       }
 
       return NextResponse.json(formattedPost, { status: 200 });
@@ -200,15 +191,7 @@ export async function GET(req: NextRequest) {
               data: { status: Status.taken },
             });
           }
-        } else if (
-          post.category?.name === CategoryName.Vente ||
-          (post.DateReserve && post.DateReserve.dateDebut === null && post.DateReserve.dateFine === null)
-        ) {
-          await prisma.post.update({
-            where: { id: post.id },
-            data: { status: Status.taken },
-          });
-        }
+        } 
       })
     );
 
