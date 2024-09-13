@@ -12,7 +12,7 @@ function setCorsHeaders(response: NextResponse) {
   return response;
 }
 
-
+console.log("ewewew")
 export function OPTIONS() {
   const response = new NextResponse(null, { status: 204 });
   return setCorsHeaders(response);
