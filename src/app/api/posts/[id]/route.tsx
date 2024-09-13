@@ -165,6 +165,9 @@ export async function DELETE(req: Request) {
   try {
     const post = await prisma.post.findUnique({
       where: { id: Number(id) },
+      include: {
+        Detail: true, 
+      },
     });
 
     if (!post) {
@@ -186,17 +189,21 @@ export async function DELETE(req: Request) {
         })
       );
     }
-    
 
     
+    if (post.Detail) { 
+      await prisma.detail.delete({
+        where: { id: post.Detail.id }, 
+      });
+    }
     await prisma.post.delete({
       where: { id: Number(id) },
     });
 
-    return NextResponse.json({ message: 'Post deleted successfully' }, { status: 200 });
+    return NextResponse.json({ message: 'Post and associated detail deleted successfully' }, { status: 200 });
   } catch (error: any) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error('Error deleting post:', errorMessage);
-    return NextResponse.json({ error: 'Error deleting post', details: errorMessage }, { status: 500 });
+    console.error('Error deleting post and detail:', errorMessage);
+    return NextResponse.json({ error: 'Error deleting post and detail', details: errorMessage }, { status: 500 });
   }
 }

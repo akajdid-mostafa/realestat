@@ -5,14 +5,14 @@ import cloudinary from 'cloudinary';
 
 dotenv.config();
 function setCorsHeaders(response: NextResponse) {
-  response.headers.set('Access-Control-Allow-Origin', '*'); // Adjust according to your needs
+  response.headers.set('Access-Control-Allow-Origin', '*'); 
   response.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   response.headers.set('Access-Control-Allow-Credentials', 'true');
   return response;
 }
 
-// Handle OPTIONS method for CORS preflight
+
 export function OPTIONS() {
   const response = new NextResponse(null, { status: 204 });
   return setCorsHeaders(response);
@@ -25,7 +25,7 @@ cloudinary.v2.config({
   api_secret: '41BFZx9tensYKPnhu3CppsmU9Ng',
 });
 
-// POST handler
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
 
     console.log('Received data:', body);
 
-    // Validate required fields
+    
     const missingFields = [];
     if (!img || !Array.isArray(img) || img.length === 0) missingFields.push('img');
     if (!datePost) missingFields.push('datePost');
@@ -52,13 +52,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields', fields: missingFields }, { status: 400 });
     }
 
-    // Validate status
     if (!Object.values(Status).includes(status as Status)) {
       console.error('Invalid status value:', status);
       return NextResponse.json({ error: 'Invalid status value' }, { status: 400 });
     }
 
-    // Upload images to Cloudinary
     const uploadedImages = await Promise.all(
       img.map(async (imageUrl: string) => {
         const result = await cloudinary.v2.uploader.upload(imageUrl, {
@@ -77,7 +75,6 @@ export async function POST(req: NextRequest) {
     const date = new Date(datePost);
     date.setHours(0, 0, 0, 0);
 
-    // Create the post in the database
     const post = await prisma.post.create({
       data: {
         img: uploadedImages.map((image) => image.url),
@@ -110,7 +107,6 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// GET handler
 export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
