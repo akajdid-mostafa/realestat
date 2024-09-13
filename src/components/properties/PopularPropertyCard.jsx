@@ -1,24 +1,37 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {
-    Box, Button, Flex, Heading, Text, Image, Grid,
-    IconButton,
-    Tag,
-    Link,
-    HStack
-} from '@chakra-ui/react';
+import {Box,Flex,Text,Image,IconButton,Tag,Link,HStack} from '@chakra-ui/react';
 import { CarouselProvider, Slider, Slide } from 'pure-react-carousel';
 import 'pure-react-carousel/dist/react-carousel.es.css';
-import { FaBed, FaBath, FaExpandArrowsAlt, FaMapMarkerAlt } from 'react-icons/fa';
-import { MdPhone } from 'react-icons/md';
-import { FaWhatsapp } from 'react-icons/fa';
-import { cardData } from '../data';
+import { FaBed, FaEye , FaBath, FaExpandArrowsAlt, FaMapMarkerAlt } from 'react-icons/fa';
+import { TbListDetails } from "react-icons/tb";
 
 const PopularCard = () => {
     const [gridDisplay, setGridDisplay] = useState(false);
     const [slidesToShow, setSlidesToShow] = useState(1);
     const [currentSlide, setCurrentSlide] = useState(0);
-    const totalSlides = cardData.length;
+    const [posts, setPosts] = useState([]);
+    const [details, setDetails] = useState([]);
+    const totalSlides = posts.length;
     const intervalRef = useRef(null);
+
+    useEffect(() => {
+        // Fetch posts and details from APIs
+        const fetchData = async () => {
+            try {
+                const postsResponse = await fetch('https://immoceanrepo.vercel.app/api/posts');
+                const postsData = await postsResponse.json();
+                setPosts(postsData);
+
+                const detailsResponse = await fetch('https://immoceanrepo.vercel.app/api/details');
+                const detailsData = await detailsResponse.json();
+                setDetails(detailsData);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     useEffect(() => {
         const handleResize = () => {
@@ -42,7 +55,6 @@ const PopularCard = () => {
 
     useEffect(() => {
         const interval = () => {
-
             if (window.innerWidth >= 1524) {
                 setCurrentSlide(prev => (prev + 1) % (totalSlides - 2));
             } else if (window.innerWidth >= 768) {
@@ -50,15 +62,13 @@ const PopularCard = () => {
             } else {
                 setCurrentSlide(prev => (prev + 1) % totalSlides);
             }
-            
-            
         };
 
         if (gridDisplay) {
             clearInterval(intervalRef.current);
             intervalRef.current = null;
         } else {
-            intervalRef.current = setInterval(interval, 5000);
+            intervalRef.current = setInterval(interval, 2000);
         }
 
         return () => {
@@ -68,6 +78,31 @@ const PopularCard = () => {
         };
     }, [gridDisplay, totalSlides]);
 
+    // Transform API data into the format expected by the component
+    const transformedData = posts.map(post => {
+        const detail = details.find(detail => detail.postId === post.id) || {};
+        return {
+            id: post.id,
+            imageSrc: post.img[0] || '/images/card.jpeg', // Default image if none provided
+            title: post.title,
+            urltube: post.youtub || 'https://www.youtube.com/embed/rjKsKbU2Wuo?autoplay=1&controls=1',
+            type: post.type?.type || 'Unknown',
+            location: post.adress,
+            category: post.category?.name || 'Unknown',
+            bedrooms: detail.bedromms || 0,
+            kitchen: detail.kitchen || 0,
+            bathrooms: detail.bathrooms || 0,
+            latitude: post.lat,
+            longitude: post.lon,
+            area: detail.surface || 'N/A',
+            floor: detail.floor || 'N/A',
+            price: `$${post.prix || '0'}`,
+            images: post.img.map((url, index) => ({
+                alt: `image${index + 1}`,
+                url
+            }))
+        };
+    });
     return (
         <Box display="flex" flexDirection="column" alignItems="center" p={4}>
             <CarouselProvider
@@ -81,34 +116,47 @@ const PopularCard = () => {
                 currentSlide={currentSlide}
             >
                 <Slider>
-                    {cardData.map(card => (
+                    {transformedData.map(card => (
                         <Slide key={card.id} index={card.id} style={{ margin: '0 10px' }}>
                             <Box className="property-item homeya-box card" bg="white" borderRadius="md" boxShadow="lg" overflow="hidden" transition="0.3s">
-                                <Link href={`/properties/${card.id}.html`} className="images-group">
-                                    <Box position="relative">
+                                <Link href={`/properties?modal=yes&id=${card.id}`} className="images-group">
+                                    <Box position="relative" height="200px"> {/* Fixed height for consistency */}
                                         <Image
                                             src={card.imageSrc}
                                             alt={card.title}
                                             loading="lazy"
-                                            objectFit="cover"
-                                            borderRadius="md"
+                                            objectFit="cover" // Ensures image covers the area without distortion
+                                            width="100%"
+                                            height="100%" // Ensures the image fills the container
                                         />
                                         <Flex position="absolute" top={2} left={2} gap={2}>
-                                            {card.type === 'Vent' && (
-                                                <Tag bg="green.900" color="white" fontWeight="bold">{card.type}</Tag>
+                                            {card.category === 'Vente' && (
+                                                <Tag bg="green.900" color="white" fontWeight="bold">
+                                                    {card.category}
+                                                </Tag>
                                             )}
-                                            {card.type === 'Location' && (
-                                                <Tag bg="red.600" color="white" fontWeight="bold">{card.type}</Tag>
+                                            {card.category === 'Location' && (
+                                                <Tag bg="red.600" color="white" fontWeight="bold">
+                                                    {card.category}
+                                                </Tag>
                                             )}
                                         </Flex>
                                         <Flex position="absolute" bottom={2} left={2}>
-                                            <Tag bg="white" color="black" fontWeight="bold">{card.category}</Tag>
+                                            <Tag bg="white" color="black" fontWeight="bold">
+                                                {card.type && card.type ? card.type : 'Unknown'}
+                                            </Tag>
                                         </Flex>
                                     </Box>
                                 </Link>
-                                <Box mt={4} p={4}>
+                                <Box mt={1} p={4}>
                                     <Text fontWeight="bold" fontSize="lg" isTruncated>
-                                        <Link href={`/properties/${card.id}.html`} title={card.title}>
+                                        <Link
+                                            href={`/properties/${card.id}.html`}
+                                            textDecoration="none"
+                                            color="blue.800"
+                                            _hover={{ textDecoration: 'none', color: 'inherit' }}
+                                            title={card.title}
+                                        >
                                             {card.title}
                                         </Link>
                                     </Text>
@@ -134,27 +182,23 @@ const PopularCard = () => {
                                     </HStack>
                                 </Box>
                                 <Flex justify="space-between" align="center" bg="gray.100" p={4}>
-                                    {card.type === 'Vent' && (
-                                        <Text fontWeight="bold" color="blue.800" fontSize="xl">{card.price}</Text>
-                                    )}
-                                    {card.type === 'Location' && (
-                                        <Text fontWeight="bold" color="blue.800" fontSize="xl">{card.price}/month</Text>
-                                    )}
+                                    <Text fontWeight="bold" color="blue.800" fontSize="xl">
+                                        {card.price}
+                                    </Text>
                                     <Flex>
                                         <IconButton
-                                            as="a"
-                                            href={`tel:${card.phone}`}
-                                            aria-label="Call"
-                                            icon={<MdPhone />}
-                                            colorScheme="green"
+                                            aria-label="Details"
+                                            icon={<TbListDetails />}
+                                            colorScheme="blue"
+                                            fontSize={30}
                                             mr={2}
                                         />
                                         <IconButton
-                                            as="a"
-                                            href={`https://wa.me/${card.whatsapp}`}
-                                            aria-label="WhatsApp"
-                                            icon={<FaWhatsapp />}
-                                            colorScheme="green"
+                                            aria-label="View"
+                                            icon={<FaEye />}
+                                            colorScheme="blue"
+                                            fontSize={25}
+                                            mr={1}
                                         />
                                     </Flex>
                                 </Flex>

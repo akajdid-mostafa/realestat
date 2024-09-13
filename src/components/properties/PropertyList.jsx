@@ -13,6 +13,9 @@ const PropertyList = () => {
     const router = useRouter();
     const itemsPerPage = 6;
 
+    // Calculate total pages
+    const totalPages = Math.ceil(properties.length / itemsPerPage);
+
     useEffect(() => {
         const fetchProperties = async () => {
             try {
@@ -89,26 +92,35 @@ const PropertyList = () => {
                     >
                         Previous
                     </Button>
-                    {Array.from({ length: Math.ceil(properties.length / itemsPerPage) }, (_, index) => (
-                        <Button
-                            key={index}
-                            onClick={() => handlePageChange(index + 1)}
-                            variant={currentPage === index + 1 ? 'solid' : 'outline'}
-                            mx={1}
-                            textColor={currentPage === index + 1 ? 'white' : 'black'}
-                            colorScheme={currentPage === index + 1 ? 'blue' : 'white'}
-                            borderColor="white"
-                            _hover={{
-                                bg: currentPage === index + 1 ? 'blue.400' : 'blue.600',
-                                color: 'white'
-                            }}
-                        >
-                            {index + 1}
-                        </Button>
-                    ))}
+                    {Array.from({ length: totalPages }, (_, index) => {
+                        const page = index + 1;
+                        if (page === 1 || page === 2 || page === totalPages || page === totalPages - 1 || page === currentPage) {
+                            return (
+                                <Button
+                                    key={index}
+                                    onClick={() => handlePageChange(page)}
+                                    variant={currentPage === page ? 'solid' : 'outline'}
+                                    mx={1}
+                                    textColor={currentPage === page ? 'white' : 'black'}
+                                    colorScheme={currentPage === page ? 'blue' : 'white'}
+                                    borderColor="white"
+                                    _hover={{
+                                        bg: currentPage === page ? 'blue.400' : 'blue.600',
+                                        color: 'white'
+                                    }}
+                                >
+                                    {page}
+                                </Button>
+                            );
+                        }
+                        if ((page === 3 && currentPage > 4) || (page === totalPages - 2 && currentPage < totalPages - 3)) {
+                            return <span key={`ellipsis-${index}`} style={{ margin: '0 8px' }}>...</span>;
+                        }
+                        return null;
+                    })}
                     <Button
                         onClick={() => handlePageChange(currentPage + 1)}
-                        isDisabled={currentPage === Math.ceil(properties.length / itemsPerPage)}
+                        isDisabled={currentPage === totalPages}
                         variant="outline"
                         ml={2}
                         textColor="white"

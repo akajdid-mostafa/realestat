@@ -23,7 +23,7 @@ const PropertyMoreDetail = ({
 
     // Collect all items in an array
     const items = [
-        rooms && { label: "Nombre de pièces", value: rooms },
+        rooms && { label: "Nombre de pièces :", value: rooms },
         bedrooms && { label: "Chambres à coucher :", value: bedrooms },
         kitchens && { label: "Cuisine :", value: kitchens },
         bathrooms && { label: "Salles de bains :", value: bathrooms },
@@ -66,7 +66,7 @@ const PropertyMoreDetail = ({
                                 {firstBoxItems.map(item => (
                                     <Flex justify="space-between" key={item.label}>
                                         <Text fontSize="md" lineHeight="2">{item.label}</Text>
-                                        <Text fontSize="md" lineHeight="2">{item.value}</Text>
+                                        <Text textAlign="start" fontSize="md" lineHeight="2">{item.value}</Text>
                                     </Flex>
                                 ))}
                             </Flex>
