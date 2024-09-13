@@ -82,8 +82,7 @@ export async function GET() {
       },
       orderBy: {
         updatedAt: 'desc',
-      },
-      take: 10, 
+      }
     });
   
     const formattedDateReserves = dateReserves.map(dateReserve => ({
