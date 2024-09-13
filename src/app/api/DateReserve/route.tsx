@@ -73,7 +73,7 @@ export async function POST(req: Request) {
     );
   }
 }
-
+// GET
 export async function GET() {
   try {
     const dateReserves = await prisma.dateReserve.findMany({

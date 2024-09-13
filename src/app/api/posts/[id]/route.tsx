@@ -154,6 +154,7 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: 'Error fetching post', details: errorMessage }, { status: 500 });
   }
 }
+// delete
 export async function DELETE(req: Request) {
   const id = req.url.split('/').pop();
 
@@ -164,6 +165,9 @@ export async function DELETE(req: Request) {
   try {
     const post = await prisma.post.findUnique({
       where: { id: Number(id) },
+      include: {
+        Detail: true, 
+      },
     });
 
     if (!post) {
@@ -174,25 +178,32 @@ export async function DELETE(req: Request) {
     if (post.img && Array.isArray(post.img)) {
       await Promise.all(
         post.img.map(async (image) => {
-          if (image) {
+          if (typeof image === 'string') {
             const publicId = image.split('/').pop()?.split('.')[0];
             if (publicId) {
               await cloudinary.uploader.destroy(publicId);
             }
+          } else {
+            console.warn(`Expected a string for image, but received: ${typeof image}`);
           }
         })
       );
     }
 
     
+    if (post.Detail) { 
+      await prisma.detail.delete({
+        where: { id: post.Detail.id }, 
+      });
+    }
     await prisma.post.delete({
       where: { id: Number(id) },
     });
 
-    return NextResponse.json({ message: 'Post deleted successfully' }, { status: 200 });
+    return NextResponse.json({ message: 'Post and associated detail deleted successfully' }, { status: 200 });
   } catch (error: any) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error('Error deleting post:', errorMessage);
-    return NextResponse.json({ error: 'Error deleting post', details: errorMessage }, { status: 500 });
+    console.error('Error deleting post and detail:', errorMessage);
+    return NextResponse.json({ error: 'Error deleting post and detail', details: errorMessage }, { status: 500 });
   }
 }
