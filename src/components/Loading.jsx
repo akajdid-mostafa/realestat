@@ -1,7 +1,7 @@
 // LoadingAnimation.jsx
 import React from 'react';
 import { Box } from '@chakra-ui/react';
-
+console.log("sqsq")
 const LoadingAnimation = () => {
   return (
     <Box
