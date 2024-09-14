@@ -15,13 +15,6 @@ export async function POST(req: Request) {
       throw new Error('Missing required fields');
     }
 
-    const parsedDateDebut = dateDebut ? new Date(dateDebut) : null;
-    const parsedDateFine = dateFine ? new Date(dateFine) : null;
-
-    if (parsedDateDebut && parsedDateFine && parsedDateDebut >= parsedDateFine) {
-      throw new Error('dateDebut must be less than dateFine');
-    }
-
     const post = await prisma.post.findUnique({
       where: { id: postId },
       include: { category: true },
@@ -31,11 +24,11 @@ export async function POST(req: Request) {
       throw new Error('Post with the given ID does not exist');
     }
 
-    const isDateNull = parsedDateDebut === null && parsedDateFine === null;
+    const isDateNull = dateDebut === null && dateFine === null;
 
     const dateReserveData = {
-      dateDebut: parsedDateDebut,
-      dateFine: parsedDateFine,
+      dateDebut: dateDebut ? new Date(dateDebut) : null,
+      dateFine: dateFine ? new Date(dateFine) : null,
       fullName,
       price,
       CIN,
@@ -47,7 +40,7 @@ export async function POST(req: Request) {
     });
 
     if (post.category?.name === CategoryName.Location) {
-      if (parsedDateFine) {
+      if (dateFine) {
         await prisma.post.update({
           where: { id: postId },
           data: { status: Status.available },
@@ -80,8 +73,7 @@ export async function POST(req: Request) {
     );
   }
 }
-
-
+// GET
 export async function GET() {
   try {
     const dateReserves = await prisma.dateReserve.findMany({
@@ -90,10 +82,9 @@ export async function GET() {
       },
       orderBy: {
         updatedAt: 'desc',
-      },
-      take: 10, 
+      }
     });
-
+  
     const formattedDateReserves = dateReserves.map(dateReserve => ({
       ...dateReserve,
       dateDebut: dateReserve.dateDebut ? formatDateToYYYYMMDD(dateReserve.dateDebut) : null,

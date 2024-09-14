@@ -4,11 +4,10 @@ import { v2 as cloudinary } from 'cloudinary';
 
 const prisma = new PrismaClient();
 
-// Configure Cloudinary
 cloudinary.config({
-  cloud_name: 'dtcfvpu6n',
-  api_key: '813952658855993',
-  api_secret: '813952658855993',
+  cloud_name: 'dab60xyhf',
+  api_key: '141321481661693',
+  api_secret: 'T9zFUC5NdH51iFiSeOpyfGUlO1I',
 });
 
 export async function PUT(req: Request) {
@@ -28,7 +27,7 @@ export async function PUT(req: Request) {
     youtub,
   } = await req.json();
 
-  if (!id || isNaN(Number(id))) {
+  if (typeof id !== 'string' || isNaN(Number(id))) {
     return NextResponse.json({ error: 'Invalid or missing ID' }, { status: 400 });
   }
 
@@ -41,7 +40,6 @@ export async function PUT(req: Request) {
   }
 
   try {
-    // Check if categoryId exists
     if (categoryId) {
       const categoryExists = await prisma.category.findUnique({
         where: { id: categoryId },
@@ -52,7 +50,6 @@ export async function PUT(req: Request) {
       }
     }
 
-    // Check if typeId exists
     if (typeId) {
       const typeExists = await prisma.type.findUnique({
         where: { id: typeId },
@@ -63,7 +60,6 @@ export async function PUT(req: Request) {
       }
     }
 
-    // Find existing post
     const existingPost = await prisma.post.findUnique({
       where: { id: Number(id) },
     });
@@ -72,16 +68,14 @@ export async function PUT(req: Request) {
       return NextResponse.json({ error: 'Post not found' }, { status: 404 });
     }
 
-    let uploadedImages = existingPost.img as string[]; // Typecast to string array for JSON[]
+    let uploadedImages: string[] = existingPost.img as string[]; // Ensure `img` is an array of strings
 
-    // Handle image uploads
     if (img && Array.isArray(img) && img.length > 0) {
-      // Optionally delete old images from Cloudinary (if required)
       if (existingPost.img && Array.isArray(existingPost.img)) {
         await Promise.all(
-          existingPost.img.map(async (image) => {
-            if (typeof image === 'string') { // Check if image is a string
-              const publicId = image.split('/').pop()?.split('.')[0]; // Extract public_id from URL safely
+          (existingPost.img as string[]).map(async (image) => {
+            if (image) { 
+              const publicId = image.split('/').pop()?.split('.')[0]; 
               if (publicId) {
                 await cloudinary.uploader.destroy(publicId);
               }
@@ -90,22 +84,20 @@ export async function PUT(req: Request) {
         );
       }
 
-      // Upload new images to Cloudinary
       uploadedImages = await Promise.all(
         img.map(async (imageUrl: string) => {
           const result = await cloudinary.uploader.upload(imageUrl, {
-            folder: 'your_folder_name', // Update with your desired folder
+            folder: 'your_folder_name',
           });
           return result.secure_url;
         })
       );
     }
 
-    // Update the post with new data and images
     const updatedPost = await prisma.post.update({
       where: { id: Number(id) },
       data: {
-        img: uploadedImages, // Update images
+        img: uploadedImages, 
         datePost: datePost ? new Date(datePost) : existingPost.datePost,
         lat: lat !== undefined ? parseFloat(lat) : existingPost.lat,
         lon: lon !== undefined ? parseFloat(lon) : existingPost.lon,
@@ -162,6 +154,7 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: 'Error fetching post', details: errorMessage }, { status: 500 });
   }
 }
+// delete
 export async function DELETE(req: Request) {
   const id = req.url.split('/').pop();
 
@@ -170,50 +163,47 @@ export async function DELETE(req: Request) {
   }
 
   try {
-    // Check if the post exists
     const post = await prisma.post.findUnique({
       where: { id: Number(id) },
-      include: { details: true }, // Include related records (adjust according to your schema)
+      include: {
+        Detail: true, 
+      },
     });
 
     if (!post) {
       return NextResponse.json({ error: 'Post not found' }, { status: 404 });
     }
 
-    // Delete related details
-    if (post.details && post.details.length > 0) {
-      await prisma.detail.deleteMany({
-        where: { postId: Number(id) },
-      });
-    }
-
-    // Delete images from Cloudinary
-    if (Array.isArray(post.img)) {
+    
+    if (post.img && Array.isArray(post.img)) {
       await Promise.all(
         post.img.map(async (image) => {
-          if (typeof image === 'string' && image) {
+          if (typeof image === 'string') {
             const publicId = image.split('/').pop()?.split('.')[0];
             if (publicId) {
-              try {
-                await cloudinary.v2.uploader.destroy(publicId);
-              } catch (cloudinaryError) {
-                console.error(`Failed to delete image from Cloudinary: ${cloudinaryError.message}`);
-              }
+              await cloudinary.uploader.destroy(publicId);
             }
+          } else {
+            console.warn(`Expected a string for image, but received: ${typeof image}`);
           }
         })
       );
     }
 
-    // Delete the post from the database
+    
+    if (post.Detail) { 
+      await prisma.detail.delete({
+        where: { id: post.Detail.id }, 
+      });
+    }
     await prisma.post.delete({
       where: { id: Number(id) },
     });
 
-    return NextResponse.json({ message: 'Post deleted successfully' }, { status: 200 });
+    return NextResponse.json({ message: 'Post and associated detail deleted successfully' }, { status: 200 });
   } catch (error: any) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error('Error deleting post:', errorMessage);
-    return NextResponse.json({ error: 'Error deleting post', details: errorMessage }, { status: 500 });
+    console.error('Error deleting post and detail:', errorMessage);
+    return NextResponse.json({ error: 'Error deleting post and detail', details: errorMessage }, { status: 500 });
   }
 }

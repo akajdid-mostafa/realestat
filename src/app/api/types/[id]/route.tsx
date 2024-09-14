@@ -43,8 +43,8 @@ export async function GET(req: Request) {
     const response = NextResponse.json(type, { status: 200 });
     return setCorsHeaders(response);
   } catch (error) {
-    console.error('Error fetching type by ID:', error.message || error);
-    const response = NextResponse.json({ error: 'Error fetching type by ID', details: error.message || error }, { status: 500 });
+    console.error('Error fetching type by ID:', error instanceof Error ? error.message : 'Unknown error');
+    const response = NextResponse.json({ error: 'Error fetching type by ID', details: error instanceof Error ? error.message : 'Unknown error' }, { status: 500 });
     return setCorsHeaders(response);
   }
 }
@@ -68,8 +68,8 @@ export async function PUT(req: Request) {
     const response = NextResponse.json(updatedType, { status: 200 });
     return setCorsHeaders(response);
   } catch (error) {
-    console.error('Error updating type:', error.message || error);
-    const response = NextResponse.json({ error: 'Error updating type', details: error.message || error }, { status: 500 });
+    console.error('Error updating type:',error instanceof Error ? error.message : 'Unknown error');
+    const response = NextResponse.json({ error: 'Error updating type', details: error instanceof Error ? error.message : 'Unknown error' }, { status: 500 });
     return setCorsHeaders(response);
   }
 }
@@ -91,8 +91,8 @@ export async function DELETE(req: Request) {
     const response = NextResponse.json({ message: 'Type deleted successfully' }, { status: 200 });
     return setCorsHeaders(response);
   } catch (error) {
-    console.error('Error deleting type:', error.message || error);
-    const response = NextResponse.json({ error: 'Error deleting type', details: error.message || error }, { status: 500 });
+    console.error('Error deleting type:', error instanceof Error ? error.message : 'Unknown error');
+    const response = NextResponse.json({ error: 'Error deleting type', details: error instanceof Error ? error.message : 'Unknown error' }, { status: 500 });
     return setCorsHeaders(response);
   }
 }

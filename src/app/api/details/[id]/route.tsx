@@ -112,24 +112,4 @@ export async function PUT(req: Request) {
   }
 }
 
-export async function DELETE(req: Request) {
-  const id = req.url.split('/').pop();
 
-  if (!id || isNaN(Number(id))) {
-    const response = NextResponse.json({ error: 'Invalid or missing ID' }, { status: 400 });
-    return setCorsHeaders(response);
-  }
-
-  try {
-    await prisma.detail.delete({
-      where: { id: Number(id) },
-    });
-
-    const response = NextResponse.json({ message: 'Detail deleted successfully' }, { status: 200 });
-    return setCorsHeaders(response);
-  } catch (error) {
-    console.error('Error deleting detail:', error);
-    const response = NextResponse.json({ error: 'Error deleting detail' }, { status: 500 });
-    return setCorsHeaders(response);
-  }
-}

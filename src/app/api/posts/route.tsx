@@ -5,27 +5,27 @@ import cloudinary from 'cloudinary';
 
 dotenv.config();
 function setCorsHeaders(response: NextResponse) {
-  response.headers.set('Access-Control-Allow-Origin', '*'); // Adjust according to your needs
+  response.headers.set('Access-Control-Allow-Origin', '*'); 
   response.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   response.headers.set('Access-Control-Allow-Credentials', 'true');
   return response;
 }
 
-// Handle OPTIONS method for CORS preflight
+console.log("ewewew")
 export function OPTIONS() {
   const response = new NextResponse(null, { status: 204 });
   return setCorsHeaders(response);
 }
 const prisma = new PrismaClient();
 
-cloudinary.config({
+cloudinary.v2.config({
   cloud_name: 'dtcfvpu6n',
   api_key: '813952658855993',
   api_secret: '41BFZx9tensYKPnhu3CppsmU9Ng',
 });
 
-// POST handler
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
 
     console.log('Received data:', body);
 
-    // Validate required fields
+    
     const missingFields = [];
     if (!img || !Array.isArray(img) || img.length === 0) missingFields.push('img');
     if (!datePost) missingFields.push('datePost');
@@ -52,13 +52,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields', fields: missingFields }, { status: 400 });
     }
 
-    // Validate status
     if (!Object.values(Status).includes(status as Status)) {
       console.error('Invalid status value:', status);
       return NextResponse.json({ error: 'Invalid status value' }, { status: 400 });
     }
 
-    // Upload images to Cloudinary
     const uploadedImages = await Promise.all(
       img.map(async (imageUrl: string) => {
         const result = await cloudinary.v2.uploader.upload(imageUrl, {
@@ -77,7 +75,6 @@ export async function POST(req: NextRequest) {
     const date = new Date(datePost);
     date.setHours(0, 0, 0, 0);
 
-    // Create the post in the database
     const post = await prisma.post.create({
       data: {
         img: uploadedImages.map((image) => image.url),
@@ -110,15 +107,14 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// GET handler
 export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
     const postId = url.searchParams.get('id');
-    
+
     if (postId) {
       const post = await prisma.post.findUnique({
-        where: { id: parseInt(postId) },
+        where: { id: parseInt(postId, 10) },
         include: {
           category: true,
           type: true,
@@ -126,21 +122,35 @@ export async function GET(req: NextRequest) {
           Detail: true,
         },
       });
-
+      
       if (!post) {
         return NextResponse.json({ error: 'Post not found' }, { status: 404 });
       }
-
+      
       const date = new Date(post.datePost);
       const day = String(date.getDate()).padStart(2, '0');
       const month = String(date.getMonth() + 1).padStart(2, '0');
       const year = date.getFullYear();
-
+      
       const formattedPost = {
         ...post,
-        datePost: `${day}-${month}-${year}`,  // Corrected interpolation
+        datePost: `${day}-${month}-${year}`,
         youtub: post.youtub,
       };
+
+      if (post.category?.name === CategoryName.Location) {
+        if (post.DateReserve?.dateFine) {
+          await prisma.post.update({
+            where: { id: post.id },
+            data: { status: Status.available },
+          });
+        } else {
+          await prisma.post.update({
+            where: { id: post.id },
+            data: { status: Status.taken },
+          });
+        }
+      }
 
       return NextResponse.json(formattedPost, { status: 200 });
     }
@@ -164,26 +174,8 @@ export async function GET(req: NextRequest) {
 
     await Promise.all(
       posts.map(async (post) => {
-        const dateFine = post.DateReserve?.dateFine;
-
-        if (post.category?.name === CategoryName.Location) {
-          if (dateFine) {
-            await prisma.post.update({
-              where: { id: post.id },
-              data: { status: Status.available },
-            });
-          } else {
-            await prisma.post.update({
-              where: { id: post.id },
-              data: { status: Status.taken },
-            });
-          }
-        } else if (post.category?.name === CategoryName.Vente || (post.DateReserve && (post.DateReserve.dateDebut === null || post.DateReserve.dateFine === null))) {
-          await prisma.post.update({
-            where: { id: post.id },
-            data: { status: Status.taken },
-          });
-        } else if (post.category?.name === CategoryName.Location && post.DateReserve) {
+        if (post.category?.name === CategoryName.Location && post.DateReserve) {
+          const dateFine = post.DateReserve.dateFine;
           if (dateFine && new Date(dateFine) < currentDate) {
             await prisma.post.update({
               where: { id: post.id },
@@ -195,7 +187,7 @@ export async function GET(req: NextRequest) {
               data: { status: Status.taken },
             });
           }
-        }
+        } 
       })
     );
 
@@ -204,16 +196,15 @@ export async function GET(req: NextRequest) {
       const day = String(date.getDate()).padStart(2, '0');
       const month = String(date.getMonth() + 1).padStart(2, '0');
       const year = date.getFullYear();
-
       return {
         ...post,
-        datePost: `${day}-${month}-${year}`,  // Corrected interpolation
+        datePost: `${day}-${month}-${year}`,
         youtub: post.youtub,
       };
     });
 
     return NextResponse.json(formattedPosts, { status: 200 });
-  } catch (error: any) {
+  } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     console.error('Error retrieving posts:', errorMessage);
     return NextResponse.json({ error: 'Error retrieving posts', details: errorMessage }, { status: 500 });
