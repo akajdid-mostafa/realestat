@@ -161,7 +161,8 @@ export async function GET(req: Request) {
     console.error('Error fetching post:', errorMessage);
     return NextResponse.json({ error: 'Error fetching post', details: errorMessage }, { status: 500 });
   }
-}export async function DELETE(req: Request) {
+}
+export async function DELETE(req: Request) {
   const id = req.url.split('/').pop();
 
   if (!id || isNaN(Number(id))) {
@@ -169,29 +170,42 @@ export async function GET(req: Request) {
   }
 
   try {
+    // Check if the post exists
     const post = await prisma.post.findUnique({
       where: { id: Number(id) },
+      include: { details: true }, // Include related records (adjust according to your schema)
     });
 
     if (!post) {
       return NextResponse.json({ error: 'Post not found' }, { status: 404 });
     }
 
-    
-    if (post.img && Array.isArray(post.img)) {
+    // Delete related details
+    if (post.details && post.details.length > 0) {
+      await prisma.detail.deleteMany({
+        where: { postId: Number(id) },
+      });
+    }
+
+    // Delete images from Cloudinary
+    if (Array.isArray(post.img)) {
       await Promise.all(
         post.img.map(async (image) => {
-          if (image) {
+          if (typeof image === 'string' && image) {
             const publicId = image.split('/').pop()?.split('.')[0];
             if (publicId) {
-              await cloudinary.uploader.destroy(publicId);
+              try {
+                await cloudinary.v2.uploader.destroy(publicId);
+              } catch (cloudinaryError) {
+                console.error(`Failed to delete image from Cloudinary: ${cloudinaryError.message}`);
+              }
             }
           }
         })
       );
     }
 
-    
+    // Delete the post from the database
     await prisma.post.delete({
       where: { id: Number(id) },
     });
@@ -203,4 +217,3 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: 'Error deleting post', details: errorMessage }, { status: 500 });
   }
 }
-
