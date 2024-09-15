@@ -141,7 +141,7 @@ const Popular = () => {
                        transition="0.3s"
                        maxW="lg"  // Set maximum width
                    >
-                       <Box  position="relative"  height="200px"> {/* Fixed height */}
+                       <Box position="relative" height="200px" className="image-container"> {/* Fixed height */}
                            <Link href={`/properties?modal=yes&id=${card.id}`} className="images-group">
                                <Image
                                    src={card.imageSrc}
@@ -151,6 +151,7 @@ const Popular = () => {
                                    borderRadius="md"
                                    width="100%"
                                    height="100%"
+                                   className="hover-image" // Added class for hover effect
                                />
                            </Link>
                            <Flex position="absolute" top={2} left={2} gap={2}>

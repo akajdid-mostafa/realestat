@@ -64,12 +64,12 @@ const LoadingAnimation = () => {
                   left: 'var(--left)',
                   transform: `rotateY(var(--rotateY)) rotateX(var(--rotateX)) translateZ(var(--translateZ))`,
                   ...(divIndex === 1 && {
-                    '--background': '#145af2',
+                    '--background': '#1E88E5',
                     '--right': '0',
                     '--rotateY': '90deg',
                   }),
                   ...(divIndex === 2 && {
-                    '--background': '#447cf5',
+                    '--background': '#1E88E5',
                     '--rotateX': '-90deg',
                   }),
                   ...(divIndex === 3 && {

@@ -29,7 +29,6 @@ const Properties = ({ siteInfo }) => {
                     ) : (
             <Layout siteInfo={siteInfo}>
                 <Box>
-                    <Header />
                     {isLoading ? (
                         <LoadingAnimation /> // Show loading animation when isLoading is true
                     ) : (
