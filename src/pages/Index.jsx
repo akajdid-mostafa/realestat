@@ -32,7 +32,7 @@ const HomePage = ({ siteInfo, isLoading }) => { // Added isLoading to the functi
               <ContactForm />
             </Container>
           </Box>
-          <Footer /> // Moved inside the Layout component
+          <Footer />
         </Layout>
     </ChakraBaseProvider>
   );

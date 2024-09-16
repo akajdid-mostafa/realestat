@@ -33,7 +33,6 @@ export async function POST(req: NextRequest) {
 
     console.log('Received data:', body);
 
-    
     const missingFields = [];
     if (!img || !Array.isArray(img) || img.length === 0) missingFields.push('img');
     if (!datePost) missingFields.push('datePost');
@@ -99,13 +98,15 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json(post, { status: 201 });
+    // Include the `id` of the created post in the response
+    return NextResponse.json({ id: post.id, post }, { status: 201 });
   } catch (error: any) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     console.error('Error creating post:', errorMessage);
     return NextResponse.json({ error: 'Error creating post', details: errorMessage }, { status: 500 });
   }
 }
+
 
 export async function GET(req: NextRequest) {
   try {
