@@ -208,15 +208,16 @@ const PropertyDetailModal = ({ isOpen, onClose }) => {
                             </Box>
                             <Box flex={{ base: "1", lg: "0.3" }} p={4} position="sticky" top={0} mr="10" height="100%" width="100%" overflowY="auto" bg="white" boxShadow="md">
                                 <Text fontSize="2xl" fontWeight="bold" mb={4} textAlign="center">
-                                    Besoin d'être contacté ?
+                                    Besoin d&apos;être contacté ?
                                 </Text>
                                 <FormControl mb={4}>
                                     <FormLabel>Name</FormLabel>
                                     <InputGroup>
                                         <InputLeftElement
                                             pointerEvents="none"
-                                            children={<FaUser />}
-                                        />
+                                        >
+                                            <FaUser />
+                                        </InputLeftElement>
                                         <Input placeholder="Your Name" />
                                     </InputGroup>
                                 </FormControl>
@@ -225,8 +226,9 @@ const PropertyDetailModal = ({ isOpen, onClose }) => {
                                     <InputGroup>
                                         <InputLeftElement
                                             pointerEvents="none"
-                                            children={<FaEnvelope />}
-                                        />
+                                        >
+                                            <FaEnvelope />
+                                        </InputLeftElement>
                                         <Input type="email" placeholder="Your Email" />
                                     </InputGroup>
                                 </FormControl>
@@ -235,8 +237,9 @@ const PropertyDetailModal = ({ isOpen, onClose }) => {
                                     <InputGroup>
                                         <InputLeftElement
                                             pointerEvents="none"
-                                            children={<FaPhone />}
-                                        />
+                                        >
+                                            <FaPhone />
+                                        </InputLeftElement>
                                         <Input type="tel" placeholder="Your Phone Number" />
                                     </InputGroup>
                                 </FormControl>
@@ -269,7 +272,7 @@ const PropertyDetailModal = ({ isOpen, onClose }) => {
                                     color="gray.600"
                                     mt={2}
                                 >
-                                    En continuant, vous acceptez de recevoir des textes à l'adresse électronique que vous avez fournie. Nous nous engageons à ne pas vous spammer.
+                                    En continuant, vous acceptez de recevoir des textes à l&apos;adresse électronique que vous avez fournie. Nous nous engageons à ne pas vous spammer.
                                 </Text>
                             </Box>
                         </Flex>

@@ -21,23 +21,28 @@ const PropertyCard = ({ property, onClick }) => {
             borderRadius="md"
             overflow="hidden"
             boxShadow="lg"
-            transition="0.3s"
+            transition="0.3s ease-in-out"
             p={4}
             maxW="sm"
+            _hover={{
+                boxShadow: "xl",
+                transform: "scale(1.05)"
+            }}
+            cursor="pointer"
         >
             <Link
                 cursor="pointer"
                 onClick={handleClick}
             >
-                <Box position="relative" height="200px"> {/* Fixed height */}
+                <Box position="relative" height="200px">
                     <Image
                         src={property.img[0]} // Updated for API data
                         alt={property.title}
-                        objectFit="cover" // Ensures the image covers the area
+                        objectFit="cover"
                         borderRadius="md"
                         loading="lazy"
-                        height="100%" // Ensures the image takes full height
-                        width="100%"  // Ensures the image takes full width
+                        height="100%"
+                        width="100%"
                     />
                     <Flex position="absolute" top={2} left={2} gap={2}>
                         {property.categoryId === 2 && (
@@ -59,20 +64,20 @@ const PropertyCard = ({ property, onClick }) => {
                 </Box>
             </Link>
             <Box mt={2}>
+            <Link
+                cursor="pointer"
+                onClick={handleClick}
+                _hover={{ textDecoration: "none" }}
+            >
                 <Text
                     fontWeight="bold"
                     fontSize="lg"
                     isTruncated
                     cursor="pointer"
+                    color="blue.800"
+                    _hover={{ textDecoration: "none", color: "inherit" }}
                 >
-                    <Link
-                        textDecoration="none"
-                        color="blue.800"
-                        _hover={{ textDecoration: "none", color: "inherit" }}
-                        title={property.title}
-                    >
                         {property.title}
-                    </Link>
                 </Text>
                 <Flex
                     align="center"
@@ -100,6 +105,7 @@ const PropertyCard = ({ property, onClick }) => {
                         <Text ml={1}>{property.surface}</Text>
                     </Flex>
                 </Flex>
+                </Link>
                 <Flex justify="space-between" mt={4}>
                     <Text fontWeight="bold" color="blue.800" fontSize="xl">
                         {property.prix} {property.typeId === 1 ? '/month' : ''}

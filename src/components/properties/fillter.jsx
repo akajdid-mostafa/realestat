@@ -126,10 +126,7 @@ const PropertySearchPage = ({
                         {selectedRoomCount || "Nombre de chambre"}
                       </MenuButton>
                       <MenuList>
-                        <MenuItem icon={<FaBed />} onClick={() => setSelectedRoomCount("Tous")}>
-                          Tous
-                        </MenuItem>
-                        {["1 chambre", "2 chambre", "3 chambre", "4 chambre", "Plus 5 chambre"].map((count) => (
+                        {["Tous chambre" , "1 chambre", "2 chambre", "3 chambre", "4 chambre", "Plus 5 chambre"].map((count) => (
                           <MenuItem key={count} icon={<FaBed />} onClick={() => setSelectedRoomCount(count)}>
                             {count}
                           </MenuItem>
@@ -143,10 +140,7 @@ const PropertySearchPage = ({
                         {selectedBathroomsCount || "Nombre de bathroom"}
                       </MenuButton>
                       <MenuList>
-                        <MenuItem icon={<FaBath />} onClick={() => setSelectedBathroomsCount("Tous")}>
-                          Tous
-                        </MenuItem>
-                        {["1 bathroom", "2 bathroom", "3 bathroom", "4 bathroom", "Plus 5 bathroom"].map((count) => (
+                        {["Tous bathroom" , "1 bathroom", "2 bathroom", "3 bathroom", "4 bathroom", "Plus 5 bathroom"].map((count) => (
                           <MenuItem key={count} icon={<FaBath />} onClick={() => setSelectedBathroomsCount(count)}>
                             {count}
                           </MenuItem>

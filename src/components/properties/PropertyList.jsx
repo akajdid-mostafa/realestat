@@ -35,7 +35,7 @@ const PropertyList = () => {
     }, []);
 
     useEffect(() => {
-        // Filter properties based on the selected tab and property type
+        // Filter properties based on the selected tab, property type, and status
         let filtered = properties;
 
         if (activeTab === 'FOR Location') {
@@ -46,6 +46,8 @@ const PropertyList = () => {
         if (selectedPropertyType !== 'View All') {
             filtered = filtered.filter(property => property.type.type === selectedPropertyType);
         }
+        // Filter by status: available or taken
+        filtered = filtered.filter(property => property.status === 'available' || (property.status === 'taken' && property.categoryId === 2));
 
         setFilteredProperties(filtered);
     }, [activeTab, selectedPropertyType, properties]);
@@ -63,7 +65,7 @@ const PropertyList = () => {
         } else {
             setSelectedProperty(null);
         }
-    }, [router.query, filteredProperties]);
+    }, [router.query, filteredProperties, router]);
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
@@ -94,7 +96,6 @@ const PropertyList = () => {
             <Box p={4} display="flex" justifyContent="center">
                 {currentItems.length > 0 ? (
                     <Box maxW="7xl" w="full">
-
                         <Grid
                             templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }}
                             gap={6}
