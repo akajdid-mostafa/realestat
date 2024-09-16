@@ -104,8 +104,9 @@ const Naavbar = () => {
             size="lg"
             display={{ base: "inline-flex", md: "none" }}
             onClick={onOpen}
+            bg="white"
           />
-          <Drawer isOpen={isOpen} onClose={onClose} placement="right">
+          <Drawer isOpen={isOpen} onClose={onClose} placement="right" bg="white">
             <DrawerOverlay />
             <DrawerContent>
               <DrawerCloseButton />

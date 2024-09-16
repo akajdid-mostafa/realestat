@@ -25,7 +25,7 @@ const HomePage = ({ siteInfo }) => { // Added isLoading to the function paramete
     // Simulate a loading process, e.g., fetching data
     const timer = setTimeout(() => {
         setIsLoading(false); // Set loading to false after a delay
-    }, 2000); // Adjust delay as needed
+    }, 1000); // Adjust delay as needed
 
     return () => clearTimeout(timer); // Cleanup the timer
 }, []);

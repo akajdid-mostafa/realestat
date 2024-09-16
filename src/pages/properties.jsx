@@ -15,7 +15,7 @@ const Properties = ({ siteInfo }) => {
         // Simulate a loading process, e.g., fetching data
         const timer = setTimeout(() => {
             setIsLoading(false); // Set loading to false after a delay
-        }, 2000); // Adjust delay as needed
+        }, 1000); // Adjust delay as needed
 
         return () => clearTimeout(timer); // Cleanup the timer
     }, []);
@@ -29,15 +29,11 @@ const Properties = ({ siteInfo }) => {
                     ) : (
             <Layout siteInfo={siteInfo}>
                 <Box>
-                    {isLoading ? (
-                        <LoadingAnimation /> // Show loading animation when isLoading is true
-                    ) : (
                         <Flex direction={{ base: 'column', lg: 'row' }}>
                             <Box p={4} flex="1">
                                 <PropertyList />
                             </Box>
                         </Flex>
-                    )}
                     <Footer />
                 </Box>
             </Layout>
