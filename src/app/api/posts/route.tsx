@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
     if (!datePost) missingFields.push('datePost');
     if (!lat) missingFields.push('lat');
     if (!lon) missingFields.push('lon');
-    if (!prix || typeof prix !== 'string') missingFields.push('prix'); 
+    if (!prix) missingFields.push('prix'); 
     if (!adress) missingFields.push('adress');
     if (!ville) missingFields.push('ville');
     if (!status) missingFields.push('status');
