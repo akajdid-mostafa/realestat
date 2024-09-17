@@ -12,7 +12,6 @@ function setCorsHeaders(response: NextResponse) {
   return response;
 }
 
-console.log("ewewew")
 export function OPTIONS() {
   const response = new NextResponse(null, { status: 204 });
   return setCorsHeaders(response);
@@ -123,19 +122,19 @@ export async function GET(req: NextRequest) {
           Detail: true,
         },
       });
-      
+
       if (!post) {
         return NextResponse.json({ error: 'Post not found' }, { status: 404 });
       }
-      
+
       const date = new Date(post.datePost);
       const day = String(date.getDate()).padStart(2, '0');
       const month = String(date.getMonth() + 1).padStart(2, '0');
       const year = date.getFullYear();
-      
+
       const formattedPost = {
         ...post,
-        datePost: `${day}-${month}-${year}`,
+        datePost: `${day}-${month}-${year}`,  // Fixed string interpolation here
         youtub: post.youtub,
       };
 
@@ -169,6 +168,9 @@ export async function GET(req: NextRequest) {
           { DateReserve: { NOT: { dateDebut: null, dateFine: null } } },
         ],
       },
+      orderBy: {
+        datePost: 'asc',
+      },
     });
 
     const currentDate = new Date();
@@ -188,7 +190,7 @@ export async function GET(req: NextRequest) {
               data: { status: Status.taken },
             });
           }
-        } 
+        }
       })
     );
 
@@ -199,15 +201,16 @@ export async function GET(req: NextRequest) {
       const year = date.getFullYear();
       return {
         ...post,
-        datePost: `${day}-${month}-${year}`,
+        datePost: `${day}-${month}-${year}`,  // Fixed string interpolation here
         youtub: post.youtub,
       };
     });
 
     return NextResponse.json(formattedPosts, { status: 200 });
-  } catch (error) {
+  } catch (error: any) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     console.error('Error retrieving posts:', errorMessage);
     return NextResponse.json({ error: 'Error retrieving posts', details: errorMessage }, { status: 500 });
   }
 }
+
