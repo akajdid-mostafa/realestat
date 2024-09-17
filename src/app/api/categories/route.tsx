@@ -17,7 +17,7 @@ export function OPTIONS() {
   const response = new NextResponse(null, { status: 204 });
   return setCorsHeaders(response);
 }
-console.log("dds")
+
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
