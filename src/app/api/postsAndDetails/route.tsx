@@ -93,7 +93,7 @@ export async function POST(req: NextRequest) {
             datePost: date,
             lat: parseFloat(lat),
             lon: parseFloat(lon),
-            prix: parseFloat(prix),
+            prix,
             adress,
             ville,
             status: status as Status,
