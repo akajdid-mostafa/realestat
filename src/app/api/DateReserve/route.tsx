@@ -30,7 +30,7 @@ export async function POST(req: Request) {
       dateDebut: dateDebut ? new Date(dateDebut) : null,
       dateFine: dateFine ? new Date(dateFine) : null,
       fullName,
-      price,
+      price:parseFloat(price),
       CIN,
       post: { connect: { id: postId } },
     };

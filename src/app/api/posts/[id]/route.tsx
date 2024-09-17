@@ -25,6 +25,7 @@ export async function PUT(req: Request) {
     categoryId,
     typeId,
     youtub,
+    comment
   } = await req.json();
 
   if (typeof id !== 'string' || isNaN(Number(id))) {
@@ -101,12 +102,13 @@ export async function PUT(req: Request) {
         datePost: datePost ? new Date(datePost) : existingPost.datePost,
         lat: lat !== undefined ? parseFloat(lat) : existingPost.lat,
         lon: lon !== undefined ? parseFloat(lon) : existingPost.lon,
-        prix: prix !== undefined ? parseFloat(prix) : existingPost.prix,
+        prix,
         adress,
         ville,
         status: status as Status,
         title,
         youtub,
+        comment,
         category: categoryId ? { connect: { id: categoryId } } : undefined,
         type: typeId ? { connect: { id: typeId } } : undefined,
       },

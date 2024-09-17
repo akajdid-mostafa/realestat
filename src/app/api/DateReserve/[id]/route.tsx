@@ -58,7 +58,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
       dateDebut,
       dateFine,
       fullName,
-      price,
+      price ,
       CIN,
     } = await req.json();
 
@@ -72,7 +72,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
         dateDebut: dateDebut ? new Date(dateDebut) : undefined,
         dateFine: dateFine ? new Date(dateFine) : undefined,
         fullName,
-        price,
+        price: price !== undefined ? parseFloat(price) : undefined,
         CIN,
       },
     });

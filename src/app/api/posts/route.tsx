@@ -29,7 +29,7 @@ cloudinary.v2.config({
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { datePost, lat, lon, prix, adress, ville, status, title, categoryId, typeId, Detail, img, youtub } = body;
+    const { datePost, lat, lon, prix, adress, ville, status, title, categoryId, typeId, Detail, img, youtub, comment  } = body;
 
     console.log('Received data:', body);
 
@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
     if (!datePost) missingFields.push('datePost');
     if (!lat) missingFields.push('lat');
     if (!lon) missingFields.push('lon');
-    if (!prix) missingFields.push('prix');
+    if (!prix || typeof prix !== 'string') missingFields.push('prix'); 
     if (!adress) missingFields.push('adress');
     if (!ville) missingFields.push('ville');
     if (!status) missingFields.push('status');
@@ -81,12 +81,13 @@ export async function POST(req: NextRequest) {
         datePost: date,
         lat: parseFloat(lat),
         lon: parseFloat(lon),
-        prix: parseFloat(prix),
+        prix,  
         adress,
         ville,
         status: status as Status,
         title,
         youtub,
+        comment,
         category: { connect: { id: parseInt(categoryId) } },
         type: { connect: { id: parseInt(typeId) } },
         Detail: Detail ? { create: JSON.parse(Detail) } : undefined,
@@ -106,7 +107,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Error creating post', details: errorMessage }, { status: 500 });
   }
 }
-
+// GET
 export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
@@ -168,6 +169,9 @@ export async function GET(req: NextRequest) {
           { DateReserve: { NOT: { dateDebut: null, dateFine: null } } },
         ],
       },
+      orderBy: {
+        datePost: 'asc',  
+      },
     });
 
     const currentDate = new Date();
@@ -187,7 +191,7 @@ export async function GET(req: NextRequest) {
               data: { status: Status.taken },
             });
           }
-        } 
+        }
       })
     );
 
