@@ -34,6 +34,7 @@ export async function POST(req: Request) {
     facade,
     documents,
     postId,
+    Guard,
     Proprietary
   } = await req.json();
 
@@ -61,6 +62,7 @@ export async function POST(req: Request) {
         facade,
         documents,
         Proprietary,
+        Guard,
         post: { connect: { id: postId } },
       },
     });
