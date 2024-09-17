@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Grid, Button, Flex } from '@chakra-ui/react';
+import { Box, Grid } from '@chakra-ui/react';
 import PropertyCard from './PropertyCard';
 import PropertyDetailModal from './PropertyDetailModal';
-import PropertySearchPage from './fillter';
+import PropertySearchPage from './fillter'; // Fix import path if needed
 import NotFound from './notfound';
+import Pagination from './pagination';
 import { useRouter } from 'next/router';
 
 const POSTS_API_URL = 'https://immoceanrepo.vercel.app/api/posts';
+const DETAILS_API_URL = 'https://immoceanrepo.vercel.app/api/details';
 
 const PropertyList = () => {
     const [properties, setProperties] = useState([]);
@@ -15,42 +17,89 @@ const PropertyList = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [activeTab, setActiveTab] = useState('ALL TYPE');
     const [selectedPropertyType, setSelectedPropertyType] = useState('View All');
+    const [selectedCity, setSelectedCity] = useState('');
+    const [selectedRoomCount, setSelectedRoomCount] = useState('Tous chambre');
+    const [selectedBathroomsCount, setSelectedBathroomsCount] = useState('Tous Salle de bain');
     const router = useRouter();
-    const itemsPerPage = 6;
+    const itemsPerPage = 9;
 
     const totalPages = Math.ceil(filteredProperties.length / itemsPerPage);
 
     useEffect(() => {
-        const fetchProperties = async () => {
+        const fetchData = async () => {
             try {
-                const response = await fetch(POSTS_API_URL);
-                const data = await response.json();
-                setProperties(data);
-                setFilteredProperties(data); // Initialize with all properties
+                const [postsResponse, detailsResponse] = await Promise.all([
+                    fetch(POSTS_API_URL),
+                    fetch(DETAILS_API_URL),
+                ]);
+                const postsData = await postsResponse.json();
+                const detailsData = await detailsResponse.json();
+
+                const propertiesWithDetails = postsData.map(post => {
+                    const detail = detailsData.find(d => d.postId === post.id);
+                    return { ...post, detail };
+                });
+
+                setProperties(propertiesWithDetails);
+                setFilteredProperties(propertiesWithDetails);
             } catch (error) {
-                console.error('Error fetching properties:', error);
+                console.error('Error fetching data:', error);
             }
         };
-        fetchProperties();
+
+        fetchData();
     }, []);
 
     useEffect(() => {
-        // Filter properties based on the selected tab, property type, and status
         let filtered = properties;
 
+        // Tab filtering
         if (activeTab === 'FOR Location') {
             filtered = filtered.filter(property => property.categoryId === 2);
         } else if (activeTab === 'FOR Vente') {
             filtered = filtered.filter(property => property.categoryId === 1);
         }
+
+        // Property type filtering
         if (selectedPropertyType !== 'View All') {
             filtered = filtered.filter(property => property.type.type === selectedPropertyType);
         }
-        // Filter by status: available or taken
+
+        // City filtering
+        if (selectedCity && selectedCity !== 'All Ville') {
+            filtered = filtered.filter(property => property.ville === selectedCity);
+        }
+
+        // Room count filtering
+if (selectedRoomCount !== 'Tous chambre') {
+    filtered = filtered.filter(property => {
+        const rooms = parseInt(property.detail?.rooms, 10); // Use optional chaining and parseInt
+        if (isNaN(rooms)) return false; // Exclude properties with invalid or missing room values
+        
+        if (selectedRoomCount.startsWith('Plus')) {
+            return rooms >= 5; // 'Plus 5 chambre' shows properties with 5 or more rooms
+        }
+        return rooms === parseInt(selectedRoomCount, 10); // Exact number filtering
+    });
+}
+
+// Bathrooms count filtering
+if (selectedBathroomsCount !== 'Tous Salle de bain') {
+    filtered = filtered.filter(property => {
+        const bathrooms = parseInt(property.detail?.bathrooms, 10); // Use optional chaining and parseInt
+        if (isNaN(bathrooms)) return false; // Exclude properties with invalid or missing bathroom values
+        
+        if (selectedBathroomsCount.startsWith('Plus')) {
+            return bathrooms >= 5; // 'Plus 5 Salle de bain' shows properties with 5 or more bathrooms
+        }
+        return bathrooms === parseInt(selectedBathroomsCount, 10); // Exact number filtering
+    });
+}
+        // Availability filtering
         filtered = filtered.filter(property => property.status === 'available' || (property.status === 'taken' && property.categoryId === 2));
 
         setFilteredProperties(filtered);
-    }, [activeTab, selectedPropertyType, properties]);
+    }, [activeTab, selectedPropertyType, selectedCity, selectedRoomCount, selectedBathroomsCount, properties]);
 
     useEffect(() => {
         const { query } = router;
@@ -73,12 +122,27 @@ const PropertyList = () => {
 
     const handleTabChange = (tab) => {
         setActiveTab(tab);
-        setCurrentPage(1); // Reset page to 1 when tab changes
+        setCurrentPage(1);
     };
 
     const handlePropertyTypeChange = (type) => {
         setSelectedPropertyType(type);
-        setCurrentPage(1); // Reset page to 1 when property type changes
+        setCurrentPage(1);
+    };
+
+    const handleCityChange = (city) => {
+        setSelectedCity(city);
+        setCurrentPage(1);
+    };
+
+    const handleRoomCountChange = (count) => {
+        setSelectedRoomCount(count);
+        setCurrentPage(1);
+    };
+
+    const handleBathroomsCountChange = (count) => {
+        setSelectedBathroomsCount(count);
+        setCurrentPage(1);
     };
 
     const currentItems = filteredProperties.slice(
@@ -91,7 +155,10 @@ const PropertyList = () => {
             <PropertySearchPage
                 onTabChange={handleTabChange}
                 onPropertyTypeChange={handlePropertyTypeChange}
-                properties={properties} // Pass your list of properties here
+                properties={properties}
+                onCityChange={handleCityChange}
+                onRoomCountChange={handleRoomCountChange}
+                onBathroomsCountChange={handleBathroomsCountChange}
             />
             <Box p={4} display="flex" justifyContent="center">
                 {currentItems.length > 0 ? (
@@ -105,81 +172,26 @@ const PropertyList = () => {
                                 <PropertyCard
                                     key={property.id}
                                     property={property}
-                                    onClick={(selected) => {
-                                        setSelectedProperty(selected);
+                                    onClick={() => {
+                                        setSelectedProperty(property);
                                         router.push({
                                             pathname: '/properties',
-                                            query: { modal: 'yes', id: selected.id },
+                                            query: { modal: 'yes', id: property.id },
                                         });
                                     }}
                                 />
                             ))}
                         </Grid>
-
-                        <Flex mt={8} justify="center" align="center">
-                            <Button
-                                onClick={() => handlePageChange(currentPage - 1)}
-                                isDisabled={currentPage === 1}
-                                variant="outline"
-                                mr={2}
-                                textColor="white"
-                                bg="blue.600"
-                                borderColor="white"
-                                _hover={{
-                                    bg: 'blue.400',
-                                    color: 'white'
-                                }}
-                            >
-                                Previous
-                            </Button>
-                            {Array.from({ length: totalPages }, (_, index) => {
-                                const page = index + 1;
-                                if (page === 1 || page === 2 || page === totalPages || page === totalPages - 1 || page === currentPage) {
-                                    return (
-                                        <Button
-                                            key={index}
-                                            onClick={() => handlePageChange(page)}
-                                            variant={currentPage === page ? 'solid' : 'outline'}
-                                            mx={1}
-                                            textColor={currentPage === page ? 'white' : 'black'}
-                                            colorScheme={currentPage === page ? 'blue' : 'white'}
-                                            borderColor="white"
-                                            _hover={{
-                                                bg: currentPage === page ? 'blue.400' : 'blue.600',
-                                                color: 'white'
-                                            }}
-                                        >
-                                            {page}
-                                        </Button>
-                                    );
-                                }
-                                if ((page === 3 && currentPage > 4) || (page === totalPages - 2 && currentPage < totalPages - 3)) {
-                                    return <span key={`ellipsis-${index}`} style={{ margin: '0 8px' }}>...</span>;
-                                }
-                                return null;
-                            })}
-                            <Button
-                                onClick={() => handlePageChange(currentPage + 1)}
-                                isDisabled={currentPage === totalPages}
-                                variant="outline"
-                                ml={2}
-                                textColor="white"
-                                bg="blue.600"
-                                borderColor="white"
-                                _hover={{
-                                    bg: 'blue.400',
-                                    color: 'white'
-                                }}
-                            >
-                                Next
-                            </Button>
-                        </Flex>
+                        <Pagination
+                            totalPages={totalPages}
+                            currentPage={currentPage}
+                            onPageChange={handlePageChange}
+                        />
                     </Box>
                 ) : (
-                    <NotFound /> // Display NotFound component if no properties are found
+                    <NotFound />
                 )}
             </Box>
-
             {selectedProperty && (
                 <PropertyDetailModal
                     isOpen={!!selectedProperty}

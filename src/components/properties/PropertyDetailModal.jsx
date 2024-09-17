@@ -135,7 +135,7 @@ const PropertyDetailModal = ({ isOpen, onClose }) => {
                             fontWeight="bold"
                             pl={6}
                         >
-                            {property?.title || "Loading..."}
+                            {property?.title || "Loading..."}  
                         </Text>
                     </Box>
                 </ModalHeader>
@@ -176,7 +176,10 @@ const PropertyDetailModal = ({ isOpen, onClose }) => {
                                     parking={property?.parking}
                                     balcony={property?.balcony}
                                     pool={property?.pool}
+                                    Guard={property?.Guard}
+                                    Proprietary={property?.Proprietary}
                                     documents={property?.documents}
+
                                 />
                                 <Box position="relative" mt={4} mb={8}>
                                     <Box position="absolute" left={0} top="50%" transform="translateY(-50%)" width="4px" height="100%" bg="blue.600"></Box>
@@ -287,7 +290,7 @@ const PropertyDetailModal = ({ isOpen, onClose }) => {
                                 Les plus populaires
                             </Text>
                         </Box>
-                        <PopularCard />
+                        <PopularCard currentCategory={property?.category} />
                         <Image
                             src="/images/footer-art.svg"
                             alt=""

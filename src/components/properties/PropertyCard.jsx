@@ -1,7 +1,6 @@
 import React from 'react';
 import { Box, IconButton, Image, Text, Flex, Tag, Link } from "@chakra-ui/react";
 import { FaBed, FaEye, FaBath, FaExpandArrowsAlt, FaMapMarkerAlt } from "react-icons/fa";
-import { TbListDetails } from "react-icons/tb";
 import { useRouter } from 'next/router';
 
 const PropertyCard = ({ property, onClick }) => {
@@ -64,67 +63,62 @@ const PropertyCard = ({ property, onClick }) => {
                 </Box>
             </Link>
             <Box mt={2}>
-            <Link
-                cursor="pointer"
-                onClick={handleClick}
-                _hover={{ textDecoration: "none" }}
-            >
-                <Text
-                    fontWeight="bold"
-                    fontSize="lg"
-                    isTruncated
+                <Link
                     cursor="pointer"
-                    color="blue.800"
-                    _hover={{ textDecoration: "none", color: "inherit" }}
+                    onClick={handleClick}
+                    _hover={{ textDecoration: "none" }}
                 >
+                    <Text
+                        fontWeight="bold"
+                        fontSize="lg"
+                        isTruncated
+                        cursor="pointer"
+                        color="blue.800"
+                        _hover={{ textDecoration: "none", color: "inherit" }}
+                    >
                         {property.title}
-                </Text>
-                <Flex
-                    align="center"
-                    mt={1}
-                >
-                    <FaMapMarkerAlt />
-                    <Text ml={1} isTruncated>
-                        {property.adress}
                     </Text>
-                </Flex>
-                <Flex
-                    justify="space-between"
-                    mt={2}
-                >
-                    <Flex align="center">
-                        <FaBed />
-                        <Text ml={1}>{property.bedrooms} Bedrooms</Text>
+                    <Flex
+                        align="center"
+                        mt={1}
+                    >
+                        <FaMapMarkerAlt />
+                        <Text ml={1} isTruncated>
+                            {property.adress}
+                        </Text>
                     </Flex>
-                    <Flex align="center">
-                        <FaBath />
-                        <Text ml={1}>{property.bathrooms} Bathrooms</Text>
+                    <Flex
+                        justify="space-between"
+                        mt={2}
+                    >
+                        {property.detail && property.detail.rooms && (
+                            <Flex align="center">
+                                <FaBed />
+                                <Text ml={1}>{property.detail.rooms} chambre</Text>
+                            </Flex>
+                        )}
+                        {property.detail && property.detail.bathrooms && (
+                            <Flex align="center">
+                                <FaBath />
+                                <Text ml={1}>{property.detail.bathrooms} salle de bain</Text>
+                            </Flex>
+                        )}
+                        {property.detail && property.detail.surface && (
+                            <Flex align="center">
+                                <FaExpandArrowsAlt />
+                                <Text ml={1}>{property.detail.surface} m²</Text>
+                            </Flex>
+                        )}
                     </Flex>
-                    <Flex align="center">
-                        <FaExpandArrowsAlt />
-                        <Text ml={1}>{property.surface}</Text>
-                    </Flex>
-                </Flex>
                 </Link>
                 <Flex justify="space-between" mt={4}>
-                    <Text fontWeight="bold" color="blue.800" fontSize="xl">
-                        {property.prix} {property.typeId === 1 ? '/month' : ''}
-                    </Text>
+                    <Tag p={1.5} bg="blue.600" color="white" fontWeight="bold" fontSize="xl">
+                        {property.prix} 
+                    </Tag>
                     <Flex>
-                        <IconButton
-                            aria-label="Details"
-                            icon={<TbListDetails />}
-                            colorScheme="blue"
-                            fontSize={30}
-                            mr={2}
-                        />
-                        <IconButton
-                            aria-label="View"
-                            icon={<FaEye />}
-                            colorScheme="blue"
-                            fontSize={25}
-                            mr={1}
-                        />
+                        <Tag  color="black" fontWeight="bold">
+                            ID : {property.id}
+                        </Tag>
                     </Flex>
                 </Flex>
             </Box>

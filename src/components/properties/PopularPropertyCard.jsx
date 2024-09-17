@@ -5,7 +5,7 @@ import 'pure-react-carousel/dist/react-carousel.es.css';
 import { FaBed, FaEye , FaBath, FaExpandArrowsAlt, FaMapMarkerAlt } from 'react-icons/fa';
 import { TbListDetails } from "react-icons/tb";
 
-const PopularCard = () => {
+const PopularCard = ({ currentCategory }) => {
     const [gridDisplay, setGridDisplay] = useState(false);
     const [slidesToShow, setSlidesToShow] = useState(1);
     const [currentSlide, setCurrentSlide] = useState(0);
@@ -15,7 +15,6 @@ const PopularCard = () => {
     const intervalRef = useRef(null);
 
     useEffect(() => {
-        // Fetch posts and details from APIs
         const fetchData = async () => {
             try {
                 const postsResponse = await fetch('https://immoceanrepo.vercel.app/api/posts');
@@ -56,11 +55,11 @@ const PopularCard = () => {
     useEffect(() => {
         const interval = () => {
             if (window.innerWidth >= 1524) {
-                setCurrentSlide(prev => (prev + 1) % (totalSlides - 2));
+                setCurrentSlide(prev => (prev + 1) % (totalSlides - 3));
             } else if (window.innerWidth >= 768) {
-                setCurrentSlide(prev => (prev + 1) % (totalSlides - 1));
+                setCurrentSlide(prev => (prev + 1) % (totalSlides - 2));
             } else {
-                setCurrentSlide(prev => (prev + 1) % totalSlides);
+                setCurrentSlide(prev => (prev + 1) % (totalSlides - 1));
             }
         };
 
@@ -78,12 +77,11 @@ const PopularCard = () => {
         };
     }, [gridDisplay, totalSlides]);
 
-    // Transform API data into the format expected by the component
     const transformedData = posts.map(post => {
         const detail = details.find(detail => detail.postId === post.id) || {};
         return {
             id: post.id,
-            imageSrc: post.img[0] || '/images/card.jpeg', // Default image if none provided
+            imageSrc: post.img[0] || '/images/card.jpeg',
             title: post.title,
             urltube: post.youtub || 'https://www.youtube.com/embed/rjKsKbU2Wuo?autoplay=1&controls=1',
             type: post.type?.type || 'Unknown',
@@ -103,12 +101,15 @@ const PopularCard = () => {
             }))
         };
     });
+
+    const filteredData = transformedData.filter(card => card.category === currentCategory);
+
     return (
         <Box display="flex" flexDirection="column" alignItems="center" p={4}>
             <CarouselProvider
                 naturalSlideWidth={100}
                 naturalSlideHeight={125}
-                totalSlides={totalSlides}
+                totalSlides={filteredData.length}
                 visibleSlides={slidesToShow}
                 infinite={true}
                 isIntrinsicHeight={true}
@@ -116,18 +117,18 @@ const PopularCard = () => {
                 currentSlide={currentSlide}
             >
                 <Slider>
-                    {transformedData.map(card => (
+                    {filteredData.map(card => (
                         <Slide key={card.id} index={card.id} style={{ margin: '0 10px' }}>
                             <Box className="property-item homeya-box card" bg="white" borderRadius="md" boxShadow="lg" overflow="hidden" transition="0.3s">
                                 <Link href={`/properties?modal=yes&id=${card.id}`} className="images-group">
-                                    <Box position="relative" height="200px"> {/* Fixed height for consistency */}
+                                    <Box position="relative" height="200px">
                                         <Image
                                             src={card.imageSrc}
                                             alt={card.title}
                                             loading="lazy"
-                                            objectFit="cover" // Ensures image covers the area without distortion
+                                            objectFit="cover"
                                             width="100%"
-                                            height="100%" // Ensures the image fills the container
+                                            height="100%"
                                         />
                                         <Flex position="absolute" top={2} left={2} gap={2}>
                                             {card.category === 'Vente' && (
@@ -207,7 +208,6 @@ const PopularCard = () => {
                     ))}
                 </Slider>
             </CarouselProvider>
-
         </Box>
     );
 };

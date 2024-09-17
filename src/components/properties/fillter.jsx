@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Box,
   Button,
@@ -33,23 +33,24 @@ const citiesInMorocco = [
   "Gourrama",  "Had Bouhssoussen"
 ];
 
-
 const PropertySearchPage = ({ 
   onTabChange, 
   onPropertyTypeChange, 
-  properties = [] // List of properties passed as a prop
+  properties = [],
+  onCityChange,
+  onRoomCountChange,
+  onBathroomsCountChange
 }) => {
   const [activeTab, setActiveTab] = useState('ALL TYPE');
   const [selectedPropertyType, setSelectedPropertyType] = useState('View All');
   const [selectedCity, setSelectedCity] = useState('Select a city');
   const [cityInput, setCityInput] = useState('');
-  const [selectedRoomCount, setSelectedRoomCount] = useState(null);
-  const [selectedBathroomsCount, setSelectedBathroomsCount] = useState(null);
+  const [selectedRoomCount, setSelectedRoomCount] = useState('Tous chambre');
+  const [selectedBathroomsCount, setSelectedBathroomsCount] = useState('Tous Salle de bain');
   const inputRef = useRef(null);
 
-  // Derive unique categories from properties
   const propertyTypes = [...new Set(properties.map(property => property.type.type))];
-  
+
   const handleTabChange = (tab) => {
     setActiveTab(tab);
     onTabChange(tab); // Notify parent component about the tab change
@@ -57,11 +58,17 @@ const PropertySearchPage = ({
 
   const handlePropertyTypeChange = (type) => {
     setSelectedPropertyType(type);
-    onPropertyTypeChange(type); // Notify parent component about the property type change
+    onPropertyTypeChange(type);
   };
 
   const handleCitySearch = (event) => {
     setCityInput(event.target.value);
+  };
+
+  const handleSearch = () => {
+    onCityChange(selectedCity === 'Select a city' ? '' : selectedCity);
+    onRoomCountChange(selectedRoomCount);
+    onBathroomsCountChange(selectedBathroomsCount);
   };
 
   const filteredCities = citiesInMorocco.filter((city) =>
@@ -75,7 +82,7 @@ const PropertySearchPage = ({
           <Box borderRadius="lg" overflow="hidden" boxShadow="xl">
             <Box bg="white">
               <Flex borderBottom="1px" borderColor="gray.200" align="center" justify="center">
-                {['ALL TYPE', 'FOR Vente' , 'FOR Location'].map((tab) => (
+                {['ALL TYPE', 'FOR Vente', 'FOR Location'].map((tab) => (
                   <Button
                     key={tab}
                     variant="ghost"
@@ -92,7 +99,6 @@ const PropertySearchPage = ({
                 ))}
               </Flex>
 
-              {/* flex button search */}
               <Flex p={4} align="center" gap={4} flexDir={{ base: "column", md: "row" }}>
                 <Grid templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }} gap={4} width="100%">
                   <GridItem>
@@ -100,7 +106,7 @@ const PropertySearchPage = ({
                       <MenuButton as={Button} rightIcon={<FaChevronDown />} w="100%" size="lg">
                         {selectedCity}
                       </MenuButton>
-                      <MenuList maxHeight="320px" overflowY="auto">  
+                      <MenuList maxHeight="320px" overflowY="auto">
                         <InputGroup p={2}>
                           <Input
                             placeholder="Search..."
@@ -123,11 +129,11 @@ const PropertySearchPage = ({
                   <GridItem>
                     <Menu>
                       <MenuButton as={Button} leftIcon={<FaBed />} rightIcon={<FaChevronDown />} w="100%" size="lg">
-                        {selectedRoomCount || "Nombre de chambre"}
+                        {selectedRoomCount}
                       </MenuButton>
                       <MenuList>
-                        {["Tous chambre" , "1 chambre", "2 chambre", "3 chambre", "4 chambre", "Plus 5 chambre"].map((count) => (
-                          <MenuItem key={count} icon={<FaBed />} onClick={() => setSelectedRoomCount(count)}>
+                        {["Tous chambre", "1 chambre", "2 chambre", "3 chambre", "4 chambre", "Plus 5 chambre"].map((count) => (
+                          <MenuItem key={count} onClick={() => setSelectedRoomCount(count)}>
                             {count}
                           </MenuItem>
                         ))}
@@ -137,11 +143,11 @@ const PropertySearchPage = ({
                   <GridItem>
                     <Menu>
                       <MenuButton as={Button} leftIcon={<FaBath />} rightIcon={<FaChevronDown />} w="100%" size="lg">
-                        {selectedBathroomsCount || "Nombre de bathroom"}
+                        {selectedBathroomsCount}
                       </MenuButton>
                       <MenuList>
-                        {["Tous bathroom" , "1 bathroom", "2 bathroom", "3 bathroom", "4 bathroom", "Plus 5 bathroom"].map((count) => (
-                          <MenuItem key={count} icon={<FaBath />} onClick={() => setSelectedBathroomsCount(count)}>
+                        {["Tous Salle de bain", "1 Salle de bain", "2 Salle de bain", "3 Salle de bain", "4 Salle de bain", "Plus 5 Salle de bain"].map((count) => (
+                          <MenuItem key={count} onClick={() => setSelectedBathroomsCount(count)}>
                             {count}
                           </MenuItem>
                         ))}
@@ -149,12 +155,11 @@ const PropertySearchPage = ({
                     </Menu>
                   </GridItem>
                 </Grid>
-                <Button p={4} w={{ base: "100%", md: "auto" }} bg="blue.600" _hover={{ bg: 'blue.700' }} color="white">
+                <Button p={4} w={{ base: "100%", md: "auto" }} bg="blue.600" _hover={{ bg: 'blue.700' }} color="white" onClick={handleSearch}>
                   <SearchIcon mr={2} />
                   Search
                 </Button>
               </Flex>
-              {/* Dynamic filter type cards */}
               <Flex flexWrap="wrap" gap={2} p={4} borderTop="1px" borderColor="gray.200" justifyContent="center">
                 {['View All', ...propertyTypes].map((type) => (
                   <Button
