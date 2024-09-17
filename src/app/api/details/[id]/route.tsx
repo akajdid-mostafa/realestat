@@ -64,6 +64,7 @@ export async function PUT(req: Request) {
     facade,
     documents,
     postId,
+    Guard
   } = await req.json();
 
   if (!id || isNaN(Number(id))) {
@@ -99,6 +100,7 @@ export async function PUT(req: Request) {
         pool,
         facade,
         documents,
+        Guard,
         post: { connect: { id: postId } },
       },
     });

@@ -33,7 +33,8 @@ export async function POST(req: Request) {
     pool,
     facade,
     documents,
-    postId
+    postId,
+    Proprietary
   } = await req.json();
 
   if (!postId) {
@@ -59,6 +60,7 @@ export async function POST(req: Request) {
         pool,
         facade,
         documents,
+        Proprietary,
         post: { connect: { id: postId } },
       },
     });

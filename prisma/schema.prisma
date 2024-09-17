@@ -22,11 +22,12 @@ model Post {
   datePost    DateTime
   lat         Float
   lon         Float
-  prix        Float
+  prix        String
   adress      String
   ville       String
   status      Status
   title       String
+  comment     String?
   youtub      String?
   categoryId  Int?
   typeId      Int?
@@ -34,6 +35,8 @@ model Post {
   category    Category?    @relation(fields: [categoryId], references: [id])
   type        Type?        @relation(fields: [typeId], references: [id])
   DateReserve DateReserve?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model Partennaire {
@@ -64,7 +67,7 @@ model Detail {
   kitchen          String?
   bathrooms        String?
   furnished        String?
-  floor            String?
+  floor            String?        
   elevator         String?
   parking          String?
   balcony          String?
@@ -73,7 +76,10 @@ model Detail {
   documents        String?
   postId           Int     @unique
   post             Post    @relation(fields: [postId], references: [id])
+  Guard            String?  // New column
+  Proprietary      String?  // New column
 }
+
 
 model DateReserve {
   id        Int       @id @default(autoincrement())
@@ -81,7 +87,7 @@ model DateReserve {
   dateFine  DateTime?
   fullName  String
   CIN       String
-  price     String
+  price     Float
   postId    Int?      @unique
   post      Post?     @relation(fields: [postId], references: [id])
   createdAt DateTime  @default(now())

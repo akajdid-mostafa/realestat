@@ -32,8 +32,8 @@ export async function POST(req: NextRequest) {
     try {
       const body = await req.json();
       const { 
-        datePost, lat, lon, prix, adress, ville, status, title, categoryId, typeId, Detail, img, youtub, // Post data
-        constructionyear, surface, rooms, bedromms, livingrooms, kitchen, bathrooms, furnished, floor, elevator, parking, balcony, pool, facade, documents, postId // Detail data
+        datePost, lat, lon, prix, adress, ville, status, title, categoryId, typeId, Detail, img, youtub,comment,// Post data
+        constructionyear, surface, rooms, bedromms, livingrooms, kitchen, bathrooms, furnished, floor, elevator, parking, balcony, pool, facade, documents, postId,Guard,Proprietary // Detail data
       } = body;
   
       // Logic to determine if it's a post or detail creation based on required fields
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
         // Detail creation
         const detail = await prisma.detail.create({
           data: {
-            constructionyear, surface, rooms, bedromms, livingrooms, kitchen, bathrooms, furnished, floor, elevator, parking, balcony, pool, facade, documents,
+            constructionyear, surface, rooms, bedromms, livingrooms, kitchen, bathrooms, furnished, floor, elevator, parking, balcony, pool, facade, documents,Proprietary,Guard,
             post: { connect: { id: postId } },
           },
         });
@@ -93,12 +93,13 @@ export async function POST(req: NextRequest) {
             datePost: date,
             lat: parseFloat(lat),
             lon: parseFloat(lon),
-            prix: parseFloat(prix),
+            prix,
             adress,
             ville,
             status: status as Status,
             title,
             youtub,
+            comment,
             category: { connect: { id: parseInt(categoryId) } },
             type: { connect: { id: parseInt(typeId) } },
             Detail: Detail ? { create: Detail } : undefined, // No need to parse if already an object

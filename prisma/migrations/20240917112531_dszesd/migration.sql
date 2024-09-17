@@ -25,14 +25,17 @@ CREATE TABLE "Post" (
     "datePost" TIMESTAMP(3) NOT NULL,
     "lat" DOUBLE PRECISION NOT NULL,
     "lon" DOUBLE PRECISION NOT NULL,
-    "prix" DOUBLE PRECISION NOT NULL,
+    "prix" TEXT NOT NULL,
     "adress" TEXT NOT NULL,
     "ville" TEXT NOT NULL,
     "status" "Status" NOT NULL,
     "title" TEXT NOT NULL,
+    "comment" TEXT,
     "youtub" TEXT,
     "categoryId" INTEGER,
     "typeId" INTEGER,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Post_pkey" PRIMARY KEY ("id")
 );
@@ -81,6 +84,8 @@ CREATE TABLE "Detail" (
     "facade" TEXT,
     "documents" TEXT,
     "postId" INTEGER NOT NULL,
+    "Guard" TEXT,
+    "Proprietary" TEXT,
 
     CONSTRAINT "Detail_pkey" PRIMARY KEY ("id")
 );
@@ -92,7 +97,7 @@ CREATE TABLE "DateReserve" (
     "dateFine" TIMESTAMP(3),
     "fullName" TEXT NOT NULL,
     "CIN" TEXT NOT NULL,
-    "price" TEXT NOT NULL,
+    "price" DOUBLE PRECISION NOT NULL,
     "postId" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
