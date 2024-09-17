@@ -21,6 +21,7 @@ export async function POST(req: Request) {
     constructionyear,
     surface,
     rooms,
+    Guard,
     bedromms,  
     livingrooms,
     kitchen,
@@ -60,7 +61,7 @@ export async function POST(req: Request) {
         pool,
         facade,
         documents,
-        Proprietary,
+        Proprietary,Guard,
         post: { connect: { id: postId } },
       },
     });
