@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React , { useState , useEffect } from 'react';
 import { Box, Container, ChakraBaseProvider } from "@chakra-ui/react";
 import Hero from "../components/Index/Hero";
 import Layout from "../components/Index/Layout";
@@ -50,7 +50,7 @@ const HomePage = ({ siteInfo }) => { // Added isLoading to the function paramete
               <ContactForm />
             </Container>
           </Box>
-          <Footer /> 
+          <Footer />
         </Layout>
          )}
     </ChakraBaseProvider>
