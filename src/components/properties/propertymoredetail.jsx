@@ -23,14 +23,14 @@ const PropertyMoreDetail = ({
 
     // Collect all items in an array
     const items = [
-        rooms && { label: "Nombre de pièces :", value: rooms },
+        rooms && { label: "Nombre de chambres :", value: rooms },
         bedrooms && { label: "Chambres à coucher :", value: bedrooms },
         kitchens && { label: "Cuisine :", value: kitchens },
         bathrooms && { label: "Salles de bains :", value: bathrooms },
         area && { label: "Surface :", value: `${area} m²` },
-        yearBuilt && { label: "Construction year :", value: yearBuilt },
-        floor && { label: "Floor :", value: floor },
-        facing && { label: "Faces :", value: facing }
+        yearBuilt && { label: "Année de construction :", value: yearBuilt },
+        floor && { label: "Étage  :", value: floor },
+        facing && { label: "Nombre de façade :", value: facing }
     ].filter(Boolean); // Filter out undefined items
 
     // Determine the split point for the items

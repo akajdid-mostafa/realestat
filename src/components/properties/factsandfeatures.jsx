@@ -26,6 +26,8 @@ const FactsAndFeatures = ({
   parking,
   balcony,
   pool,
+  Guard,
+  Proprietary,
   documents
 }) => {
   const iconColor = "blue.600"; // Define a consistent icon color
@@ -150,7 +152,7 @@ const FactsAndFeatures = ({
           </Box>
           <Box>
             <Text fontWeight="semibold">Garde </Text>
-            <Text color="gray.500">Available</Text>
+            <Text color="gray.500">{Guard}</Text>
           </Box>
         </Flex>
         <Flex align="center" spacing={4}>
@@ -168,7 +170,7 @@ const FactsAndFeatures = ({
           </Box>
           <Box>
             <Text fontWeight="semibold">Propriétaire</Text>
-            <Text color="gray.500">Available</Text>
+          <Text color="gray.500">{Proprietary}</Text>
           </Box>
         </Flex>
         <Flex align="center" spacing={4}>

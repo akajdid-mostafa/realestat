@@ -21,7 +21,7 @@ import { SiWhatsapp } from "react-icons/si";
 import { FaKitchenSet } from 'react-icons/fa6';
 
 const PropertySummary = ({ title, location, category, bedrooms, kitchens, bathrooms, area, price }) => {
-    const callButtonText = useBreakpointValue({ base: "appel", md: "Passer un appel", lg: "Passer un appel" });
+    const callButtonText = useBreakpointValue({ base: "appel", md: "0762544011", lg: "0762544011" });
     const whatssapButtonText = useBreakpointValue({ base: "WhatsApp", md: "Envoyer WhatsApp", lg: "Envoyer WhatsApp" });
 
     return (
