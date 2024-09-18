@@ -24,9 +24,6 @@ const Properties = ({ siteInfo }) => {
 
     return (
         <ChakraBaseProvider theme={theme}>
-            {isLoading ? (
-                        <LoadingAnimation /> // Show loading animation when isLoading is true
-                    ) : (
             <Layout siteInfo={siteInfo}>
                 <Box>
                         <Flex direction={{ base: 'column', lg: 'row' }}>
@@ -37,8 +34,6 @@ const Properties = ({ siteInfo }) => {
                     <Footer />
                 </Box>
             </Layout>
-            )}
-
         </ChakraBaseProvider>
     );
 };

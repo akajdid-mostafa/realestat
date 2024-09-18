@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Heading, Stack, AspectRatio, Container } from '@chakra-ui/react';
+import { Box, Heading, Stack, AspectRatio, Container, useBreakpointValue } from '@chakra-ui/react';
 
 const VideoSection = ({ src, heading }) => {
   // Extract video ID from the URL
@@ -14,9 +14,12 @@ const VideoSection = ({ src, heading }) => {
   const videoId = typeof src === 'string' ? extractVideoId(src) : null;
   const embedUrl = videoId ? `https://www.youtube.com/embed/${videoId}` : '';
 
+  // Responsive width settings
+  const videoWidth = useBreakpointValue({ base: "95%", md: "80%" }); // Larger size on mobile
+
   return (
     <Container maxW="container.xl" centerContent>
-      <Box maxW="4xl" w="95%">
+      <Box maxW="4xl" w={videoWidth}> 
         <AspectRatio ratio={16 / 9} rounded="lg" overflow="hidden">
           <iframe
             src={embedUrl} // Use the formatted embed URL

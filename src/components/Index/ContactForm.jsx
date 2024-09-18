@@ -55,11 +55,11 @@ import {
 		w="full"
 	  >
 		<Box
-		  flex={{ base: 'none', md: '3' }}
 		  w="full"
 		  maxW={{ base: 'full', md: '50%' }} // Adjusted max width
 		  mr={{ base: 0, md: 6 }}
 		  mb={{ base: 6, md: 0 }}
+		  display={{ base: 'none', md: 'block' }} // Hide on mobile, show on medium screens and up
 		>
 		  <Box
 			rounded="lg"
@@ -190,4 +190,3 @@ import {
   };
   
   export default ContactForm;
-  

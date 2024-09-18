@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Box,
   Button,
@@ -14,6 +14,7 @@ import {
 } from '@chakra-ui/react';
 import { SearchIcon } from '@chakra-ui/icons';
 import { FaBed, FaChevronDown, FaBath } from "react-icons/fa";
+import { useRouter } from 'next/router'; // Import useRouter from next/router
 
 const citiesInMorocco = [
   "All Ville","Agadir","Aïn Harrouda",  "Ben Yakhlef",  "Bouskoura",  "Casablanca",  "Médiouna",  "Mohammadia",  "Tit Mellil",  "Bejaad",  "Ben Ahmed",  "Benslimane",  "Berrechid",
@@ -41,6 +42,8 @@ const PropertySearchPage = ({
   onRoomCountChange,
   onBathroomsCountChange
 }) => {
+  const router = useRouter(); // Use the useRouter hook for navigation
+
   const [activeTab, setActiveTab] = useState('ALL TYPE');
   const [selectedPropertyType, setSelectedPropertyType] = useState('View All');
   const [selectedCity, setSelectedCity] = useState('Select a city');
@@ -51,9 +54,18 @@ const PropertySearchPage = ({
 
   const propertyTypes = [...new Set(properties.map(property => property.type.type))];
 
+  useEffect(() => {
+    // Assuming properties might be updated asynchronously, re-calculate propertyTypes when properties change
+    const newPropertyTypes = [...new Set(properties.map(property => property.type.type))];
+    // Optionally set a state here if propertyTypes needs to trigger re-renders
+  }, [properties]); // Dependency on properties to update when it changes
+
   const handleTabChange = (tab) => {
     setActiveTab(tab);
-    onTabChange(tab); // Notify parent component about the tab change
+    if (typeof onTabChange === 'function') {
+      onTabChange(tab);
+    }
+    // Removed the navigation logic from here
   };
 
   const handlePropertyTypeChange = (type) => {
@@ -66,15 +78,38 @@ const PropertySearchPage = ({
   };
 
   const handleSearch = () => {
-    onCityChange(selectedCity === 'Select a city' ? '' : selectedCity);
-    onRoomCountChange(selectedRoomCount);
-    onBathroomsCountChange(selectedBathroomsCount);
+    const queryParams = new URLSearchParams({
+      city: selectedCity === 'Select a city' ? '' : selectedCity,
+      roomCount: selectedRoomCount,
+      bathroomsCount: selectedBathroomsCount,
+      tab: activeTab.replace(/\s/g, '+') // Replace spaces with '+' for URL encoding
+    }).toString();
+
+    // Redirect to the properties page with all parameters including the selected tab
+    router.push(`/properties?${queryParams}`);
   };
 
   const filteredCities = citiesInMorocco.filter((city) =>
     city.toLowerCase().includes(cityInput.toLowerCase())
   );
 
+  useEffect(() => {
+    const queryParams = new URLSearchParams(window.location.search);
+    const tabFromUrl = queryParams.get('tab');
+    const cityFromUrl = queryParams.get('city');
+    const roomCountFromUrl = queryParams.get('roomCount');
+    const bathroomsCountFromUrl = queryParams.get('bathroomsCount');
+
+    // Replace '+' with spaces and set the active tab
+    const formattedTab = tabFromUrl ? tabFromUrl.replace(/\+/g, ' ') : 'ALL TYPE';
+
+    setActiveTab(formattedTab);
+    setSelectedCity(cityFromUrl || 'Select a city');
+    setSelectedRoomCount(roomCountFromUrl || 'Tous chambre');
+    setSelectedBathroomsCount(bathroomsCountFromUrl || 'Tous Salle de bain');
+  }, [router.query]); // Ensure this effect runs when router.query changes
+
+  
   return (
     <Box>
       <Box as="main">

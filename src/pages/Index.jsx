@@ -1,4 +1,4 @@
-import React , { useState , useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Container, ChakraBaseProvider } from "@chakra-ui/react";
 import Hero from "../components/Index/Hero";
 import Layout from "../components/Index/Layout";
@@ -33,9 +33,6 @@ const HomePage = ({ siteInfo }) => { // Added isLoading to the function paramete
 
   return (
     <ChakraBaseProvider theme={theme}>
-      {isLoading ? (
-                        <LoadingAnimation /> // Show loading animation when isLoading is true
-                    ) : (
         <Layout siteInfo={siteInfo}>
           <Hero />
           <Popular />
@@ -46,15 +43,14 @@ const HomePage = ({ siteInfo }) => { // Added isLoading to the function paramete
           <Counters />
           <Cta3 />
           <Box>
-            <Container maxW="container.xl" py={4}>
+            <Container maxW={{ base: "none", md: "container.xl" }} py={4}>
               <ContactForm />
             </Container>
           </Box>
           <Footer />
         </Layout>
-         )}
     </ChakraBaseProvider>
-  );
+  )
 };
 
 export default HomePage;

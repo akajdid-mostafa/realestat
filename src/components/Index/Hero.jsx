@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box, Flex, VStack, Text, Heading, Stack, Grid } from "@chakra-ui/react";
-import Filter from "./Filter "; // Import the Filter component
+import PropertySearchPage from "../properties/fillter"; // Import the Filter component
+import { useRouter } from 'next/router'; // Import useRouter if you're using Next.js
 
 const sentences = [
   "Maison de rêve",
@@ -18,10 +19,35 @@ const imageUrls = [
   "/images/21009878_6.jpg", // Duplicate the first image
 ];
 
+// Mock properties data
+
+
 const Hero = () => {
+  const [properties, setProperties] = useState([]); // Initialize properties state
   const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [selectedTab, setSelectedTab] = useState('ALL TYPE'); // Default tab
+  const router = useRouter();
+
+  useEffect(() => {
+    // Using the provided API endpoint
+    fetch("https://immoceanrepo.vercel.app/api/posts")
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        // Assuming the data is directly in the format needed
+        setProperties(data);
+        console.log("Properties fetched successfully:", data);
+      })
+      .catch(error => {
+        console.error('Error fetching properties:', error);
+      });
+  }, []);
 
   useEffect(() => {
     const sentenceIntervalId = setInterval(() => {
@@ -47,6 +73,38 @@ const Hero = () => {
 
     return () => clearInterval(imageIntervalId);
   }, []);
+
+  const handleTabChange = (tab) => {
+    console.log("Tab changed to:", tab);
+    // Additional logic for handling tab change
+  };
+
+  const handlePropertyTypeChange = (type) => {
+    console.log("Property type changed to:", type);
+    // Additional logic for handling property type change
+  };
+
+  const handleCityChange = (city) => {
+    console.log("City changed to:", city);
+    // Additional logic for handling city change
+  };
+
+  const handleRoomCountChange = (count) => {
+    console.log("Room count changed to:", count);
+    // Additional logic for handling room count change
+  };
+
+  const handleBathroomsCountChange = (count) => {
+    console.log("Bathrooms count changed to:", count);
+    // Additional logic for handling bathrooms count change
+  };
+
+  const handleHeroSearch = () => {
+    const queryParams = new URLSearchParams({
+      tab: selectedTab.replace(/\s/g, '+') // Replace spaces with '+' for URL encoding
+    }).toString();
+    router.push(`/properties?${queryParams}`);
+  };
 
   return (
     <Flex
@@ -136,7 +194,14 @@ const Hero = () => {
             </Box>
           </Box>
         </Stack>
-        <Filter />
+        <PropertySearchPage
+          properties={properties} // Pass fetched properties to PropertySearchPage
+          onTabChange={handleTabChange}
+          onPropertyTypeChange={handlePropertyTypeChange}
+          onCityChange={handleCityChange}
+          onRoomCountChange={handleRoomCountChange}
+          onBathroomsCountChange={handleBathroomsCountChange}
+        />
       </VStack>
     </Flex>
   );

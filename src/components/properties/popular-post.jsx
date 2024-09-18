@@ -141,8 +141,9 @@ const Popular = () => {
                        transition="0.3s"
                        maxW="lg"  // Set maximum width
                    >
+                    <Link href={`/properties?modal=yes&id=${card.id}`} _hover={{ textDecoration: "none" }} className="images-group">
                        <Box position="relative" height="200px" className="image-container"> {/* Fixed height */}
-                           <Link href={`/properties?modal=yes&id=${card.id}`} className="images-group">
+                           
                                <Image
                                    src={card.imageSrc}
                                    alt={card.title}
@@ -153,7 +154,7 @@ const Popular = () => {
                                    height="100%"
                                    className="hover-image" // Added class for hover effect
                                />
-                           </Link>
+                           
                            <Flex position="absolute" top={2} left={2} gap={2}>
                                {card.category === 'Vente' && (
                                    <Tag bg="green.900" color="white" fontWeight="bold">
@@ -229,6 +230,7 @@ const Popular = () => {
                                />
                            </Flex>
                        </Flex>
+                       </Link>
                    </Box>
                     ))}
                 </Grid>
@@ -246,8 +248,8 @@ const Popular = () => {
                     <Slider>
                         {transformedData.map(card => (
                             <Slide key={card.id} index={card.id} style={{ margin: '0 10px' }}>
+                                <Link href={`/properties?modal=yes&id=${card.id}`} _hover={{ textDecoration: "none" }} className="images-group">
                                 <Box className="property-item homeya-box card" bg="white" borderRadius="md" boxShadow="lg" overflow="hidden" transition="0.3s">
-                                    <Link href={`/properties?modal=yes&id=${card.id}`} className="images-group">
                                         <Box position="relative" height="350px"> {/* Fixed height for consistency */}
                                             <Image
                                                 src={card.imageSrc}
@@ -275,7 +277,7 @@ const Popular = () => {
                                                 </Tag>
                                             </Flex>
                                         </Box>
-                                    </Link>
+                                    
                                     <Box mt={1} p={4}>
                                         <Text fontWeight="bold" fontSize="lg" isTruncated>
                                             <Link
@@ -329,7 +331,9 @@ const Popular = () => {
                                             />
                                         </Flex>
                                     </Flex>
+                                    
                                 </Box>
+                                </Link>
                             </Slide>
                         ))}
                     </Slider>

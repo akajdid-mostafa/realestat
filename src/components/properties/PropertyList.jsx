@@ -5,7 +5,7 @@ import PropertyDetailModal from './PropertyDetailModal';
 import PropertySearchPage from './fillter'; // Fix import path if needed
 import NotFound from './notfound';
 import Pagination from './pagination';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/router'; // Correct import for Next.js
 
 const POSTS_API_URL = 'https://immoceanrepo.vercel.app/api/posts';
 const DETAILS_API_URL = 'https://immoceanrepo.vercel.app/api/details';
@@ -115,6 +115,16 @@ if (selectedBathroomsCount !== 'Tous Salle de bain') {
             setSelectedProperty(null);
         }
     }, [router.query, filteredProperties, router]);
+
+    useEffect(() => {
+        const { city, roomCount, bathroomsCount } = router.query;
+
+        if (router.isReady) { // Ensure the router is ready and query parameters are available
+            handleCityChange(city || '');
+            handleRoomCountChange(roomCount || 'Tous chambre');
+            handleBathroomsCountChange(bathroomsCount || 'Tous Salle de bain');
+        }
+    }, [router.isReady, router.query]); // Re-run the effect if the URL parameters change
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
