@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react';
 import { SearchIcon } from '@chakra-ui/icons';
 import { FaBed, FaChevronDown, FaBath } from "react-icons/fa";
-import { useRouter } from 'next/router'; // Import useRouter from next/router
+import { useRouter } from 'next/router';
 
 const citiesInMorocco = [
   "All Ville","Agadir","Aïn Harrouda",  "Ben Yakhlef",  "Bouskoura",  "Casablanca",  "Médiouna",  "Mohammadia",  "Tit Mellil",  "Bejaad",  "Ben Ahmed",  "Benslimane",  "Berrechid",
@@ -40,11 +40,11 @@ const PropertySearchPage = ({
   properties = [],
   onCityChange,
   onRoomCountChange,
-  onBathroomsCountChange
+  onBathroomsCount
 }) => {
-  const router = useRouter(); // Use the useRouter hook for navigation
+  const router = useRouter();
 
-  const [activeTab, setActiveTab] = useState('ALL TYPE');
+  const [activeTab, setActiveTab] = useState('');
   const [selectedPropertyType, setSelectedPropertyType] = useState('View All');
   const [selectedCity, setSelectedCity] = useState('Select a city');
   const [cityInput, setCityInput] = useState('');
@@ -60,17 +60,58 @@ const PropertySearchPage = ({
     // Optionally set a state here if propertyTypes needs to trigger re-renders
   }, [properties]); // Dependency on properties to update when it changes
 
+  const updateUrlWithoutNavigation = (newParams) => {
+    const url = new URL(window.location.href);
+    Object.entries(newParams).forEach(([key, value]) => {
+      if (value) {
+        url.searchParams.set(key, value);
+      } else {
+        url.searchParams.delete(key);
+      }
+    });
+    window.history.pushState({}, '', url.toString());
+  };
+
   const handleTabChange = (tab) => {
     setActiveTab(tab);
     if (typeof onTabChange === 'function') {
       onTabChange(tab);
     }
-    // Removed the navigation logic from here
+    // Update URL without navigation
+    updateUrlWithoutNavigation({ tab: tab.replace(/\s/g, '+') });
+  };
+
+  const handleCityChange = (city) => {
+    setSelectedCity(city);
+    if (typeof onCityChange === 'function') {
+      onCityChange(city);
+    }
+    updateUrlWithoutNavigation({ city });
+  };
+
+  const handleRoomCountChange = (count) => {
+    setSelectedRoomCount(count);
+    if (typeof onRoomCountChange === 'function') {
+      onRoomCountChange(count);
+    }
+    updateUrlWithoutNavigation({ roomCount: count });
+  };
+
+  const handleBathroomsCountChange = (count) => {
+    setSelectedBathroomsCount(count);
+    if (typeof onBathroomsCount === 'function') {
+      onBathroomsCount(count);
+    }
+    updateUrlWithoutNavigation({ bathroomsCount: count });
   };
 
   const handlePropertyTypeChange = (type) => {
     setSelectedPropertyType(type);
-    onPropertyTypeChange(type);
+    if (typeof onPropertyTypeChange === 'function') {
+      onPropertyTypeChange(type);
+    }
+    // Update URL without navigation
+    updateUrlWithoutNavigation({ propertyType: type.replace(/\s/g, '+') });
   };
 
   const handleCitySearch = (event) => {
@@ -82,10 +123,11 @@ const PropertySearchPage = ({
       city: selectedCity === 'Select a city' ? '' : selectedCity,
       roomCount: selectedRoomCount,
       bathroomsCount: selectedBathroomsCount,
-      tab: activeTab.replace(/\s/g, '+') // Replace spaces with '+' for URL encoding
+      tab: activeTab.replace(/\s/g, '+'),
+      propertyType: selectedPropertyType === 'View All' ? '' : selectedPropertyType.replace(/\s/g, '+')
     }).toString();
 
-    // Redirect to the properties page with all parameters including the selected tab
+    // Redirect to the properties page with all parameters including the selected tab and property type
     router.push(`/properties?${queryParams}`);
   };
 
@@ -99,15 +141,28 @@ const PropertySearchPage = ({
     const cityFromUrl = queryParams.get('city');
     const roomCountFromUrl = queryParams.get('roomCount');
     const bathroomsCountFromUrl = queryParams.get('bathroomsCount');
+    const propertyTypeFromUrl = queryParams.get('propertyType');
 
-    // Replace '+' with spaces and set the active tab
-    const formattedTab = tabFromUrl ? tabFromUrl.replace(/\+/g, ' ') : 'ALL TYPE';
+    // Update states based on URL parameters
+    if (tabFromUrl) {
+      const formattedTab = tabFromUrl.replace(/\+/g, ' ');
+      setActiveTab(formattedTab);
+      if (typeof onTabChange === 'function') {
+        onTabChange(formattedTab);
+      }
+    }
+    if (cityFromUrl) setSelectedCity(cityFromUrl);
+    if (roomCountFromUrl) setSelectedRoomCount(roomCountFromUrl);
+    if (bathroomsCountFromUrl) setSelectedBathroomsCount(bathroomsCountFromUrl);
+    if (propertyTypeFromUrl) {
+      const formattedPropertyType = propertyTypeFromUrl.replace(/\+/g, ' ');
+      setSelectedPropertyType(formattedPropertyType);
+      if (typeof onPropertyTypeChange === 'function') {
+        onPropertyTypeChange(formattedPropertyType);
+      }
+    }
 
-    setActiveTab(formattedTab);
-    setSelectedCity(cityFromUrl || 'Select a city');
-    setSelectedRoomCount(roomCountFromUrl || 'Tous chambre');
-    setSelectedBathroomsCount(bathroomsCountFromUrl || 'Tous Salle de bain');
-  }, [router.query]); // Ensure this effect runs when router.query changes
+  }, [router.query, onTabChange, onPropertyTypeChange]); // Add onTabChange and onPropertyTypeChange to the dependency array
 
   
   return (
