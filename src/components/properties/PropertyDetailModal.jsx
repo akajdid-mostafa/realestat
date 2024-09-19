@@ -287,7 +287,7 @@ const PropertyDetailModal = ({ isOpen, onClose }) => {
                                 fontWeight="bold"
                                 pl={6}
                             >
-                                Les plus populaires
+                                Annonces similaires
                             </Text>
                         </Box>
                         <PopularCard currentCategory={property?.category} />

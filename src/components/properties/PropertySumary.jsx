@@ -1,5 +1,5 @@
 // PropertySummary.js
-import React from 'react';
+import React, { useState } from 'react'; // Import useState
 import {
     Box,
     Flex,
@@ -21,7 +21,8 @@ import { SiWhatsapp } from "react-icons/si";
 import { FaKitchenSet } from 'react-icons/fa6';
 
 const PropertySummary = ({ title, location, category, bedrooms, kitchens, bathrooms, area, price }) => {
-    const callButtonText = useBreakpointValue({ base: "appel", md: "0762544011", lg: "0762544011" });
+    const [showNumber, setShowNumber] = useState(false); // Add state to toggle phone number display
+    const callButtonText = useBreakpointValue({ base: "appel", md: "Afficher le n° de téléphone" , lg: "Afficher le n° de téléphone" });
     const whatssapButtonText = useBreakpointValue({ base: "WhatsApp", md: "Envoyer WhatsApp", lg: "Envoyer WhatsApp" });
 
     return (
@@ -83,7 +84,7 @@ const PropertySummary = ({ title, location, category, bedrooms, kitchens, bathro
                     <Button
                         leftIcon={<Icon as={FaPhone} />}
                         colorScheme="teal"
-                        onClick={() => window.location.href = "tel:123456789"}
+                        onClick={() => setShowNumber(true)} // Set showNumber to true when clicked
                         mr={3}
                         position="relative"
                         zIndex="1"
@@ -117,7 +118,7 @@ const PropertySummary = ({ title, location, category, bedrooms, kitchens, bathro
                             transition: "all 0.25s",
                         }}
                     >
-                        {callButtonText}
+                        {showNumber ? "(+212) 808 649 090" : callButtonText} 
                     </Button>
                     <Button
                         leftIcon={<Icon as={SiWhatsapp} />}

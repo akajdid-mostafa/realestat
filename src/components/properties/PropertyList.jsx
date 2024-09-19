@@ -5,7 +5,7 @@ import PropertyDetailModal from './PropertyDetailModal';
 import PropertySearchPage from './fillter'; // Fix import path if needed
 import NotFound from './notfound';
 import Pagination from './pagination';
-import { useRouter } from 'next/router'; // Correct import for Next.js
+import { useRouter } from 'next/router';
 
 const POSTS_API_URL = 'https://immoceanrepo.vercel.app/api/posts';
 const DETAILS_API_URL = 'https://immoceanrepo.vercel.app/api/details';
@@ -21,7 +21,7 @@ const PropertyList = () => {
     const [selectedRoomCount, setSelectedRoomCount] = useState('Tous chambre');
     const [selectedBathroomsCount, setSelectedBathroomsCount] = useState('Tous Salle de bain');
     const router = useRouter();
-    const itemsPerPage = 9;
+    const itemsPerPage = 12;
 
     const totalPages = Math.ceil(filteredProperties.length / itemsPerPage);
 
@@ -115,16 +115,6 @@ if (selectedBathroomsCount !== 'Tous Salle de bain') {
             setSelectedProperty(null);
         }
     }, [router.query, filteredProperties, router]);
-
-    useEffect(() => {
-        const { city, roomCount, bathroomsCount } = router.query;
-
-        if (router.isReady) { // Ensure the router is ready and query parameters are available
-            handleCityChange(city || '');
-            handleRoomCountChange(roomCount || 'Tous chambre');
-            handleBathroomsCountChange(bathroomsCount || 'Tous Salle de bain');
-        }
-    }, [router.isReady, router.query]); // Re-run the effect if the URL parameters change
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);

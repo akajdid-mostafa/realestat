@@ -1,63 +1,91 @@
 'use client'
 
-import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { useState, useEffect } from 'react'
+import { motion, useAnimation } from 'framer-motion'
+import { useInView } from 'react-intersection-observer'
 import { Home, DollarSign, Handshake } from 'lucide-react'
 import { Button } from "@chakra-ui/react"
+
 
 // Service data with Chakra UI compatible color classes
 const services = [
   {
-    icon: Home,
+    image: "/images/achat.jpg", // Add image path here
     title: "Vente immobiliers",
     description: "Trouvez la propriété de vos rêves grâce à nos expériences photographiques immersives et à nos listes complètes, y compris des propriétés uniques que vous ne trouverez nulle part ailleurs.",
     cta: "Trouver un bien",
   },
   {
-    icon: DollarSign,
+    image: "/images/lour.jpg",
     title: "Location immobiliers",
     description: "Profitez de l'expérience de la location d'un bien immobilier - de la consultation de notre vaste réseau à l'envoi de candidatures et au paiement du loyer, le tout en un seul endroit.",
     cta: "Louer un bien",
   },
   {
-    icon: Handshake,
-    title: "Consultation sur la propriété",
-    description: "Whether you choose our innovative Offers program or a traditional sale, we'll guide you to a successful and profitable transaction.",
-    cta: "Sell A Home",
+    image: "/images/vent.jpg",
+    title: "Vente d'un bien immobilier",
+    description: "Vendez votre propriété en toute sérénité avec notre expertise. Que ce soit via notre programme innovant ou une vente traditionnelle, nous vous accompagnons à chaque étape pour une transaction réussie.",
+    cta: "Vendre votre bien",
+  },
+  {
+    image: "/images/managment.jpg",
+    title: "Gestion immobilière",
+    description: "Simplifiez la gestion de vos biens immobiliers avec notre service complet. De la maintenance à la recherche de locataires, nous nous occupons de tout pour maximiser votre investissement et assurer votre tranquillité d'esprit.",
+    cta: "Gérer votre bien",
   }
 ]
 
 export default function CardService() {
   const [hoveredIndex, setHoveredIndex] = useState(null)
+  const controls = useAnimation();
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+    threshold: 0.5  // Adjust this value based on when you want the animation to start
+  });
+
+  useEffect(() => {
+    if (inView) {
+      controls.start('visible');
+    }
+  }, [controls, inView]);
 
   return (
-    <div className="container mx-auto px-4 py-16">
+    <div ref={ref} className="container mx-auto px-4 py-16">
       <div className="text-center mb-6">
-        <h3 className="text-lg font-medium text-gray-600 mb-2">Our Services</h3>
-        <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Main Focus</h2>
-        <div className="w-24 h-1 bg-blue-600 mx-auto"></div>
+        <h3 className="text-xl font-medium text-gray-600 mb-4">Nos services</h3>
+        <h2 className="text-4xl font-bold text-gray-900 mb-4">Notre objectif principal</h2>
+        <div className="w-80 h-1 bg-blue-600 mx-auto"></div>
       </div>
 
-      <div className="grid grid-cols-1 mt-14 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 mt-14 md:grid-cols-2 lg:grid-cols-4 gap-8">
         {services.map((service, index) => (
           <motion.div 
             key={index}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial="hidden"
+            animate={controls}
+            variants={{
+              hidden: { opacity: 0, x: (index < 2) ? -200 : 200 },
+              visible: { opacity: 1, x: 0 }
+            }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
-            className="bg-white rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 ease-in-out hover:scale-105 relative"
+            className="bg-white rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 ease-in-out hover:scale-105 relative flex flex-col justify-between" // Added flex layout here
             onMouseEnter={() => setHoveredIndex(index)}
             onMouseLeave={() => setHoveredIndex(null)}
           >
-            <div className={`h-2 bg-blue-600`}></div>
-            <div className="p-8">
-              <div className="flex justify-center mb-6">
-                <div className={`w-20 h-20 bg-blue-600 bg-opacity-20 rounded-full flex items-center justify-center`}>
-                  <service.icon className={`w-10 h-10 text-blue-600`} />
+            <div>
+              <div className={`h-2 bg-blue-600`}></div>
+              <div className="p-4">
+                <div className="flex justify-center mb-4">
+                  <div className={` bg-opacity-20 rounded-full flex items-center justify-center`}>
+                    {/* Increase image size */}
+                    <img src={service.image} alt={service.title} className="w-48 h-48" /> 
+                  </div>
                 </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4  text-center">{service.title}</h3>
+                <p className="text-gray-600 p-2 font-semibold text-center ">{service.description}</p>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">{service.title}</h3>
-              <p className="text-gray-600 mb-6 text-center">{service.description}</p>
+            </div>
+            <div className="pb-8 pl-4 pr-4">
               <div className="flex justify-center">
                 <Button
                   bg="blue.600"
@@ -82,13 +110,13 @@ export default function CardService() {
                   {service.cta}
                 </Button>
               </div>
-              <motion.div 
-                className={`absolute bottom-0 left-0 w-full h-1 bg-blue-600`}
-                initial={{ width: "0%" }}
-                animate={{ width: hoveredIndex === index ? "100%" : "0%" }}
-                transition={{ duration: 0.6 }}
-              ></motion.div>
             </div>
+            <motion.div 
+              className={`absolute bottom-0 left-0 w-full h-1 bg-blue-600`}
+              initial={{ width: "0%" }}
+              animate={{ width: hoveredIndex === index ? "100%" : "0%" }}
+              transition={{ duration: 0.6 }}
+            ></motion.div>
           </motion.div>
         ))}
       </div>
