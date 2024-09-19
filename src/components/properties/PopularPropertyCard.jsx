@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {Box,Flex,Text,Image,IconButton,Tag,Link,HStack} from '@chakra-ui/react';
+import { Box, Flex, Text, Image, IconButton, Tag, Link, HStack } from '@chakra-ui/react';
 import { CarouselProvider, Slider, Slide } from 'pure-react-carousel';
 import 'pure-react-carousel/dist/react-carousel.es.css';
-import { FaBed, FaEye , FaBath, FaExpandArrowsAlt, FaMapMarkerAlt } from 'react-icons/fa';
+import { FaBed, FaEye, FaBath, FaExpandArrowsAlt, FaMapMarkerAlt } from 'react-icons/fa';
 import { TbListDetails } from "react-icons/tb";
 
 const PopularCard = ({ currentCategory }) => {
@@ -86,6 +86,7 @@ const PopularCard = ({ currentCategory }) => {
             urltube: post.youtub || 'https://www.youtube.com/embed/rjKsKbU2Wuo?autoplay=1&controls=1',
             type: post.type?.type || 'Unknown',
             location: post.adress,
+            ville: post.ville,
             category: post.category?.name || 'Unknown',
             bedrooms: detail.bedromms || 0,
             kitchen: detail.kitchen || 0,
@@ -142,9 +143,14 @@ const PopularCard = ({ currentCategory }) => {
                                                 </Tag>
                                             )}
                                         </Flex>
-                                        <Flex position="absolute" bottom={2} left={2}>
+                                        <Flex position="absolute" bottom={2} right={2}>
                                             <Tag bg="white" color="black" fontWeight="bold">
                                                 {card.type && card.type ? card.type : 'Unknown'}
+                                            </Tag>
+                                        </Flex>
+                                        <Flex position="absolute" bottom={2} left={2}>
+                                            <Tag bg="blue.600" color="white" fontWeight="bold">
+                                                {card.ville}
                                             </Tag>
                                         </Flex>
                                     </Box>

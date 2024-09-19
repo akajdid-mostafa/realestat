@@ -99,6 +99,7 @@ const Popular = () => {
             urltube: post.youtub || 'https://www.youtube.com/embed/rjKsKbU2Wuo?autoplay=1&controls=1',
             type: post.type?.type || 'Unknown',
             location: post.adress,
+            ville: post.ville,
             category: post.category?.name || 'Unknown',
             bedrooms: detail.bedromms || 0,
             kitchen: detail.kitchen || 0,
@@ -167,9 +168,14 @@ const Popular = () => {
                                             </Tag>
                                         )}
                                     </Flex>
-                                    <Flex position="absolute" bottom={2} left={2}>
+                                    <Flex position="absolute" bottom={2} right={2}>
                                         <Tag bg="white" color="black" fontWeight="bold">
                                             {card.type || 'Unknown'}
+                                        </Tag>
+                                    </Flex>
+                                    <Flex position="absolute" bottom={2} left={2}>
+                                        <Tag bg="blue.600" color="white" fontWeight="bold">
+                                            {card.ville}
                                         </Tag>
                                     </Flex>
                                 </Box>

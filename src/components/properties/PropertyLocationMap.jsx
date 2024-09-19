@@ -9,27 +9,27 @@ const defaultCenter = {
   lng: -122.4194, // Longitude of San Francisco (default)
 };
 
-// Define a container for the map for better styling, similar to a video embed
-const mapWrapperStyle = {
-  padding: "0",
-  boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
-  borderRadius: "4px",
-  overflow: "hidden",
-  position: "relative",
-  width: "95%",
-  paddingBottom: "56.25%", // Maintains a 16:9 aspect ratio
-  height: 0,
-  backgroundColor: "#f5f5f5", // Consistent background color
-};
+// // Define a container for the map for better styling, similar to a video embed
+// const mapWrapperStyle = {
+//   padding: "0",
+//   boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
+//   borderRadius: "4px",
+//   overflow: "hidden",
+//   position: "relative",
+//   width: "95%",
+//   paddingBottom: "56.25%", // Maintains a 16:9 aspect ratio
+//   height: 0,
+//   backgroundColor: "#f5f5f5", // Consistent background color
+// };
 
-const mapContainerStyle = {
-  position: "absolute",
-  top: 0,
-  left: 0,
-  width: "100%",
-  height: "100%",
-  border: "1px solid #ccc" // Consistent border color
-};
+// const mapContainerStyle = {
+//   position: "absolute",
+//   top: 0,
+//   left: 0,
+//   width: "100%",
+//   height: "100%",
+//   border: "1px solid #ccc" // Consistent border color
+// };
 
 const Map = ({ center = defaultCenter, zoom = 15 }) => {
   const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_API || "";
@@ -37,7 +37,7 @@ const Map = ({ center = defaultCenter, zoom = 15 }) => {
 
   const [map, setMap] = useState(null);
 
-  const { isLoaded } = useJsApiLoader({
+  const { isLoaded, loadError } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: API_KEY,
   });
@@ -49,6 +49,11 @@ const Map = ({ center = defaultCenter, zoom = 15 }) => {
   const onUnmount = useCallback(() => {
     setMap(null);
   }, []);
+
+  if (loadError) {
+    console.error("Error loading Google Maps API:", loadError);
+    return <div>Error loading map</div>;
+  }
 
   return (
     <Container maxW="container.xl" centerContent>

@@ -12,7 +12,7 @@ import {
 import {
     FaBed,
     FaBath,
-    FaExpandArrowsAlt,
+    FaCity ,
     FaMapMarkerAlt,
     FaPhone,
     FaWhatsapp,
@@ -20,7 +20,7 @@ import {
 import { SiWhatsapp } from "react-icons/si";
 import { FaKitchenSet } from 'react-icons/fa6';
 
-const PropertySummary = ({ title, location, category, bedrooms, kitchens, bathrooms, area, price }) => {
+const PropertySummary = ({ title, location, category, Ville, kitchens, bathrooms, area, price }) => {
     const [showNumber, setShowNumber] = useState(false); // Add state to toggle phone number display
     const callButtonText = useBreakpointValue({ base: "appel", md: "Afficher le n° de téléphone" , lg: "Afficher le n° de téléphone" });
     const whatssapButtonText = useBreakpointValue({ base: "WhatsApp", md: "Envoyer WhatsApp", lg: "Envoyer WhatsApp" });
@@ -40,6 +40,12 @@ const PropertySummary = ({ title, location, category, bedrooms, kitchens, bathro
                 <Text fontSize={{ base: "lg", md: "xl", lg: "2xl" }} color="blue.600">
                     {title}
                 </Text>
+                <Flex align="center" mt={{ base: 2, md: 1 }}>
+                    <FaCity  color="blue.600" />
+                    <Text fontSize={{ base: "sm", md: "md" }} ml={2}>
+                        {Ville}
+                    </Text>
+                </Flex>
                 <Flex align="center" mt={{ base: 2, md: 1 }}>
                     <FaMapMarkerAlt color="blue.600" />
                     <Text fontSize={{ base: "sm", md: "md" }} ml={2}>

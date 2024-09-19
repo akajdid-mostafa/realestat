@@ -12,19 +12,8 @@ import {
     Box,
     Text,
     useBreakpointValue,
-    FormControl,
-    FormLabel,
-    InputGroup,
-    InputLeftElement,
-    Input,
-    Textarea,
-    Button,
 } from "@chakra-ui/react";
-import {
-    FaPhone,
-    FaEnvelope,
-    FaUser,
-} from "react-icons/fa";
+import ContactForm from './contact';
 import Carousel from "./Carousel";
 import FactsAndFeatures from './factsandfeatures';
 import VideoSection from './Videoyoutube';
@@ -78,6 +67,7 @@ const PropertyDetailModal = ({ isOpen, onClose }) => {
                         setProperty({
                             ...post,
                             ...detail,
+                            postid:post.id,
                             images: post.img, // Assuming images are from the post
                             youtubeUrl: post.youtub,
                             location: post.adress,
@@ -101,8 +91,8 @@ const PropertyDetailModal = ({ isOpen, onClose }) => {
     }, [query]);
 
     useEffect(() => {
-        if (property) {
-            setMessage(`Je suis intéressé par ${property.title} avec l'ID de référence ${property.id}, au prix de ${property.price} et ...`);
+        if (property && property.id) { // Ensure property and property.id are not undefined
+            setMessage(`Je suis intéressé par ${property.title} avec l'ID de référence ${property.postid}, au prix de ${property.price} et ...`);
         }
     }, [property]);
 
@@ -148,6 +138,7 @@ const PropertyDetailModal = ({ isOpen, onClose }) => {
                         <Box>
                             <PropertySummary
                                 title={property?.title}
+                                Ville={property?.ville}
                                 location={property?.location}
                                 category={property?.type}
                                 bedrooms={property?.bedrooms}
@@ -209,75 +200,7 @@ const PropertyDetailModal = ({ isOpen, onClose }) => {
                                     />
                                 </Box>
                             </Box>
-                            <Box flex={{ base: "1", lg: "0.3" }} p={4} position="sticky" top={0} mr="10" height="100%" width="100%" overflowY="auto" bg="white" boxShadow="md">
-                                <Text fontSize="2xl" fontWeight="bold" mb={4} textAlign="center">
-                                    Besoin d&apos;être contacté ?
-                                </Text>
-                                <FormControl mb={4}>
-                                    <FormLabel>Name</FormLabel>
-                                    <InputGroup>
-                                        <InputLeftElement
-                                            pointerEvents="none"
-                                        >
-                                            <FaUser />
-                                        </InputLeftElement>
-                                        <Input placeholder="Your Name" />
-                                    </InputGroup>
-                                </FormControl>
-                                <FormControl mb={4}>
-                                    <FormLabel>Email</FormLabel>
-                                    <InputGroup>
-                                        <InputLeftElement
-                                            pointerEvents="none"
-                                        >
-                                            <FaEnvelope />
-                                        </InputLeftElement>
-                                        <Input type="email" placeholder="Your Email" />
-                                    </InputGroup>
-                                </FormControl>
-                                <FormControl mb={4}>
-                                    <FormLabel>Your Number Phone</FormLabel>
-                                    <InputGroup>
-                                        <InputLeftElement
-                                            pointerEvents="none"
-                                        >
-                                            <FaPhone />
-                                        </InputLeftElement>
-                                        <Input type="tel" placeholder="Your Phone Number" />
-                                    </InputGroup>
-                                </FormControl>
-                                <FormControl mb={4}>
-                                    <FormLabel>Message</FormLabel>
-                                    <Textarea
-                                        value={message}
-                                        onChange={(e) => setMessage(e.target.value)}
-                                        placeholder="Your Message"
-                                        style={{
-                                            fontWeight: "semibold",
-                                            borderColor: 'blue.600',
-                                            boxShadow: '0 0 5px rgba(0, 128, 128, 0.5)',
-                                            height: '150px'
-                                        }}
-                                    />
-                                </FormControl>
-                                <Button
-                                    colorScheme="blue"
-                                    width="full"
-                                    bg="blue.600"
-                                    _hover={{ transform: 'scale(1.05)' }}
-                                    transition="transform 0.2s"
-                                >
-                                    Send Message
-                                </Button>
-                                <Text
-                                    textAlign="center"
-                                    fontSize="sm"
-                                    color="gray.600"
-                                    mt={2}
-                                >
-                                    En continuant, vous acceptez de recevoir des textes à l&apos;adresse électronique que vous avez fournie. Nous nous engageons à ne pas vous spammer.
-                                </Text>
-                            </Box>
+                            <ContactForm message={message} setMessage={setMessage} />
                         </Flex>
 
                         <Box position="relative" mt={8} mb={8}>

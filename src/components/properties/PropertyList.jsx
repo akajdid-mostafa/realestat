@@ -116,6 +116,15 @@ if (selectedBathroomsCount !== 'Tous Salle de bain') {
         }
     }, [router.query, filteredProperties, router]);
 
+    useEffect(() => {
+        const { city, roomCount, bathroomsCount } = router.query;
+        if (router.isReady) { // Ensure the router is ready and query parameters are available
+            handleCityChange(city || '');
+            handleRoomCountChange(roomCount || 'Tous chambre');
+            handleBathroomsCountChange(bathroomsCount || 'Tous Salle de bain');
+        }
+    }, [router.isReady, router.query]); // Re-run the effect if the URL parameters change
+
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
     };
