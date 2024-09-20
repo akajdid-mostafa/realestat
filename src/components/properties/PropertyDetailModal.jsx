@@ -22,9 +22,6 @@ import Map from './PropertyLocationMap';
 import PopularCard from './PopularPropertyCard';
 import PropertySummary from './PropertySumary';
 
-
-
-
 const POSTS_API_URL = 'https://immoceanrepo.vercel.app/api/posts';
 const DETAILS_API_URL = 'https://immoceanrepo.vercel.app/api/details';
 
@@ -91,10 +88,15 @@ const PropertyDetailModal = ({ isOpen, onClose }) => {
     }, [query]);
 
     useEffect(() => {
-        if (property && property.id) { // Ensure property and property.id are not undefined
-            setMessage(`Je suis intéressé par ${property.title} avec l'ID de référence ${property.postid}, au prix de ${property.price} et ...`);
+        if (property && property.postid) {
+            const newMessage = `Interested in property ${property.title} with ID ${property.postid}, priced at ${property.price}.`;
+            setMessage(newMessage);
+            console.log("Updated message:", newMessage); // This should log the correct message
         }
     }, [property]);
+
+    // Debugging output to check the message state
+    console.log("Message to ContactForm:", message); // This should log the message being passed to ContactForm
 
     if (loading) return <Text>Loading...</Text>;
     if (error) return <Text>{error}</Text>;
@@ -200,7 +202,7 @@ const PropertyDetailModal = ({ isOpen, onClose }) => {
                                     />
                                 </Box>
                             </Box>
-                            <ContactForm message={message} setMessage={setMessage} />
+                            <ContactForm defaultMessage={message} />
                         </Flex>
 
                         <Box position="relative" mt={8} mb={8}>
