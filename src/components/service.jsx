@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { motion, useAnimation } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { Home, DollarSign, Handshake } from 'lucide-react'
-import { Button } from "@chakra-ui/react"
+import { Button , Link } from "@chakra-ui/react"
 
 
 // Service data with Chakra UI compatible color classes
@@ -14,24 +14,28 @@ const services = [
     title: "Vente immobiliers",
     description: "Trouvez la propriété de vos rêves grâce à nos expériences photographiques immersives et à nos listes complètes, y compris des propriétés uniques que vous ne trouverez nulle part ailleurs.",
     cta: "Trouver un bien",
+    href:"/properties",
   },
   {
     image: "/images/lour.jpg",
     title: "Location immobiliers",
     description: "Profitez de l'expérience de la location d'un bien immobilier - de la consultation de notre vaste réseau à l'envoi de candidatures et au paiement du loyer, le tout en un seul endroit.",
     cta: "Louer un bien",
+    href:"/properties",
   },
   {
     image: "/images/vent.jpg",
     title: "Vente d'un bien immobilier",
     description: "Vendez votre propriété en toute sérénité avec notre expertise. Que ce soit via notre programme innovant ou une vente traditionnelle, nous vous accompagnons à chaque étape pour une transaction réussie.",
     cta: "Vendre votre bien",
+    href:"/properties",
   },
   {
     image: "/images/managment.jpg",
     title: "Gestion immobilière",
     description: "Simplifiez la gestion de vos biens immobiliers avec notre service complet. De la maintenance à la recherche de locataires, nous nous occupons de tout pour maximiser votre investissement et assurer votre tranquillité d'esprit.",
     cta: "Gérer votre bien",
+    href:"/properties",
   }
 ]
 
@@ -87,7 +91,9 @@ export default function CardService() {
             </div>
             <div className="pb-8 pl-4 pr-4">
               <div className="flex justify-center">
+                <Link href={service.href}>
                 <Button
+                  
                   bg="blue.600"
                   color="white"
                   variant="solid"
@@ -109,6 +115,7 @@ export default function CardService() {
                 >
                   {service.cta}
                 </Button>
+                </Link>
               </div>
             </div>
             <motion.div 
