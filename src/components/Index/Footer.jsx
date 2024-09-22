@@ -23,7 +23,7 @@ export default function Footer() {
                                 height={50}
                             />
                             <p className="text-base leading-relaxed text-gray-600 mt-7">
-                                Nous fournissons un service complet pour la vente, l'achat ou la location de biens immobiliers. Nous opérons depuis plus de 10 ans. Recherchez des millions d'appartements et de maisons sur ImmOcean.
+                                Nous fournissons un service complet pour la vente, l&apos;achat ou la location de biens immobiliers. Nous opérons depuis plus de 10 ans. Recherchez des millions d&apos;appartements et de maisons sur ImmOcean.
                             </p>
                         </div>
                         <ul className="flex space-x-3">

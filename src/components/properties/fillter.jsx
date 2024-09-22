@@ -15,6 +15,7 @@ import {
 import { SearchIcon } from '@chakra-ui/icons';
 import { FaBed, FaChevronDown, FaBath } from "react-icons/fa";
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 const citiesInMorocco = [
   "All Ville","Agadir","Aïn Harrouda",  "Ben Yakhlef",  "Bouskoura",  "Casablanca",  "Médiouna",  "Mohammadia",  "Tit Mellil",  "Bejaad",  "Ben Ahmed",  "Benslimane",  "Berrechid",
@@ -118,7 +119,7 @@ const PropertySearchPage = ({
     setCityInput(event.target.value);
   };
 
-  const handleSearch = () => {
+  const getSearchUrl = () => {
     const queryParams = new URLSearchParams({
       city: selectedCity === 'Select a city' ? '' : selectedCity,
       roomCount: selectedRoomCount,
@@ -127,8 +128,11 @@ const PropertySearchPage = ({
       propertyType: selectedPropertyType === 'View All' ? '' : selectedPropertyType.replace(/\s/g, '+')
     }).toString();
 
-    // Redirect to the properties page with all parameters including the selected tab and property type
-    router.push(`/properties?${queryParams}`);
+    return `/properties?${queryParams}`;
+  };
+
+  const handleSearch = () => {
+    router.push(getSearchUrl());
   };
 
   const filteredCities = citiesInMorocco.filter((city) =>
@@ -164,7 +168,16 @@ const PropertySearchPage = ({
 
   }, [router.query, onTabChange, onPropertyTypeChange]); // Add onTabChange and onPropertyTypeChange to the dependency array
 
-  
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return null; // or a loading indicator
+  }
+
   return (
     <Box>
       <Box as="main">
@@ -245,7 +258,14 @@ const PropertySearchPage = ({
                     </Menu>
                   </GridItem>
                 </Grid>
-                <Button p={4} w={{ base: "100%", md: "auto" }} bg="blue.600" _hover={{ bg: 'blue.700' }} color="white" onClick={handleSearch}>
+                <Button 
+                  onClick={handleSearch}
+                  p={4} 
+                  w={{ base: "100%", md: "auto" }} 
+                  bg="blue.600" 
+                  _hover={{ bg: 'blue.700' }} 
+                  color="white"
+                >
                   <SearchIcon mr={2} />
                   Search
                 </Button>

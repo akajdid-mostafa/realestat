@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   Flex,
-  Link,
   useDisclosure,
   Drawer,
   DrawerBody,
@@ -16,6 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import { ReactNode } from "react";
+import Link from 'next/link';
 import Image from "next/image";
 import siteInfo from "../../types/CmsSingleTypes/siteInformation";
 import { MdOutlineArrowOutward } from "react-icons/md";

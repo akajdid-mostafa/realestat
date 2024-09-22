@@ -120,7 +120,7 @@ const ContactForm = ({ siteInfo, formHeading, shouldHaveNegativeTopMargin }) => 
 						height="300"
 						frameBorder="0"
 						title="map"
-						src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=+(OCEAN%20SALON)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
+						src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=Garage%20Nr:,%20791%20EL%20GOUIRA,%20Agadir%2080000+(OCEAN%20SALON)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
 						style={{
 							borderRadius: '8px',
 							transition: 'filter 0.3s ease', // Smooth transition for filter
