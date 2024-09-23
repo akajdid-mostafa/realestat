@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   Flex,
-  Link,
   useDisclosure,
   Drawer,
   DrawerBody,
@@ -16,6 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import { ReactNode } from "react";
+import Link from 'next/link';
 import Image from "next/image";
 import siteInfo from "../../types/CmsSingleTypes/siteInformation";
 import { MdOutlineArrowOutward } from "react-icons/md";
@@ -53,27 +53,21 @@ const Naavbar = () => {
           _hover={{ textDecoration: "none" }}
         >
           <Image
-            src={siteInfo.logo.data.attributes.url}
-            alt={siteInfo.logo.data.attributes.alternativeText}
+            src="/images/logoo.png"
+            alt="logo"
             height={50}
-            width={50} // Adjust width as needed
+            width={230}
           />
-          <Text
-            ml="0.5rem" // margin-left shorthand
-            fontWeight="bold"
-            fontSize={25}
-            color="blue.600"
-          >
-            {siteInfo.siteName}
-          </Text>
         </Link>
         <Flex
           display={{ base: "none", md: "flex" }}
           alignItems="center"
           gap={12}
+          fontWeight="bold"
         >
           <NavLink href="/Index">Home</NavLink>
           <NavLink href="/properties">Propriétés</NavLink>
+          <NavLink href="/service">Services</NavLink>
           <NavLink href="/about">About</NavLink>
           <NavLink href="/contact">Contact</NavLink>
         </Flex>

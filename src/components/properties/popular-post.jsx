@@ -8,6 +8,7 @@ import {
     Image,
     Grid,
     IconButton,
+    Icon,
     Tag,
     Link,
     HStack
@@ -17,6 +18,9 @@ import 'pure-react-carousel/dist/react-carousel.es.css';
 import { FaBed, FaBath, FaExpandArrowsAlt, FaMapMarkerAlt } from 'react-icons/fa';
 import { MdPhone } from 'react-icons/md';
 import { FaWhatsapp } from 'react-icons/fa';
+import { SiWhatsapp } from "react-icons/si";
+
+
 
 const Popular = () => {
     const [gridDisplay, setGridDisplay] = useState(false);
@@ -168,30 +172,28 @@ const Popular = () => {
                                             </Tag>
                                         )}
                                     </Flex>
-                                    <Flex position="absolute" bottom={2} right={2}>
-                                        <Tag bg="white" color="black" fontWeight="bold">
-                                            {card.type || 'Unknown'}
-                                        </Tag>
-                                    </Flex>
-                                    <Flex position="absolute" bottom={2} left={2}>
+                                </Box>
+
+                                <Box mt={2} p={2}>
+                                    <Flex
+                                        align="center"
+                                        justify="space-between" // Changed to space-between to push content to edges
+                                        mt={1}
+                                    >
+                                        <Text
+                                            fontWeight="bold"
+                                            fontSize="lg"
+                                            isTruncated
+                                            cursor="pointer"
+                                            color="blue.800"
+                                            _hover={{ textDecoration: "none", color: "inherit" }}
+                                        >
+                                            {card.title}
+                                        </Text>
                                         <Tag bg="blue.600" color="white" fontWeight="bold">
                                             {card.ville}
                                         </Tag>
                                     </Flex>
-                                </Box>
-
-                                <Box mt={2} p={2}>
-                                    <Text fontWeight="bold" fontSize="lg" isTruncated>
-                                        <Link
-                                            href={`/properties/${card.id}.html`}
-                                            textDecoration="none"
-                                            color="blue.800"
-                                            _hover={{ textDecoration: 'none', color: 'inherit' }}
-                                            title={card.title}
-                                        >
-                                            {card.title}
-                                        </Link>
-                                    </Text>
                                     <Flex align="center" mt={1}>
                                         <FaMapMarkerAlt />
                                         <Text ml={1} isTruncated>
@@ -219,21 +221,47 @@ const Popular = () => {
                                         {card.price}
                                     </Text>
                                     <Flex>
-                                        <IconButton
-                                            as="a"
-                                            href={`tel:0762544011`}
-                                            aria-label="Call"
-                                            icon={<MdPhone />}
+                                        <Button
+                                            leftIcon={<Icon as={SiWhatsapp} />}
                                             colorScheme="green"
-                                            mr={2}
-                                        />
-                                        <IconButton
-                                            as="a"
-                                            href={`https://wa.me/+212762544011`}
-                                            aria-label="WhatsApp"
-                                            icon={<FaWhatsapp />}
-                                            colorScheme="green"
-                                        />
+                                            onClick={() => {
+                                                const message = encodeURIComponent(`Interested in property ${card.title} with ID ${card.id}, priced at ${card.price}. View more at http://localhost:3000/properties?modal=yes&id=${card.id}`);
+                                                window.open(`https://wa.me/123456789?text=${message}`, "_blank");
+                                            }}
+                                            position="relative"
+                                            zIndex="1"
+                                            px="4" // Reduced padding on x-axis
+                                            py="2" // Reduced padding on y-axis
+                                            color="white"
+                                            fontWeight="bold"
+                                            fontSize={{ base: "xs", md: "sm", lg: "md" }} // Smaller font sizes
+                                            bg="#198754"
+                                            borderRadius="15px"
+                                            boxShadow="md"
+                                            overflow="hidden"
+                                            transition="all 0.25s"
+                                            _hover={{
+                                                color: "#white",
+                                                _before: {
+                                                    width: "100%",
+                                                },
+                                            }}
+                                            _before={{
+                                                content: '""',
+                                                position: "absolute",
+                                                top: 0,
+                                                left: 0,
+                                                height: "100%",
+                                                width: "0",
+                                                borderRadius: "15px",
+                                                bg: "#20c997",
+                                                zIndex: "-1",
+                                                boxShadow: "md",
+                                                transition: "all 0.25s",
+                                            }}
+                                        >
+                                            WhatsApp
+                                        </Button>
                                     </Flex>
                                 </Flex>
                             </Link>
@@ -285,17 +313,25 @@ const Popular = () => {
                                         </Box>
 
                                         <Box mt={1} p={4}>
-                                            <Text fontWeight="bold" fontSize="lg" isTruncated>
-                                                <Link
-                                                    href={`/properties/${card.id}.html`}
-                                                    textDecoration="none"
+                                            <Flex
+                                                align="center"
+                                                justify="space-between" // Changed to space-between to push content to edges
+                                                mt={1}
+                                            >
+                                                <Text
+                                                    fontWeight="bold"
+                                                    fontSize="lg"
+                                                    isTruncated
+                                                    cursor="pointer"
                                                     color="blue.800"
-                                                    _hover={{ textDecoration: 'none', color: 'inherit' }}
-                                                    title={card.title}
+                                                    _hover={{ textDecoration: "none", color: "inherit" }}
                                                 >
                                                     {card.title}
-                                                </Link>
-                                            </Text>
+                                                </Text>
+                                                <Tag bg="blue.600" color="white" fontWeight="bold">
+                                                    {card.ville}
+                                                </Tag>
+                                            </Flex>
                                             <Flex alignItems="center" mt={1}>
                                                 <FaMapMarkerAlt />
                                                 <Text ml={1} isTruncated>

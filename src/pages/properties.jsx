@@ -7,7 +7,7 @@ import '../styles/globals.css';
 import Layout from '../components/Index/Layout';
 import PropertyList from '../components/properties/PropertyList';
 import LoadingAnimation from '../components/Loading';
-
+import { WhatsApp } from '../components/whatssap';
 const Properties = ({ siteInfo }) => {
     const [isLoading, setIsLoading] = useState(true); // Add loading state
 
@@ -32,6 +32,7 @@ const Properties = ({ siteInfo }) => {
                             </Box>
                         </Flex>
                     <Footer />
+                    <WhatsApp />
                 </Box>
             </Layout>
         </ChakraBaseProvider>

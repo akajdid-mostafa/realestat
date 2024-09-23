@@ -26,7 +26,6 @@ export default function HomeFinancingSteps() {
     return (
         <Box
             bgGradient="linear(to-l, blue.700, blue.500)"
-            mx="auto"
             pt={10}
             pb={10}
             textColor="white"
@@ -86,7 +85,6 @@ export default function HomeFinancingSteps() {
                                         borderRadius="lg"
                                         boxShadow="lg"
                                         w="full"
-                                        maxW="md"
                                         display="flex"
                                         flexDirection="column"
                                         transition="transform 0.3s"
@@ -109,7 +107,6 @@ export default function HomeFinancingSteps() {
                                         <Text fontSize="md" flexGrow={1} mb={2}>
                                             {step.description}
                                         </Text>
-                                        {step.linkText && (
                                             <Button
                                                 as="a"
                                                 href={step.linkUrl}
@@ -118,7 +115,6 @@ export default function HomeFinancingSteps() {
                                             >
                                                 {step.linkText}
                                             </Button>
-                                        )}
                                     </Box>
                                 </Slide>
                             ))}

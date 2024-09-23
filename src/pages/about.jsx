@@ -5,7 +5,7 @@ import Layout from '../components/Index/Layout'
 import theme from '../types/CmsSingleTypes/theme'
 import '../styles/globals.css';  
 import Footer from '../components/Index/Footer'
-
+import { WhatsApp } from '../components/whatssap';
 const about = ({ siteInfo}) => {
     return (
         <>
@@ -13,8 +13,8 @@ const about = ({ siteInfo}) => {
                 <Layout siteInfo={siteInfo}>
 
                 <About />
-               
                 <Footer/>
+                <WhatsApp />
                 </Layout>
                 
             </ChakraBaseProvider>

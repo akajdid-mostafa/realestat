@@ -14,6 +14,7 @@ import Abouta from "../components/Index/abou";
 import Counters from "../components/Index/Counters";
 import CardService from '../components/service';
 import LoadingAnimation from '../components/Loading';
+import { WhatsApp } from '../components/whatssap';
 
 
 
@@ -48,6 +49,7 @@ const HomePage = ({ siteInfo }) => { // Added isLoading to the function paramete
             </Container>
           </Box>
           <Footer />
+          <WhatsApp />
         </Layout>
     </ChakraBaseProvider>
   )

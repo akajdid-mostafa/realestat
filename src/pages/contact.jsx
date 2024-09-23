@@ -5,6 +5,7 @@ import { ChakraBaseProvider } from '@chakra-ui/react'
 import ContactForm from '../components/Index/ContactForm'
 import Footer from '../components/Index/Footer'
 import theme from '../types/CmsSingleTypes/theme'
+import { WhatsApp } from '../components/whatssap';
 import '../styles/globals.css';
 const ContactUsPage = ({ siteInfo }) => {
 	return (
@@ -18,6 +19,7 @@ const ContactUsPage = ({ siteInfo }) => {
 					</Stack>
 				</Container>
 				<Footer/>
+				<WhatsApp />
 				</Box>
 			</Layout>
 			

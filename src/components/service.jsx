@@ -1,41 +1,43 @@
+/* eslint-disable @next/next/no-img-element */
 'use client'
 
 import { useState, useEffect } from 'react'
 import { motion, useAnimation } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
-import { Home, DollarSign, Handshake } from 'lucide-react'
-import { Button , Link } from "@chakra-ui/react"
+import { Button  } from "@chakra-ui/react"
+import Link from 'next/link'
+
 
 
 // Service data with Chakra UI compatible color classes
 const services = [
   {
     image: "/images/achat.jpg", // Add image path here
-    title: "Vente immobiliers",
+    title: "Achat d'un bien immobilier",
     description: "Trouvez la propriété de vos rêves grâce à nos expériences photographiques immersives et à nos listes complètes, y compris des propriétés uniques que vous ne trouverez nulle part ailleurs.",
     cta: "Trouver un bien",
-    href:"/properties",
+    href:"/properties?tab=FOR%2BVente",
   },
   {
     image: "/images/lour.jpg",
     title: "Location immobiliers",
     description: "Profitez de l'expérience de la location d'un bien immobilier - de la consultation de notre vaste réseau à l'envoi de candidatures et au paiement du loyer, le tout en un seul endroit.",
-    cta: "Louer un bien",
-    href:"/properties",
+    cta: "Louer un bien", 
+    href: "/properties?tab=FOR%2BLocation",      
   },
   {
     image: "/images/vent.jpg",
     title: "Vente d'un bien immobilier",
     description: "Vendez votre propriété en toute sérénité avec notre expertise. Que ce soit via notre programme innovant ou une vente traditionnelle, nous vous accompagnons à chaque étape pour une transaction réussie.",
     cta: "Vendre votre bien",
-    href:"/properties",
+    href: "/service",
   },
   {
     image: "/images/managment.jpg",
     title: "Gestion immobilière",
     description: "Simplifiez la gestion de vos biens immobiliers avec notre service complet. De la maintenance à la recherche de locataires, nous nous occupons de tout pour maximiser votre investissement et assurer votre tranquillité d'esprit.",
     cta: "Gérer votre bien",
-    href:"/properties",
+    href: "/service",
   }
 ]
 
