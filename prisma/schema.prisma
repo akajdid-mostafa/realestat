@@ -19,7 +19,7 @@ model User {
 model Post {
   id          Int          @id @default(autoincrement())
   img         Json[]
-  datePost    DateTime
+  // datePost    DateTime
   lat         Float
   lon         Float
   prix        String

@@ -67,7 +67,6 @@ export async function PUT(req: NextRequest) {
   if (!id || isNaN(Number(id))) {
     return setCorsHeaders(NextResponse.json({ error: 'Invalid or missing ID' }, { status: 400 }));
   }
-
   try {
     if (datePost || lat || lon || prix || adress || ville || status || title || img) {
       const existingPost = await prisma.post.findUnique({ where: { id: Number(id) } });
@@ -127,55 +126,56 @@ export async function PUT(req: NextRequest) {
 
    
     if (
-      constructionyear ||
-      surface ||
-      rooms ||
-      bedromms ||
-      livingrooms ||
-      kitchen ||
-      bathrooms ||
-      furnished ||
-      floor ||
-      elevator ||
-      parking ||
-      balcony ||
-      pool ||
-      facade ||
-      documents ||
-      Guard
-    ) {
-      const existingDetail = await prisma.detail.findUnique({ where: { id: Number(id) } });
-
-      if (!existingDetail) {
-        return setCorsHeaders(NextResponse.json({ error: 'Detail not found' }, { status: 404 }));
+        constructionyear ||
+        surface ||
+        rooms ||
+        bedromms ||
+        livingrooms ||
+        kitchen ||
+        bathrooms ||
+        furnished ||
+        floor ||
+        elevator ||
+        parking ||
+        balcony ||
+        pool ||
+        facade ||
+        documents ||
+        Guard
+      ) {
+        // Fetch Detail by the postId
+        const existingDetail = await prisma.detail.findUnique({
+          where: { postId: Number(id) },  // Use postId to get the correct Detail
+        });
+      
+        if (!existingDetail) {
+          return setCorsHeaders(NextResponse.json({ error: 'Detail not found' }, { status: 404 }));
+        }
+      
+        const updatedDetail = await prisma.detail.update({
+          where: { id: existingDetail.id },  // Use Detail's own id to update the correct record
+          data: {
+            constructionyear,
+            surface,
+            rooms,
+            bedromms,
+            livingrooms,
+            kitchen,
+            bathrooms,
+            furnished,
+            floor,
+            elevator,
+            parking,
+            balcony,
+            pool,
+            facade,
+            documents,
+            Guard,
+          },
+        });
+      
+        console.log('Detail updated:', updatedDetail);
       }
-
-      const updatedDetail = await prisma.detail.update({
-        where: { id: Number(id) },
-        data: {
-          constructionyear,
-          surface,
-          rooms,
-          bedromms,
-          livingrooms,
-          kitchen,
-          bathrooms,
-          furnished,
-          floor,
-          elevator,
-          parking,
-          balcony,
-          pool,
-          facade,
-          documents,
-          Guard,
-          post: postId ? { connect: { id: postId } } : undefined,
-        },
-      });
-
-      console.log('Detail updated:', updatedDetail);
-    }
-
     return setCorsHeaders(NextResponse.json({ message: 'Update successful' }, { status: 200 }));
   } catch (error) {
     console.error('Error updating post or detail:', error);
