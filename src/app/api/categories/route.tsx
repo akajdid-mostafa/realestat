@@ -12,21 +12,39 @@ function setCorsHeaders(response: NextResponse) {
   return response;
 }
 
-// Handle OPTIONS method for CORS preflight
+
 export function OPTIONS() {
   const response = new NextResponse(null, { status: 204 });
   return setCorsHeaders(response);
 }
+
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
   const categoryName = url.searchParams.get('name') as CategoryName;
 
   if (!categoryName) {
-    const response = NextResponse.json({ error: 'Category name is required' }, { status: 400 });
-    return setCorsHeaders(response);
+    try {
+      const categories = await prisma.category.findMany({
+        include: {
+          posts: true,
+        },
+      });
+
+      const response = NextResponse.json(categories, { status: 200 });
+      return setCorsHeaders(response);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      console.error('Error fetching all categories:', errorMessage);
+      const response = NextResponse.json(
+        { error: 'Error fetching all categories', details: errorMessage },
+        { status: 500 }
+      );
+      return setCorsHeaders(response);
+    }
   }
 
+  // Fetch specific category by name
   try {
     const category = await prisma.category.findFirst({
       where: { name: categoryName },
@@ -42,13 +60,18 @@ export async function GET(req: Request) {
 
     const response = NextResponse.json(category.posts, { status: 200 });
     return setCorsHeaders(response);
-  } catch (error) {
-    console.error('Error fetching posts by category:', error.message || error);
-    const response = NextResponse.json({ error: 'Error fetching posts by category', details: error.message || error }, { status: 500 });
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('Error fetching posts by category:', errorMessage);
+    const response = NextResponse.json(
+      { error: 'Error fetching posts by category', details: errorMessage },
+      { status: 500 }
+    );
     return setCorsHeaders(response);
   }
 }
 
+// Create a new category
 export async function POST(req: Request) {
   const { name } = await req.json();
 
@@ -64,9 +87,13 @@ export async function POST(req: Request) {
 
     const response = NextResponse.json(newCategory, { status: 201 });
     return setCorsHeaders(response);
-  } catch (error) {
-    console.error('Error creating category:', error.message || error);
-    const response = NextResponse.json({ error: 'Error creating category', details: error.message || error }, { status: 500 });
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('Error creating category:', errorMessage);
+    const response = NextResponse.json(
+      { error: 'Error creating category', details: errorMessage },
+      { status: 500 }
+    );
     return setCorsHeaders(response);
   }
 }

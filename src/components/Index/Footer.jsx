@@ -1,16 +1,18 @@
 import React from 'react';
 import Image from 'next/image';
-import { MdOutgoingMail ,MdPhoneInTalk ,MdLocationOn ,MdAccessTimeFilled  } from 'react-icons/md';
+import { MdOutgoingMail, MdPhoneInTalk, MdLocationOn, MdAccessTimeFilled } from 'react-icons/md';
 import { FaFacebookF, FaInstagram } from 'react-icons/fa';
 import { FiYoutube } from 'react-icons/fi';
 import { BsTwitterX } from 'react-icons/bs';
 
+
 export default function Footer() {
     return (
-        <section className="px-3 py-10 bg-gray-50 sm:pt-16 lg:pt-24">
+        <section
+            className=" footer-container px-3  bg-gray-50 sm:pt-16 lg:pt-14"
+        >
             <div className="px-3 mx-auto sm:px-6 lg:px-8 max-w-7xl">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-16 gap-x-12">
-                    
                     {/* Logo and Social Media Icons */}
                     <div className="flex flex-col items-start space-y-6">
                         <div className="flex flex-col items-start">
@@ -21,13 +23,13 @@ export default function Footer() {
                                 height={50}
                             />
                             <p className="text-base leading-relaxed text-gray-600 mt-7">
-                                Nous fournissons un service complet pour la vente, l'achat ou la location de biens immobiliers. Nous opérons depuis plus de 10 ans. Recherchez des millions d'appartements et de maisons sur ImmOcean.
+                                Nous fournissons un service complet pour la vente, l&apos;achat ou la location de biens immobiliers. Nous opérons depuis plus de 10 ans. Recherchez des millions d&apos;appartements et de maisons sur ImmOcean.
                             </p>
                         </div>
                         <ul className="flex space-x-3">
                             {/* Social Icons */}
                             <li>
-                                <a href="mailto:maroc.immocean@gmail.com" title="Twitter" className="flex items-center justify-center text-white transition-all duration-200 bg-gray-800 rounded-full w-8 h-8 hover:bg-blue-600 focus:bg-blue-600">
+                                <a href="mailto:maroc.immocean@gmail.com" title="Email" className="flex items-center justify-center text-white transition-all duration-200 bg-gray-800 rounded-full w-8 h-8 hover:bg-blue-600 focus:bg-blue-600">
                                     <MdOutgoingMail className="w-5 h-5" />
                                 </a>
                             </li>
@@ -53,10 +55,9 @@ export default function Footer() {
                             </li>
                         </ul>
                     </div>
-                    
                     {/* Contact Information */}
                     <div>
-                        <p className="text-sm font-semibold tracking-widest text-gray-400 uppercase">CNTACT US</p>
+                        <p className="text-sm font-semibold tracking-widest text-gray-400 uppercase">CONTACT US</p>
                         <ul className="mt-6 space-y-4">
                             <li className="flex items-center text-base text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600">
                                 <a href="mailto:maroc.immocean@gmail.com" className="flex items-center space-x-2">
@@ -79,12 +80,11 @@ export default function Footer() {
                             <li className="flex items-center text-base text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600">
                                 <a href="#" className="flex items-center space-x-2">
                                     <MdAccessTimeFilled className="w-5 h-5" />
-                                    <span>9:00 PM TO 18:00 PM</span>
+                                    <span>9:00 AM to 6:00 PM</span>
                                 </a>
                             </li>
                         </ul>
                     </div>
-                    
                     {/* Newsletter Subscription */}
                     <div className="flex flex-col space-y-6">
                         <p className="text-sm font-semibold tracking-widest text-gray-400 uppercase">Subscribe to newsletter</p>
@@ -99,13 +99,18 @@ export default function Footer() {
                                     className="block w-full p-4 text-black placeholder-gray-500 transition-all duration-200 bg-white border border-gray-200 rounded-md focus:outline-none focus:border-blue-600 caret-blue-600"
                                 />
                             </div>
-                            <button type="submit" className="inline-flex items-center justify-center px-6 py-4 font-semibold text-white transition-all duration-200 bg-blue-600 rounded-md hover:bg-blue-700 focus:bg-blue-700">
+                            <button  type="submit" className="inline-flex items-center justify-center  px-6 py-4 font-semibold text-white transition-all duration-200 bg-blue-600 rounded-md hover:bg-blue-700 focus:bg-blue-700">
                                 Subscribe
                             </button>
                         </form>
                     </div>
-
                 </div>
+                <Image
+                                src="/images/footer-art.svg"
+                                alt=""
+                                width="1200" 
+                                height="160"
+                            />
             </div>
         </section>
     );

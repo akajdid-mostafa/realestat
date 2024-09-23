@@ -6,11 +6,22 @@ import jwt from 'jsonwebtoken';
 const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET || 'a5f719ac8b4b73f2a620fd73c85a7d5f79b52fcfcdc5d57c8e8f749ad7e315c47230483d7db1525f20c5c4fd65423e9c9c8244d4f7bc9cfd5753fbb4f8439f60';
 
-export async function OPTIONS(req: Request) {
+// Internal function to set CORS headers
+function setCorsHeaders(response) {
+  response.headers.set('Access-Control-Allow-Origin', '*');
+  response.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  response.headers.set('Access-Control-Allow-Credentials', 'true');
+  return response;
+}
+
+// Handle OPTIONS request
+// Handle OPTIONS request
+export async function OPTIONS(req) {
   return new NextResponse(null, {
     status: 204,
     headers: {
-      'Access-Control-Allow-Origin': 'http://localhost:3000', // Replace with your frontend's origin
+      'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization',
       'Access-Control-Allow-Credentials': 'true',
@@ -18,9 +29,11 @@ export async function OPTIONS(req: Request) {
   });
 }
 
-export async function POST(req: Request) {
+
+// Handle POST request
+export async function POST(req) {
   try {
-    const { email, password } = await req.json();
+    const { email, password ,} = await req.json();
 
     const user = await prisma.user.findUnique({
       where: { email },
@@ -38,15 +51,19 @@ export async function POST(req: Request) {
 
     const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' });
 
-    const response = NextResponse.json({ token, user: { email, password } }, { status: 200 });
-    response.headers.set('Access-Control-Allow-Origin', 'http://localhost:3000');
-    response.headers.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    response.headers.set('Access-Control-Allow-Credentials', 'true');
+    let response = NextResponse.json(
+      { token, user: { email } }, 
+      { status: 200 }
+    );
+   
+    // Set CORS headers
+   response = setCorsHeaders(response);
+
     return response;
+
   } catch (error) {
-    console.error('Error during login:', error.message); // Log the error message
-    console.error('Stack trace:', error.stack); // Log the stack trace for deeper inspection
+    console.error('Error during login:', error instanceof Error ? error.message : 'Unknown error');
+    console.error('Stack trace:', error instanceof Error ? error.stack : 'Unknown error');
 
     return NextResponse.json({ error: 'Error logging in' }, { status: 500 });
   }

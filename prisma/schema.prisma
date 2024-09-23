@@ -1,12 +1,13 @@
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider = "postgresql"
   url = env("POSTGRES_PRISMA_URL") // uses connection pooling
   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
+
+generator client {
+  provider = "prisma-client-js"
+}
+
 model User {
   id       Int     @id @default(autoincrement())
   email    String  @unique
@@ -16,22 +17,26 @@ model User {
 }
 
 model Post {
-  id          Int           @id @default(autoincrement())
-  img         String[]
+  id          Int          @id @default(autoincrement())
+  img         Json[]
   datePost    DateTime
   lat         Float
   lon         Float
-  prix        Float
+  prix        String
   adress      String
   ville       String
   status      Status
   title       String
+  comment     String?
+  youtub      String?
   categoryId  Int?
   typeId      Int?
   Detail      Detail?
-  category    Category?     @relation(fields: [categoryId], references: [id])
-  type        Type?         @relation(fields: [typeId], references: [id])
-  DateReserve DateReserve[]
+  category    Category?    @relation(fields: [categoryId], references: [id])
+  type        Type?        @relation(fields: [typeId], references: [id])
+  DateReserve DateReserve?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model Partennaire {
@@ -62,7 +67,7 @@ model Detail {
   kitchen          String?
   bathrooms        String?
   furnished        String?
-  floor            String?
+  floor            String?        
   elevator         String?
   parking          String?
   balcony          String?
@@ -71,17 +76,22 @@ model Detail {
   documents        String?
   postId           Int     @unique
   post             Post    @relation(fields: [postId], references: [id])
+  Guard            String?  // New column
+  Proprietary      String?  // New column
 }
+
 
 model DateReserve {
   id        Int       @id @default(autoincrement())
-  dateDebut DateTime
+  dateDebut DateTime?
   dateFine  DateTime?
   fullName  String
   CIN       String
-  price     String
-  postId    Int?
+  price     Float
+  postId    Int?      @unique
   post      Post?     @relation(fields: [postId], references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 enum Status {

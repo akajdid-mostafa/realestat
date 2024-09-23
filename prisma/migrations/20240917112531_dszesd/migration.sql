@@ -21,17 +21,21 @@ CREATE TABLE "User" (
 -- CreateTable
 CREATE TABLE "Post" (
     "id" SERIAL NOT NULL,
-    "img" TEXT[],
+    "img" JSONB[],
     "datePost" TIMESTAMP(3) NOT NULL,
     "lat" DOUBLE PRECISION NOT NULL,
     "lon" DOUBLE PRECISION NOT NULL,
-    "prix" DOUBLE PRECISION NOT NULL,
+    "prix" TEXT NOT NULL,
     "adress" TEXT NOT NULL,
     "ville" TEXT NOT NULL,
     "status" "Status" NOT NULL,
     "title" TEXT NOT NULL,
+    "comment" TEXT,
+    "youtub" TEXT,
     "categoryId" INTEGER,
     "typeId" INTEGER,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Post_pkey" PRIMARY KEY ("id")
 );
@@ -80,6 +84,8 @@ CREATE TABLE "Detail" (
     "facade" TEXT,
     "documents" TEXT,
     "postId" INTEGER NOT NULL,
+    "Guard" TEXT,
+    "Proprietary" TEXT,
 
     CONSTRAINT "Detail_pkey" PRIMARY KEY ("id")
 );
@@ -87,12 +93,14 @@ CREATE TABLE "Detail" (
 -- CreateTable
 CREATE TABLE "DateReserve" (
     "id" SERIAL NOT NULL,
-    "dateDebut" TIMESTAMP(3) NOT NULL,
+    "dateDebut" TIMESTAMP(3),
     "dateFine" TIMESTAMP(3),
     "fullName" TEXT NOT NULL,
     "CIN" TEXT NOT NULL,
-    "price" TEXT NOT NULL,
+    "price" DOUBLE PRECISION NOT NULL,
     "postId" INTEGER,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "DateReserve_pkey" PRIMARY KEY ("id")
 );
@@ -102,6 +110,9 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Detail_postId_key" ON "Detail"("postId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "DateReserve_postId_key" ON "DateReserve"("postId");
 
 -- AddForeignKey
 ALTER TABLE "Post" ADD CONSTRAINT "Post_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE SET NULL ON UPDATE CASCADE;

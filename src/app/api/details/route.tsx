@@ -3,16 +3,14 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-// Helper function to set CORS headers (if needed)
 function setCorsHeaders(response: NextResponse) {
-  response.headers.set('Access-Control-Allow-Origin', '*'); // Adjust according to your needs
+  response.headers.set('Access-Control-Allow-Origin', '*');
   response.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   response.headers.set('Access-Control-Allow-Credentials', 'true');
   return response;
 }
 
-// Handle OPTIONS method for CORS preflight (if needed)
 export function OPTIONS() {
   const response = new NextResponse(null, { status: 204 });
   return setCorsHeaders(response);
@@ -23,7 +21,8 @@ export async function POST(req: Request) {
     constructionyear,
     surface,
     rooms,
-    bedromms,  // Ensure this field matches your schema
+    Guard,
+    bedromms,  
     livingrooms,
     kitchen,
     bathrooms,
@@ -35,10 +34,10 @@ export async function POST(req: Request) {
     pool,
     facade,
     documents,
-    postId
+    postId,
+    Proprietary
   } = await req.json();
 
-  // Validate required fields
   if (!postId) {
     const response = NextResponse.json({ error: 'Post ID is required' }, { status: 400 });
     return setCorsHeaders(response);
@@ -62,15 +61,54 @@ export async function POST(req: Request) {
         pool,
         facade,
         documents,
+        Proprietary,Guard,
         post: { connect: { id: postId } },
       },
     });
 
     const response = NextResponse.json(detail, { status: 201 });
     return setCorsHeaders(response);
-  } catch (error) {
-    console.error('Error creating detail:', error.message || error);  // Log the actual error for debugging
-    const response = NextResponse.json({ error: 'Error creating detail', details: error.message || error }, { status: 400 });
+  } catch (error: unknown) {
+    console.error('Error creating detail:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const response = NextResponse.json({ error: 'Error creating detail', details: errorMessage }, { status: 400 });
     return setCorsHeaders(response);
   }
 }
+
+export async function GET() {
+  try {
+    const details = await prisma.detail.findMany({
+      include: {
+        post: true,
+      },
+    });
+
+    const response = NextResponse.json(details, { status: 200 });
+    return setCorsHeaders(response);
+  } catch (error: unknown) {
+    console.error('Error fetching details:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const response = NextResponse.json({ error: 'Error fetching details', details: errorMessage }, { status: 500 });
+    return setCorsHeaders(response);
+  }
+}
+
+// export async function GET() {
+//   try {
+//     const details = await prisma.detail.findMany({
+//       include: {
+//         post: true,
+//       },
+//     });
+
+//     const response = NextResponse.json(details, { status: 200 });
+//     return setCorsHeaders(response);
+//   } catch (error: unknown) {
+//     console.error('Error fetching details:', error);
+//     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+//     const response = NextResponse.json({ error: 'Error fetching details', details: errorMessage }, { status: 500 });
+//     return setCorsHeaders(response);
+//   }
+// }
+

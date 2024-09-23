@@ -2,3 +2,115 @@
 @tailwind components;
 @tailwind utilities;
 
+@media (max-width: 698px) {
+  .about {
+    margin-top: 16rem;
+  }
+}
+
+.tf-text {
+    display: inline-block; /* Keeps it on the same line */
+    min-width: 200px; /* Set a minimum width based on the longest sentence */
+  }
+  
+  .item-text {
+    display: inline-block; /* Ensures it stays inline */
+    transition: opacity 0.5s ease-in-out; /* Smooth transition for visibility */
+  }
+  
+  .animate-in {
+    opacity: 1;
+  }
+  
+  .animate-out {
+    opacity: 0;
+  }
+  /* styles.css */
+  .card {
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transform: perspective(1000px) rotateX(0deg);
+}
+
+.card:hover {
+    transform: perspective(1000px) rotateX(5deg) translateY(-10px);
+    box-shadow: 0 12px 16px rgba(0, 0, 0, 0.2);
+}
+
+.show-all-button {
+    transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out;
+}
+
+.show-all-button:hover {
+    transform: scale(1.05);
+    background-color: #2c5282; /* Darker blue */
+}
+
+/* styles.css */
+@keyframes box1 {
+  0%, 50% { transform: translate(100%, 0); }
+  100% { transform: translate(200%, 0); }
+}
+
+@keyframes box2 {
+  0% { transform: translate(0, 100%); }
+  50% { transform: translate(0, 0); }
+  100% { transform: translate(100%, 0); }
+}
+
+@keyframes box3 {
+  0%, 50% { transform: translate(100%, 100%); }
+  100% { transform: translate(0, 100%); }
+}
+
+@keyframes box4 {
+  0% { transform: translate(200%, 0); }
+  50% { transform: translate(200%, 100%); }
+  100% { transform: translate(100%, 100%); }
+}
+
+.boxes .box:nth-child(1) {
+  animation: box1 var(--duration) linear infinite;
+}
+
+.boxes .box:nth-child(2) {
+  animation: box2 var(--duration) linear infinite;
+}
+
+.boxes .box:nth-child(3) {
+  animation: box3 var(--duration) linear infinite;
+}
+
+.boxes .box:nth-child(4) {
+  animation: box4 var(--duration) linear infinite;
+}
+.image-container {
+    overflow: hidden; /* Ensures the zoom does not break container bounds */
+    position: relative; /* Needed for absolute positioning of pseudo-element */
+}
+
+.image-container:hover .hover-image {
+    transform: scale(1.05); /* Slightly zoom in */
+    transition: transform 0.3s ease-in-out;
+}
+
+.image-container::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.2); /* Light black overlay */
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.image-container:hover::after {
+    opacity: 1; /* Show overlay on hover */
+}
+
+.image-crontaine:hover {
+  background-color: rgba(0, 0, 0, 0.2); /* Light black overlay */
+  transition: background-color 0.3s ease-in-out;
+}
