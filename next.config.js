@@ -17,4 +17,13 @@ module.exports = {
     // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/Index',
+        permanent: true,
+      },
+    ];
+  },
 };
