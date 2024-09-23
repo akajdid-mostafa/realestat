@@ -17,13 +17,13 @@ const siteInfo = {
 			visible: true, // Controls whether the item is visible in the navbar
 		},
 		{
-			label: 'About',
-			url: '/about',
+			label: 'Propriétés',
+			url: '/properties',
 			visible: true,
 		},
 		{
-			label: 'Services',
-			url: '/services',
+			label: 'About',
+			url: '/about',
 			visible: true,
 		},
 		{
@@ -31,11 +31,7 @@ const siteInfo = {
 			url: '/contact',
 			visible: true,
 		},
-		{
-			label: 'Blog',
-			url: '/blog',
-			visible: true,
-		},
+		
 	],
     footerLeft: "<p>Welcome to our website!</p>",
     realEstateWebsite: "https://example.com",

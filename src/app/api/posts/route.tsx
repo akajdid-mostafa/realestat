@@ -12,7 +12,6 @@ function setCorsHeaders(response: NextResponse) {
   return response;
 }
 
-
 export function OPTIONS() {
   const response = new NextResponse(null, { status: 204 });
   return setCorsHeaders(response);
@@ -25,7 +24,7 @@ cloudinary.v2.config({
   api_secret: '41BFZx9tensYKPnhu3CppsmU9Ng',
 });
 
-
+console.log("dw")
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -33,13 +32,12 @@ export async function POST(req: NextRequest) {
 
     console.log('Received data:', body);
 
-    
     const missingFields = [];
     if (!img || !Array.isArray(img) || img.length === 0) missingFields.push('img');
     if (!datePost) missingFields.push('datePost');
     if (!lat) missingFields.push('lat');
     if (!lon) missingFields.push('lon');
-    if (!prix) missingFields.push('prix'); 
+    if (!prix) missingFields.push('prix');
     if (!adress) missingFields.push('adress');
     if (!ville) missingFields.push('ville');
     if (!status) missingFields.push('status');
@@ -100,7 +98,8 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json(post, { status: 201 });
+    // Include the `id` of the created post in the response
+    return NextResponse.json({ id: post.id, post }, { status: 201 });
   } catch (error: any) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     console.error('Error creating post:', errorMessage);
@@ -135,7 +134,7 @@ export async function GET(req: NextRequest) {
 
       const formattedPost = {
         ...post,
-        datePost: `${day}-${month}-${year}`,
+        datePost: `${day}-${month}-${year}`,  // Fixed string interpolation here
         youtub: post.youtub,
       };
 
@@ -202,7 +201,7 @@ export async function GET(req: NextRequest) {
       const year = date.getFullYear();
       return {
         ...post,
-        datePost: `${day}-${month}-${year}`,
+        datePost: `${day}-${month}-${year}`,  // Fixed string interpolation here
         youtub: post.youtub,
       };
     });
@@ -214,3 +213,4 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Error retrieving posts', details: errorMessage }, { status: 500 });
   }
 }
+

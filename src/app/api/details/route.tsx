@@ -21,6 +21,7 @@ export async function POST(req: Request) {
     constructionyear,
     surface,
     rooms,
+    Guard,
     bedromms,  
     livingrooms,
     kitchen,
@@ -34,7 +35,6 @@ export async function POST(req: Request) {
     facade,
     documents,
     postId,
-    Guard,
     Proprietary
   } = await req.json();
 
