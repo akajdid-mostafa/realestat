@@ -31,7 +31,7 @@ export async function PUT(req: NextRequest) {
   const {
     // Post 
     img,
-    datePost,
+    
     lat,
     lon,
     prix,
@@ -68,7 +68,7 @@ export async function PUT(req: NextRequest) {
     return setCorsHeaders(NextResponse.json({ error: 'Invalid or missing ID' }, { status: 400 }));
   }
   try {
-    if (datePost || lat || lon || prix || adress || ville || status || title || img) {
+    if (lat || lon || prix || adress || ville || status || title || img) {
       const existingPost = await prisma.post.findUnique({ where: { id: Number(id) } });
 
       if (!existingPost) {
@@ -105,7 +105,7 @@ export async function PUT(req: NextRequest) {
         where: { id: Number(id) },
         data: {
           img: uploadedImages,
-          datePost: datePost ? new Date(datePost) : existingPost.datePost,
+          // datePost: datePost ? new Date(datePost) : existingPost.datePost,
           lat: lat !== undefined ? parseFloat(lat) : existingPost.lat,
           lon: lon !== undefined ? parseFloat(lon) : existingPost.lon,
           prix,

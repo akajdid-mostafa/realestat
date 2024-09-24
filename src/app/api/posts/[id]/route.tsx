@@ -14,7 +14,7 @@ export async function PUT(req: Request) {
   const id = req.url.split('/').pop();
   const {
     img,
-    datePost,
+    
     lat,
     lon,
     prix,
@@ -32,7 +32,7 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: 'Invalid or missing ID' }, { status: 400 });
   }
 
-  if (!datePost || !lat || !lon || !prix || !adress || !ville || !status || !title) {
+  if ( !lat || !lon || !prix || !adress || !ville || !status || !title) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
   }
 
@@ -99,7 +99,7 @@ export async function PUT(req: Request) {
       where: { id: Number(id) },
       data: {
         img: uploadedImages, 
-        datePost: datePost ? new Date(datePost) : existingPost.datePost,
+        // datePost: datePost ? new Date(datePost) : existingPost.datePost,
         lat: lat !== undefined ? parseFloat(lat) : existingPost.lat,
         lon: lon !== undefined ? parseFloat(lon) : existingPost.lon,
         prix,
