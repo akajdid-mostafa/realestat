@@ -28,13 +28,13 @@ console.log("dw")
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { datePost, lat, lon, prix, adress, ville, status, title, categoryId, typeId, Detail, img, youtub, comment  } = body;
+    const {  lat, lon, prix, adress, ville, status, title, categoryId, typeId, Detail, img, youtub, comment  } = body;
 
     console.log('Received data:', body);
 
     const missingFields = [];
     if (!img || !Array.isArray(img) || img.length === 0) missingFields.push('img');
-    if (!datePost) missingFields.push('datePost');
+   
     if (!lat) missingFields.push('lat');
     if (!lon) missingFields.push('lon');
     if (!prix ) missingFields.push('prix'); 
@@ -70,9 +70,8 @@ export async function POST(req: NextRequest) {
       })
     );
 
-    const date = new Date(datePost);
-    date.setHours(0, 0, 0, 0);
 
+  
     const post = await prisma.post.create({
       data: {
         img: uploadedImages.map((image) => image.url),

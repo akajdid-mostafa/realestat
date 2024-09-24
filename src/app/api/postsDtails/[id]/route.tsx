@@ -60,7 +60,6 @@ export async function PUT(req: NextRequest) {
     pool,
     facade,
     documents,
-    postId,
     Guard,
   } = await req.json();
 
