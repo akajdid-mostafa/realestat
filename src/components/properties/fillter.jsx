@@ -18,37 +18,40 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 
 const citiesInMorocco = [
-  "All Ville","Agadir","Aïn Harrouda",  "Ben Yakhlef",  "Bouskoura",  "Casablanca",  "Médiouna",  "Mohammadia",  "Tit Mellil",  "Bejaad",  "Ben Ahmed",  "Benslimane",  "Berrechid",
-  "Boujniba",  "Boulanouare",  "Bouznika",  "Deroua",  "El Borouj",  "El Gara",  "Guisser",  "Hattane",  "Khouribga",  "Loulad",  "Oued Zem",  "Oulad Abbou",
-  "Oulad H'Riz Sahel",  "Oulad M'rah",  "Oulad Said",  "Oulad Sidi Ben Daoud",  "Ras El Ain",  "Settat",  "Sidi Rahhal Chataï",  "Soualem",  "Azemmour",  "Bir Jdid",
-  "El Jadida",  "Hrara",  "Ighoud",  "Jamaat Shaim",  "Jorf Lasfar",  "Khemis Zemamra",  "Laaounate",  "Moulay Abdallah",  "Oualidia",  "Oulad Amrane",  "Oulad Frej",
-  "Oulad Ghadbane",  "Safi",  "Sebt El Maârif",  "Sebt Gzoula",  "Sidi Ahmed",  "Sidi Ali Ban Hamdouche",  "Sidi Bennour",  "Sidi Bouzid",  "Sidi Smaïl",  "Youssoufia",
-  "Fès",  "Ain Cheggag",  "Bhalil",  "Boulemane",  "El Menzel",  "Guigou",  "Imouzzer Kandar",  "Imouzzer Marmoucha",  "Missour",  "Moulay Yaacoub",  "Ouled Tayeb",
-  "Ribate El Kheir",  "Séfrou",  "Skhinate",  "Tafajight",  "Arbaoua",  "Ain Dorij",  "Dar Gueddari",  "Had Kourt",  "Jorf El Melha",  "Kénitra",  "Khenichet",
-  "Lalla Mimouna",  "Mechra Bel Ksiri",  "Mehdia",  "Moulay Bousselham",  "Sidi Allal Tazi",  "Sidi Kacem",  "Sidi Slimane",  "Sidi Taibi", "Sidi Yahya El Gharb",
-  "Souk El Arbaa",  "Akka",  "Assa",  "Bouizakarne",  "El Ouatia",  "Es-Semara",  "Fam El Hisn",  "Foum Zguid",  "Guelmim",  "Taghjijt",  "Tan-Tan",  "Tata",
-  "Zag",  "Marrakech",  "Ait Daoud",  "Amizmiz",  "Assahrij",  "Ait Ourir",  "Ben Guerir",  "Chichaoua",  "El Hanchane",  "El Kelaâ des Sraghna",  "Fraïta",
-  "Ghmate",  "Imintanoute",  "Kattara",  "Lalla Takerkoust",  "Loudaya",  "Laatataouia",  "Moulay Brahim",  "Mzouda",  "Sid L'Mokhtar",  "Sid Zouin",  "Sidi Abdallah Ghiat",
-  "Sidi Bou Othmane",  "Sidi Rahhal",  "Skhour Rehamna",  "Smimou",  "Tafetachte",  "Tahannaout",  "Talmest",  "Tamallalt",  "Tamanar",  "Tamansourt",  "Tameslouht",
-  "Tanalt",  "Meknes",  "Khenifra",  "Agourai",  "Ain Taoujdate",  "MyAliCherif",  "Rissani",  "Amalou Ighriben",  "Aoufous",  "Arfoud",  "Azrou",  "Ain Jemaa",
-  "Ain Karma",  "Ain Leuh",  "Ait Boubidmane",  "Ait Ishaq",  "Boudnib",  "Boumia",  "El Hajeb",  "Elkbab",  "Er-Rich",  "Errachidia",  "Gardmit",  "Goulmima",
-  "Gourrama",  "Had Bouhssoussen"
+  "All Ville", "Agadir", "Aïn Harrouda", "Ben Yakhlef", "Bouskoura", "Casablanca", "Médiouna", "Mohammadia", "Tit Mellil", "Bejaad", "Ben Ahmed", "Benslimane", "Berrechid",
+  "Boujniba", "Boulanouare", "Bouznika", "Deroua", "El Borouj", "El Gara", "Guisser", "Hattane", "Khouribga", "Loulad", "Oued Zem", "Oulad Abbou",
+  "Oulad H'Riz Sahel", "Oulad M'rah", "Oulad Said", "Oulad Sidi Ben Daoud", "Ras El Ain", "Settat", "Sidi Rahhal Chataï", "Soualem", "Azemmour", "Bir Jdid",
+  "El Jadida", "Hrara", "Ighoud", "Jamaat Shaim", "Jorf Lasfar", "Khemis Zemamra", "Laaounate", "Moulay Abdallah", "Oualidia", "Oulad Amrane", "Oulad Frej",
+  "Oulad Ghadbane", "Safi", "Sebt El Maârif", "Sebt Gzoula", "Sidi Ahmed", "Sidi Ali Ban Hamdouche", "Sidi Bennour", "Sidi Bouzid", "Sidi Smaïl", "Youssoufia",
+  "Fès", "Ain Cheggag", "Bhalil", "Boulemane", "El Menzel", "Guigou", "Imouzzer Kandar", "Imouzzer Marmoucha", "Missour", "Moulay Yaacoub", "Ouled Tayeb",
+  "Ribate El Kheir", "Séfrou", "Skhinate", "Tafajight", "Arbaoua", "Ain Dorij", "Dar Gueddari", "Had Kourt", "Jorf El Melha", "Kénitra", "Khenichet",
+  "Lalla Mimouna", "Mechra Bel Ksiri", "Mehdia", "Moulay Bousselham", "Sidi Allal Tazi", "Sidi Kacem", "Sidi Slimane", "Sidi Taibi", "Sidi Yahya El Gharb",
+  "Souk El Arbaa", "Akka", "Assa", "Bouizakarne", "El Ouatia", "Es-Semara", "Fam El Hisn", "Foum Zguid", "Guelmim", "Taghjijt", "Tan-Tan", "Tata",
+  "Zag", "Marrakech", "Ait Daoud", "Amizmiz", "Assahrij", "Ait Ourir", "Ben Guerir", "Chichaoua", "El Hanchane", "El Kelaâ des Sraghna", "Fraïta",
+  "Ghmate", "Imintanoute", "Kattara", "Lalla Takerkoust", "Loudaya", "Laatataouia", "Moulay Brahim", "Mzouda", "Sid L'Mokhtar", "Sid Zouin", "Sidi Abdallah Ghiat",
+  "Sidi Bou Othmane", "Sidi Rahhal", "Skhour Rehamna", "Smimou", "Tafetachte", "Tahannaout", "Talmest", "Tamallalt", "Tamanar", "Tamansourt", "Tameslouht",
+  "Tanalt", "Meknes", "Khenifra", "Agourai", "Ain Taoujdate", "MyAliCherif", "Rissani", "Amalou Ighriben", "Aoufous", "Arfoud", "Azrou", "Ain Jemaa",
+  "Ain Karma", "Ain Leuh", "Ait Boubidmane", "Ait Ishaq", "Boudnib", "Boumia", "El Hajeb", "Elkbab", "Er-Rich", "Errachidia", "Gardmit", "Goulmima",
+  "Gourrama", "Had Bouhssoussen"
 ];
 
-const PropertySearchPage = ({ 
-  onTabChange, 
-  onPropertyTypeChange, 
+const PropertySearchPage = ({
+  onTabChange,
+  onPropertyTypeChange,
   properties = [],
   onCityChange,
   onRoomCountChange,
-  onBathroomsCount
+  onBathroomsCount,
+  onSearchChange, // New prop for handling search
+  searchDisplay, // New prop for controlling display
+  num,
 }) => {
   const router = useRouter();
-
   const [activeTab, setActiveTab] = useState('');
   const [selectedPropertyType, setSelectedPropertyType] = useState('View All');
   const [selectedCity, setSelectedCity] = useState('Select a city');
   const [cityInput, setCityInput] = useState('');
+  const [searchInput, setSearchInput] = useState(''); // State for search input
   const [selectedRoomCount, setSelectedRoomCount] = useState('Tous chambre');
   const [selectedBathroomsCount, setSelectedBathroomsCount] = useState('Tous Salle de bain');
   const inputRef = useRef(null);
@@ -171,6 +174,26 @@ const PropertySearchPage = ({
 
   const [isMounted, setIsMounted] = useState(false);
 
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      // Check if searchDisplay is 'block' before triggering search change
+      if (searchDisplay === 'block') {
+        onSearchChange(searchInput); // Trigger search change after debounce
+      }
+    }, 200);
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchInput, onSearchChange, searchDisplay]); // Added searchDisplay to the dependency array
+
+  const handleSearchInputChange = (event) => {
+    setSearchInput(event.target.value);
+  };
+
+
+
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -202,9 +225,18 @@ const PropertySearchPage = ({
                   </Button>
                 ))}
               </Flex>
-
               <Flex p={4} align="center" gap={4} flexDir={{ base: "column", md: "row" }}>
-                <Grid templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }} gap={4} width="100%">
+                <Grid templateColumns={{ base: "1fr", md: `repeat(${num}, 1fr)` }} gap={4} width="100%">
+                  {/* Updated input search with display from props */}
+                  <GridItem display={searchDisplay}>
+                    <InputGroup size="lg" >
+                      <Input
+                        placeholder="Search by ville or adresse..."
+                        value={searchInput}
+                        onChange={handleSearchInputChange}
+                      />
+                    </InputGroup>
+                  </GridItem>
                   <GridItem>
                     <Menu>
                       <MenuButton as={Button} rightIcon={<FaChevronDown />} w="100%" size="lg">
@@ -259,12 +291,12 @@ const PropertySearchPage = ({
                     </Menu>
                   </GridItem>
                 </Grid>
-                <Button 
+                <Button
                   onClick={handleSearch}
-                  p={4} 
-                  w={{ base: "100%", md: "auto" }} 
-                  bg="blue.600" 
-                  _hover={{ bg: 'blue.700' }} 
+                  p={4}
+                  w={{ base: "100%", md: "auto" }}
+                  bg="blue.600"
+                  _hover={{ bg: 'blue.700' }}
                   color="white"
                 >
                   <SearchIcon mr={2} />

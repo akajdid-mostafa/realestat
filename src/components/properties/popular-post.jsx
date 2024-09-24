@@ -37,7 +37,11 @@ const Popular = () => {
             try {
                 const postsResponse = await fetch('https://immoceanrepo.vercel.app/api/posts');
                 const postsData = await postsResponse.json();
-                setPosts(postsData);
+                if (Array.isArray(postsData)) {
+                    setPosts(postsData);
+                } else {
+                    console.error('Expected an array for posts, received:', postsData);
+                }
 
                 const detailsResponse = await fetch('https://immoceanrepo.vercel.app/api/details');
                 const detailsData = await detailsResponse.json();
@@ -94,7 +98,7 @@ const Popular = () => {
     }, [gridDisplay, totalSlides]);
 
     // Transform API data into the format expected by the component
-    const transformedData = posts.map(post => {
+    const transformedData = Array.isArray(posts) ? posts.map(post => {
         const detail = details.find(detail => detail.postId === post.id) || {};
         return {
             id: post.id,
@@ -118,7 +122,7 @@ const Popular = () => {
                 url
             }))
         };
-    });
+    }) : [];
 
     return (
         <Box display="flex" flexDirection="column" alignItems="center" p={4}>
