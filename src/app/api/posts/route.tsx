@@ -24,7 +24,6 @@ cloudinary.v2.config({
   api_secret: '41BFZx9tensYKPnhu3CppsmU9Ng',
 });
 
-console.log("dw")
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -168,7 +167,7 @@ export async function GET(req: NextRequest) {
         ],
       },
       orderBy: {
-        createdAt: 'asc',  
+        createdAt: 'desc',  
       },
     });
 
