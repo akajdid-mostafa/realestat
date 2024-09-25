@@ -59,6 +59,8 @@ const PropertyList = () => {
     useEffect(() => {
         let filtered = properties;
 
+        
+
         if (activeTab === 'FOR Location') {
             filtered = filtered.filter(property => property.categoryId === 2);
         } else if (activeTab === 'FOR Vente') {
@@ -134,21 +136,23 @@ const PropertyList = () => {
     }, [router.query, filteredProperties]);
 
     useEffect(() => {
-        const { city, roomCount, bathroomsCount } = router.query;
+        const { city, roomCount, bathroomsCount   } = router.query;
         if (router.isReady) {
             handleCityChange(city || '');
             handleRoomCountChange(roomCount || 'Tous chambre');
             handleBathroomsCountChange(bathroomsCount || 'Tous Salle de bain');
+            // handlePropertyTypeChange(PropertyType || 'View All'); // Set default if not provided
+            // handleTabChange(activeTab || 'ALL TYPE'); // Set default if not provided
         }
     }, [router.isReady, router.query]);
 
-    useEffect(() => {
-        const { PropertyType, ActiveTab } = router.query; // Extract propertyType and tab from router.query
-        if (router.isReady) {
-            handlePropertyTypeChange(PropertyType || 'View All'); // Set default if not provided
-            handleTabChange(ActiveTab || 'ALL TYPE'); // Set default if not provided
-        }
-    }, [router.isReady, router.query]);
+    // useEffect(() => {
+    //     const { } = router.query; // Extract propertyType and tab from router.query
+    //     if (router.isReady) {
+    //         handlePropertyTypeChange(PropertyType || 'View All'); // Set default if not provided
+    //         handleTabChange(ActiveTab || 'ALL TYPE'); // Set default if not provided
+    //     }
+    // }, [router.isReady, router.query]);
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
