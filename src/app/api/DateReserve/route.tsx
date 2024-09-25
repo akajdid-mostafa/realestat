@@ -24,38 +24,45 @@ export async function POST(req: Request) {
       throw new Error('Post with the given ID does not exist');
     }
 
-    const isDateNull = dateDebut === null && dateFine === null;
+    const currentDate = new Date();
+    const isDateInFuture = dateDebut && new Date(dateDebut) > currentDate;
 
     const dateReserveData = {
       dateDebut: dateDebut ? new Date(dateDebut) : null,
       dateFine: dateFine ? new Date(dateFine) : null,
       fullName,
-      price:parseFloat(price),
+      price: parseFloat(price),
       CIN,
       post: { connect: { id: postId } },
     };
 
+    // Insert dateReserve regardless of future date
     const dateReserve = await prisma.dateReserve.create({
       data: dateReserveData,
     });
 
-    if (post.category?.name === CategoryName.Location) {
-      if (dateFine) {
-        await prisma.post.update({
-          where: { id: postId },
-          data: { status: Status.available },
-        });
-      } else {
+    // Only update status based on category and dates, except for future reservations
+    if (!isDateInFuture) {
+      if (post.category?.name === CategoryName.Location) {
+        if (dateFine) {
+          await prisma.post.update({
+            where: { id: postId },
+            data: { status: Status.available },
+          });
+        } else {
+          await prisma.post.update({
+            where: { id: postId },
+            data: { status: Status.taken },
+          });
+        }
+      }
+
+      if (post.category?.name === CategoryName.Vente || (!dateDebut && !dateFine)) {
         await prisma.post.update({
           where: { id: postId },
           data: { status: Status.taken },
         });
       }
-    } else if (post.category?.name === CategoryName.Vente || isDateNull) {
-      await prisma.post.update({
-        where: { id: postId },
-        data: { status: Status.taken },
-      });
     }
 
     const formattedDateReserve = {
@@ -73,6 +80,8 @@ export async function POST(req: Request) {
     );
   }
 }
+
+
 // GET
 export async function GET() {
   try {
