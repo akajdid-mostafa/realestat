@@ -149,10 +149,8 @@ export async function GET(req: NextRequest) {
           });
         }
       }
-
       return NextResponse.json(formattedPost, { status: 200 });
     }
-
     const posts = await prisma.post.findMany({
       include: {
         category: true,
