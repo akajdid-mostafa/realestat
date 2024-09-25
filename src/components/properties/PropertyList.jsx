@@ -133,10 +133,11 @@ const PropertyList = () => {
         } else {
             setSelectedProperty(null);
         }
-    }, [router.query, filteredProperties]);
+    }, [router.query, filteredProperties, router]);
 
     useEffect(() => {
-        const { city, roomCount, bathroomsCount   } = router.query;
+        const { city, roomCount, bathroomsCount } = router.query;
+        
         if (router.isReady) {
             handleCityChange(city || '');
             handleRoomCountChange(roomCount || 'Tous chambre');
@@ -144,6 +145,7 @@ const PropertyList = () => {
             // handlePropertyTypeChange(PropertyType || 'View All'); // Set default if not provided
             // handleTabChange(activeTab || 'ALL TYPE'); // Set default if not provided
         }
+        
     }, [router.isReady, router.query]);
 
     // useEffect(() => {
@@ -156,12 +158,20 @@ const PropertyList = () => {
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
-        const currentQuery = { ...router.query, page: pageNumber }; // Update the page number in the query
-
-        // Use router.replace to update the URL without adding a new entry to the history stack
+        
+        const currentQuery = {
+            ...router.query,
+            page: pageNumber,
+            tab: activeTab, // Keep the active tab
+            propertyType: selectedPropertyType, // Keep the selected property type
+            city: selectedCity, // Keep the selected city
+            roomCount: selectedRoomCount, // Keep the selected room count
+            bathroomsCount: selectedBathroomsCount, // Keep the selected bathroom count
+        };
+    
         router.replace({
-            pathname: router.pathname, // Keep the pathname
-            query: currentQuery, // Use the updated query object
+            pathname: router.pathname,
+            query: currentQuery,
         }, undefined, { shallow: true });
     };
 
