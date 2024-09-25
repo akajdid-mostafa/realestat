@@ -8,6 +8,7 @@ import {
     Image,
     Grid,
     IconButton,
+    Icon,
     Tag,
     Link,
     HStack
@@ -17,6 +18,9 @@ import 'pure-react-carousel/dist/react-carousel.es.css';
 import { FaBed, FaBath, FaExpandArrowsAlt, FaMapMarkerAlt } from 'react-icons/fa';
 import { MdPhone } from 'react-icons/md';
 import { FaWhatsapp } from 'react-icons/fa';
+import { SiWhatsapp } from "react-icons/si";
+
+
 
 const Popular = () => {
     const [gridDisplay, setGridDisplay] = useState(false);
@@ -33,7 +37,11 @@ const Popular = () => {
             try {
                 const postsResponse = await fetch('https://immoceanrepo.vercel.app/api/posts');
                 const postsData = await postsResponse.json();
-                setPosts(postsData);
+                if (Array.isArray(postsData)) {
+                    setPosts(postsData);
+                } else {
+                    console.error('Expected an array for posts, received:', postsData);
+                }
 
                 const detailsResponse = await fetch('https://immoceanrepo.vercel.app/api/details');
                 const detailsData = await detailsResponse.json();
@@ -90,7 +98,7 @@ const Popular = () => {
     }, [gridDisplay, totalSlides]);
 
     // Transform API data into the format expected by the component
-    const transformedData = posts.map(post => {
+    const transformedData = Array.isArray(posts) ? posts.map(post => {
         const detail = details.find(detail => detail.postId === post.id) || {};
         return {
             id: post.id,
@@ -99,6 +107,7 @@ const Popular = () => {
             urltube: post.youtub || 'https://www.youtube.com/embed/rjKsKbU2Wuo?autoplay=1&controls=1',
             type: post.type?.type || 'Unknown',
             location: post.adress,
+            ville: post.ville,
             category: post.category?.name || 'Unknown',
             bedrooms: detail.bedromms || 0,
             kitchen: detail.kitchen || 0,
@@ -113,14 +122,14 @@ const Popular = () => {
                 url
             }))
         };
-    });
+    }) : [];
 
     return (
         <Box display="flex" flexDirection="column" alignItems="center" p={4}>
             <Box textAlign="center" mt={8} mb={6}>
                 <Heading fontSize="4xl" mb={4}>Annonces d'accueil dans Votre Immocean</Heading>
                 <Text color="gray.400" maxWidth="xl" mx="auto">
-                    Avec plus d'un million de locations disponibles, il est facile de trouver ce qui vous convient le mieux.
+                    Avec plus d'un million de biens disponibles, il est facile de trouver le bien qui vous convient.
                 </Text>
             </Box>
             {gridDisplay ? (
@@ -130,110 +139,141 @@ const Popular = () => {
                     maxW="7xl"
                 >
                     {transformedData.slice(0, 6).map(card => (
-                       <Box
-                       key={card.id}
-                       className="property-item homeya-box card"
-                       width="400px"
-                       bg="white"
-                       borderRadius="md"
-                       overflow="hidden"
-                       boxShadow="lg"
-                       transition="0.3s"
-                       maxW="lg"  // Set maximum width
-                   >
-                       <Box position="relative" height="200px" className="image-container"> {/* Fixed height */}
-                           <Link href={`/properties?modal=yes&id=${card.id}`} className="images-group">
-                               <Image
-                                   src={card.imageSrc}
-                                   alt={card.title}
-                                   loading="lazy"
-                                   objectFit="cover"
-                                   borderRadius="md"
-                                   width="100%"
-                                   height="100%"
-                                   className="hover-image" // Added class for hover effect
-                               />
-                           </Link>
-                           <Flex position="absolute" top={2} left={2} gap={2}>
-                               {card.category === 'Vente' && (
-                                   <Tag bg="green.900" color="white" fontWeight="bold">
-                                       {card.category}
-                                   </Tag>
-                               )}
-                               {card.category === 'Location' && (
-                                   <Tag bg="red.600" color="white" fontWeight="bold">
-                                       {card.category}
-                                   </Tag>
-                               )}
-                           </Flex>
-                           <Flex position="absolute" bottom={2} left={2}>
-                               <Tag bg="white" color="black" fontWeight="bold">
-                                   {card.type || 'Unknown'}
-                               </Tag>
-                           </Flex>
-                       </Box>
-                   
-                       <Box mt={2} p={2}>
-                           <Text fontWeight="bold" fontSize="lg" isTruncated>
-                               <Link
-                                   href={`/properties/${card.id}.html`}
-                                   textDecoration="none"
-                                   color="blue.800"
-                                   _hover={{ textDecoration: 'none', color: 'inherit' }}
-                                   title={card.title}
-                               >
-                                   {card.title}
-                               </Link>
-                           </Text>
-                           <Flex align="center" mt={1}>
-                               <FaMapMarkerAlt />
-                               <Text ml={1} isTruncated>
-                                   {card.location}
-                               </Text>
-                           </Flex>
-                           <Flex justify="space-between" mt={2}>
-                               <Flex align="center">
-                                   <FaBed />
-                                   <Text ml={1}>{card.bedrooms} Bedrooms</Text>
-                               </Flex>
-                               <Flex align="center">
-                                   <FaBath />
-                                   <Text ml={1}>{card.bathrooms} Bathrooms</Text>
-                               </Flex>
-                               <Flex align="center">
-                                   <FaExpandArrowsAlt />
-                                   <Text ml={1}>{card.area}</Text>
-                               </Flex>
-                           </Flex>
-                       </Box>
-                   
-                       <Flex justify="space-between" align="center" bg="gray.100" p={4} mt={4}>
-                           <Text fontWeight="bold" color="blue.800" fontSize="xl">
-                               {card.price}
-                           </Text>
-                           <Flex>
-                               <IconButton
-                                   as="a"
-                                   href={`tel:0762544011`}
-                                   aria-label="Call"
-                                   icon={<MdPhone />}
-                                   colorScheme="green"
-                                   mr={2}
-                               />
-                               <IconButton
-                                   as="a"
-                                   href={`https://wa.me/+212762544011`}
-                                   aria-label="WhatsApp"
-                                   icon={<FaWhatsapp />}
-                                   colorScheme="green"
-                               />
-                           </Flex>
-                       </Flex>
-                   </Box>
+                        <Box
+                            key={card.id}
+                            className="property-item homeya-box card"
+                            width="400px"
+                            bg="white"
+                            borderRadius="md"
+                            overflow="hidden"
+                            boxShadow="lg"
+                            transition="0.3s"
+                            maxW="lg"  // Set maximum width
+                        >
+                            <Link href={`/properties?modal=yes&id=${card.id}`} _hover={{ textDecoration: "none" }} className="images-group">
+                                <Box position="relative" height="200px" className="image-container"> {/* Fixed height */}
+
+                                    <Image
+                                        src={card.imageSrc}
+                                        alt={card.title}
+                                        loading="lazy"
+                                        objectFit="cover"
+                                        borderRadius="md"
+                                        width="100%"
+                                        height="100%"
+                                        className="hover-image" // Added class for hover effect
+                                    />
+
+                                    <Flex position="absolute" top={2} left={2} gap={2}>
+                                        {card.category === 'Vente' && (
+                                            <Tag bg="green.900" color="white" fontWeight="bold">
+                                                {card.category}
+                                            </Tag>
+                                        )}
+                                        {card.category === 'Location' && (
+                                            <Tag bg="red.600" color="white" fontWeight="bold">
+                                                {card.category}
+                                            </Tag>
+                                        )}
+                                    </Flex>
+                                </Box>
+
+                                <Box mt={2} p={2}>
+                                    <Flex
+                                        align="center"
+                                        justify="space-between" // Changed to space-between to push content to edges
+                                        mt={1}
+                                    >
+                                        <Text
+                                            fontWeight="bold"
+                                            fontSize="lg"
+                                            isTruncated
+                                            cursor="pointer"
+                                            color="blue.800"
+                                            _hover={{ textDecoration: "none", color: "inherit" }}
+                                        >
+                                            {card.title}
+                                        </Text>
+                                        <Tag bg="blue.600" color="white" fontWeight="bold">
+                                            {card.ville}
+                                        </Tag>
+                                    </Flex>
+                                    <Flex align="center" mt={1}>
+                                        <FaMapMarkerAlt />
+                                        <Text ml={1} isTruncated>
+                                            {card.location}
+                                        </Text>
+                                    </Flex>
+                                    <Flex justify="space-between" mt={2}>
+                                        <Flex align="center">
+                                            <FaBed />
+                                            <Text ml={1}>{card.bedrooms} Bedrooms</Text>
+                                        </Flex>
+                                        <Flex align="center">
+                                            <FaBath />
+                                            <Text ml={1}>{card.bathrooms} Bathrooms</Text>
+                                        </Flex>
+                                        <Flex align="center">
+                                            <FaExpandArrowsAlt />
+                                            <Text ml={1}>{card.area}</Text>
+                                        </Flex>
+                                    </Flex>
+                                </Box>
+
+                                <Flex justify="space-between" align="center" bg="gray.100" p={4} mt={4}>
+                                    <Text fontWeight="bold" color="blue.800" fontSize="xl">
+                                        {card.price}
+                                    </Text>
+                                    <Flex>
+                                        <Button
+                                            leftIcon={<Icon as={SiWhatsapp} />}
+                                            colorScheme="green"
+                                            onClick={() => {
+                                                const message = encodeURIComponent(`Interested in property ${card.title} with ID ${card.id}, priced at ${card.price}. View more at http://localhost:3000/properties?modal=yes&id=${card.id}`);
+                                                window.open(`https://wa.me/123456789?text=${message}`, "_blank");
+                                            }}
+                                            position="relative"
+                                            zIndex="1"
+                                            px="4" // Reduced padding on x-axis
+                                            py="2" // Reduced padding on y-axis
+                                            color="white"
+                                            fontWeight="bold"
+                                            fontSize={{ base: "xs", md: "sm", lg: "md" }} // Smaller font sizes
+                                            bg="#198754"
+                                            borderRadius="15px"
+                                            boxShadow="md"
+                                            overflow="hidden"
+                                            transition="all 0.25s"
+                                            _hover={{
+                                                color: "#white",
+                                                _before: {
+                                                    width: "100%",
+                                                },
+                                            }}
+                                            _before={{
+                                                content: '""',
+                                                position: "absolute",
+                                                top: 0,
+                                                left: 0,
+                                                height: "100%",
+                                                width: "0",
+                                                borderRadius: "15px",
+                                                bg: "#20c997",
+                                                zIndex: "-1",
+                                                boxShadow: "md",
+                                                transition: "all 0.25s",
+                                            }}
+                                        >
+                                            WhatsApp
+                                        </Button>
+                                    </Flex>
+                                </Flex>
+                            </Link>
+                        </Box>
                     ))}
                 </Grid>
             ) : (
-                    <CarouselProvider
+                <CarouselProvider
                     naturalSlideWidth={100}
                     naturalSlideHeight={125}
                     totalSlides={totalSlides}
@@ -246,8 +286,8 @@ const Popular = () => {
                     <Slider>
                         {transformedData.map(card => (
                             <Slide key={card.id} index={card.id} style={{ margin: '0 10px' }}>
-                                <Box className="property-item homeya-box card" bg="white" borderRadius="md" boxShadow="lg" overflow="hidden" transition="0.3s">
-                                    <Link href={`/properties?modal=yes&id=${card.id}`} className="images-group">
+                                <Link href={`/properties?modal=yes&id=${card.id}`} _hover={{ textDecoration: "none" }} className="images-group">
+                                    <Box className="property-item homeya-box card" bg="white" borderRadius="md" boxShadow="lg" overflow="hidden" transition="0.3s">
                                         <Box position="relative" height="350px"> {/* Fixed height for consistency */}
                                             <Image
                                                 src={card.imageSrc}
@@ -275,61 +315,71 @@ const Popular = () => {
                                                 </Tag>
                                             </Flex>
                                         </Box>
-                                    </Link>
-                                    <Box mt={1} p={4}>
-                                        <Text fontWeight="bold" fontSize="lg" isTruncated>
-                                            <Link
-                                                href={`/properties/${card.id}.html`}
-                                                textDecoration="none"
-                                                color="blue.800"
-                                                _hover={{ textDecoration: 'none', color: 'inherit' }}
-                                                title={card.title}
+
+                                        <Box mt={1} p={4}>
+                                            <Flex
+                                                align="center"
+                                                justify="space-between" // Changed to space-between to push content to edges
+                                                mt={1}
                                             >
-                                                {card.title}
-                                            </Link>
-                                        </Text>
-                                        <Flex alignItems="center" mt={1}>
-                                            <FaMapMarkerAlt />
-                                            <Text ml={1} isTruncated>
-                                                {card.location}
-                                            </Text>
-                                        </Flex>
-                                        <HStack spacing={4} mt={2}>
-                                            <Flex alignItems="center">
-                                                <FaBed />
-                                                <Text ml={1}>{card.bedrooms} Bedrooms</Text>
+                                                <Text
+                                                    fontWeight="bold"
+                                                    fontSize="lg"
+                                                    isTruncated
+                                                    cursor="pointer"
+                                                    color="blue.800"
+                                                    _hover={{ textDecoration: "none", color: "inherit" }}
+                                                >
+                                                    {card.title}
+                                                </Text>
+                                                <Tag bg="blue.600" color="white" fontWeight="bold">
+                                                    {card.ville}
+                                                </Tag>
                                             </Flex>
-                                            <Flex alignItems="center">
-                                                <FaBath />
-                                                <Text ml={1}>{card.bathrooms} Bathrooms</Text>
+                                            <Flex alignItems="center" mt={1}>
+                                                <FaMapMarkerAlt />
+                                                <Text ml={1} isTruncated>
+                                                    {card.location}
+                                                </Text>
                                             </Flex>
-                                            <Flex alignItems="center">
-                                                <FaExpandArrowsAlt />
-                                                <Text ml={1}>{card.area}</Text>
-                                            </Flex>
-                                        </HStack>
-                                    </Box>
-                                    <Flex justify="space-between" align="center" bg="gray.100" p={4}>
+                                            <HStack spacing={4} mt={2}>
+                                                <Flex alignItems="center">
+                                                    <FaBed />
+                                                    <Text ml={1}>{card.bedrooms} Bedrooms</Text>
+                                                </Flex>
+                                                <Flex alignItems="center">
+                                                    <FaBath />
+                                                    <Text ml={1}>{card.bathrooms} Bathrooms</Text>
+                                                </Flex>
+                                                <Flex alignItems="center">
+                                                    <FaExpandArrowsAlt />
+                                                    <Text ml={1}>{card.area}</Text>
+                                                </Flex>
+                                            </HStack>
+                                        </Box>
+                                        <Flex justify="space-between" align="center" bg="gray.100" p={4}>
                                             <Text fontWeight="bold" color="blue.800" fontSize="xl">{card.price}</Text>
-                                        <Flex>
-                                            <IconButton
-                                                as="a"
-                                                href={`tel:0762544011`}
-                                                aria-label="Call"
-                                                icon={<MdPhone />}
-                                                colorScheme="green"
-                                                mr={2}
-                                            />
-                                            <IconButton
-                                                as="a"
-                                                href={`https://wa.me/+212762544011`}
-                                                aria-label="WhatsApp"
-                                                icon={<FaWhatsapp />}
-                                                colorScheme="green"
-                                            />
+                                            <Flex>
+                                                <IconButton
+                                                    as="a"
+                                                    href={`tel:0762544011`}
+                                                    aria-label="Call"
+                                                    icon={<MdPhone />}
+                                                    colorScheme="green"
+                                                    mr={2}
+                                                />
+                                                <IconButton
+                                                    as="a"
+                                                    href={`https://wa.me/+212762544011`}
+                                                    aria-label="WhatsApp"
+                                                    icon={<FaWhatsapp />}
+                                                    colorScheme="green"
+                                                />
+                                            </Flex>
                                         </Flex>
-                                    </Flex>
-                                </Box>
+
+                                    </Box>
+                                </Link>
                             </Slide>
                         ))}
                     </Slider>

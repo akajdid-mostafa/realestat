@@ -46,9 +46,9 @@ const Abouta = () => {
                 whileHover={{ scale: 1.1, transition: { duration: 0.3 } }}
             >
                 <div className="bg-blue-50 rounded-full p-3">
-                    {Icon && <Icon className="text-blue-600 text-2xl" />}
+                    {Icon && <Icon className="text-blue-600 text-lg" />}
                 </div>
-                <span className="text-gray-500 font-semibold text-xl">{text}</span>
+                <span className="text-gray-500 font-semibold text-md">{text}</span>
             </motion.div>
         );
     };
@@ -69,7 +69,7 @@ const Abouta = () => {
 
     return (
         <motion.div
-            className="container mx-auto px-16 mt-0 p-5 sm:mt-48 lg:mt-28"
+            className="container mx-auto px-8 mt-4 p-3 sm:mt-24 lg:mt-14" // Reduced padding and margin
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, type: "spring", stiffness: 70 }}
@@ -85,14 +85,14 @@ const Abouta = () => {
                         className="mx-auto"
                         src="/images/7.png"
                         alt="House"
-                        width={800} // Replace with your image width
-                        height={600} // Replace with your image height
+                        width={500} // Adjusted image width
+                        height={450} // Adjusted image height
                     />
                 </motion.div>
                 <div className="col-span-12 md:col-span-12 lg:col-span-6 sm:col-span-12">
                     <Badge text="About Us" />
                     <motion.h1
-                        className="my-6 font-bold sm:text-2xl md:text-2xl lg:text-4xl xl:text-5xl 2xl:text-6xl leading-tight"
+                        className="my-3 font-bold sm:text-xl md:text-xl lg:text-3xl xl:text-4xl 2xl:text-5xl leading-tight mb-6" // Reduced font sizes
                         initial={{ opacity: 0, y: -30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.7 }}
@@ -101,7 +101,7 @@ const Abouta = () => {
                         <span className="text-blue-600">.</span>
                     </motion.h1>
                     <motion.span
-                        className="text-gray-500 mb-6 font-bold text-lg"
+                        className="text-gray-500 mb-3 font-bold text-md" // Reduced font size and margin
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6 }}
@@ -110,7 +110,7 @@ const Abouta = () => {
                         dans le monde entier. L'étendue de notre couverture mondiale, combinée à des services
                         spécialisés
                     </motion.span>
-                    <div className="icons grid grid-cols-12 mt-14">
+                    <div className="icons grid grid-cols-12 mt-10">
                         <motion.div
                             className="col-span-12 sm:col-span-6 md:col-span-6 lg:col-span-6"
                             initial={{ opacity: 0, y: 30 }}
@@ -141,18 +141,18 @@ const Abouta = () => {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6, delay: 0.8 }}
                         >
-                            <IconWithText Icon={FaShieldAlt} text="Sécurité complète 24/7" />
+                            <IconWithText Icon={FaShieldAlt} text="Sécurité complète 24/7"  />
                         </motion.div>
                     </div>
 
-                    <div className="quote-section mt-8 font-semibold text-lg">
+                    <div className="quote-section mt-8 font-semibold text-md">
                         <Quote
                             text="Vous avez des questions ou besoin d'aide ? Nous sommes là pour vous aider ! Cliquez sur le bouton « Nous contacter » pour obtenir une assistance rapide de la part de notre équipe."
                             borderColorClass="border-blue-600"
                             bgColorClass="bg-blue-50"
                         />
                     </div>
-                    <div className="btn-section mt-12 font-bold text-xl">
+                    <div className="btn-section mt-6 font-bold text-lg">
                         <ButtonRed
                             width="inherit"
                             text="Nous contacter"

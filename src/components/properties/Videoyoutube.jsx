@@ -30,6 +30,7 @@ const VideoSection = ({ src, heading }) => {
         <Stack mt={4} spacing={2}>
           <Heading as="h2" fontSize="xl" fontWeight="bold">
             {heading} {/* Use the heading prop for the Heading text */}
+
           </Heading>
         </Stack>
       </Box>

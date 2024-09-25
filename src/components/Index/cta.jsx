@@ -46,7 +46,7 @@ const Cta3 = () => {
                     transition="opacity 0.5s"
                     _hover={{ opacity: 0.8 }}
                 >
-                    Avec plus d'un million de locations disponibles, il est facile de trouver ce qui vous convient le mieux.
+                    Avec plus d&apos;un million de locations disponibles, il est facile de trouver ce qui vous convient le mieux.
                 </MotionText>
             </Stack>
 
