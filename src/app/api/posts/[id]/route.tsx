@@ -14,7 +14,6 @@ export async function PUT(req: Request) {
   const id = req.url.split('/').pop();
   const {
     img,
-    
     lat,
     lon,
     prix,
