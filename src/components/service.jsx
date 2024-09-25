@@ -13,10 +13,10 @@ import Link from 'next/link'
 const services = [
   {
     image: "/images/achat.jpg", // Add image path here
-    title: "Vente immobiliers",
+    title: "Achat d'un bien immobilier",
     description: "Trouvez la propriété de vos rêves grâce à nos expériences photographiques immersives et à nos listes complètes, y compris des propriétés uniques que vous ne trouverez nulle part ailleurs.",
     cta: "Trouver un bien",
-    href: "/properties?tab=FOR%2BVente",
+    href:"/properties?tab=FOR%2BVente",
   },
   {
     image: "/images/lour.jpg",
@@ -95,6 +95,7 @@ export default function CardService() {
               <div className="flex justify-center">
                 <Link href={service.href}>
                 <Button
+                  
                   bg="blue.600"
                   color="white"
                   variant="solid"

@@ -25,20 +25,20 @@ const WorkCard = ({ num, title, text, img }) => {
   );
 };
 
-const Work = ({ title1 , title2 , title3 , title4 , text1 , text2 , text3 , text4 }) => {
+const Work = ({ titlesmall , titlebig , title1, title2, title3, title4, text1, text2, text3, text4 }) => {
   return (
-    <section className="w-full bg-blue-600 text-white mt-4  bg-center">
-      <div className="flex flex-col gap-10 lg:gap-16 container mx-auto md:px-16 px-5 py-12 sm:py-20 md:py-20">
+    <section className="w-full bg-blue-600 text-white mt-2 bg-center">
+      <div className="flex flex-col gap-4 lg:gap-6 container mx-auto md:px-8 px-2 py-4 sm:py-8 md:py-8">
         <div>
-          <span className="uppercase block font-semibold text-md tracking-widest text-center text-white">
-            WHATS THE FUNCTION
+          <span className="uppercase block font-semibold text-sm tracking-widest text-center text-white">
+            {titlesmall}
           </span>
-          <h2 className="text-2xl sm:text-4xl font-bold my-3 text-center ">
-            Let&apos;s see how it works
+          <h2 className="text-xl sm:text-2xl font-bold my-1 text-center">
+          {titlebig}
           </h2>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-25">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-10 ">
           <div className="relative">
             <WorkCard num="01" img={"/images/arrow.svg"} title={title1} text={text1} />
           </div>

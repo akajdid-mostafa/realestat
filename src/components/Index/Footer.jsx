@@ -29,7 +29,7 @@ export default function Footer() {
                         <ul className="flex space-x-3">
                             {/* Social Icons */}
                             <li>
-                                <a href="mailto:maroc.immocean@gmail.com" title="Email" className="flex items-center justify-center text-white transition-all duration-200 bg-gray-800 rounded-full w-8 h-8 hover:bg-blue-600 focus:bg-blue-600">
+                                <a href="mailto:immocean.ma@gmail.com" title="Email" className="flex items-center justify-center text-white transition-all duration-200 bg-gray-800 rounded-full w-8 h-8 hover:bg-blue-600 focus:bg-blue-600">
                                     <MdOutgoingMail className="w-5 h-5" />
                                 </a>
                             </li>
@@ -62,7 +62,7 @@ export default function Footer() {
                             <li className="flex items-center text-base text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600">
                                 <a href="mailto:maroc.immocean@gmail.com" className="flex items-center space-x-2">
                                     <MdOutgoingMail className="w-5 h-5" />
-                                    <span>maroc.immocean@gmail.com</span>
+                                    <span>immocean.ma@gmail.com</span>
                                 </a>
                             </li>
                             <li className="flex items-center text-base text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600">

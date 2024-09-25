@@ -23,6 +23,8 @@ const imageUrls = [
 
 
 const Hero = () => {
+  const showSearch = false; // or false based on your logic
+
   const [properties, setProperties] = useState([]); // Initialize properties state
   const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -201,6 +203,8 @@ const Hero = () => {
           onCityChange={handleCityChange}
           onRoomCountChange={handleRoomCountChange}
           onBathroomsCountChange={handleBathroomsCountChange}
+          searchDisplay={showSearch ? 'block' : 'none'} // Set display value based on condition
+          num={3}
         />
       </VStack>
     </Flex>

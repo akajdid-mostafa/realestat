@@ -1,8 +1,8 @@
 import { Box, Button, Container, Flex, Heading, Image, Stack, Text } from "@chakra-ui/react";
 
-const CoreFeatures = ({ firsttitle, title ,text,image }) => {
+const CoreFeatures = ({ firsttitle, title ,text,image,button,onClick }) => {
   return (
-    <Container maxW="container.xl" my={20}>
+    <Container maxW="container.xl" my={10}>
       <Flex direction={{ base: "column", lg: "row" }} align="center" gap={{ base: 14, lg: 20 }}>
         <Stack spacing={2} flex={1}>
           <Text color="rose.600" textTransform="uppercase" fontWeight="semibold" letterSpacing="wider">
@@ -25,8 +25,9 @@ const CoreFeatures = ({ firsttitle, title ,text,image }) => {
               borderColor: "blue.600",
               boxShadow: "2xl",
             }}
+            onClick={onClick}
           >
-            Contact Us
+            {button}
           </Button>
         </Stack>
 

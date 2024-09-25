@@ -141,6 +141,7 @@ const PropertyDetailModal = ({ isOpen, onClose }) => {
                             <PropertySummary
                                 title={property?.title}
                                 Ville={property?.ville}
+                                id={property?.postid}
                                 location={property?.location}
                                 category={property?.type}
                                 bedrooms={property?.bedrooms}
