@@ -28,13 +28,13 @@ console.log("dw")
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { datePost, lat, lon, prix, adress, ville, status, title, categoryId, typeId, Detail, img, youtub, comment  } = body;
+    const {  lat, lon, prix, adress, ville, status, title, categoryId, typeId, Detail, img, youtub, comment  } = body;
 
     console.log('Received data:', body);
 
     const missingFields = [];
     if (!img || !Array.isArray(img) || img.length === 0) missingFields.push('img');
-    if (!datePost) missingFields.push('datePost');
+   
     if (!lat) missingFields.push('lat');
     if (!lon) missingFields.push('lon');
     if (!prix ) missingFields.push('prix'); 
@@ -70,13 +70,12 @@ export async function POST(req: NextRequest) {
       })
     );
 
-    const date = new Date(datePost);
-    date.setHours(0, 0, 0, 0);
 
+  
     const post = await prisma.post.create({
       data: {
         img: uploadedImages.map((image) => image.url),
-        datePost: date,
+        
         lat: parseFloat(lat),
         lon: parseFloat(lon),
         prix,  
@@ -127,14 +126,14 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ error: 'Post not found' }, { status: 404 });
       }
 
-      const date = new Date(post.datePost);
-      const day = String(date.getDate()).padStart(2, '0');
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const year = date.getFullYear();
+      // const date = new Date(post.datePost);
+      // const day = String(date.getDate()).padStart(2, '0');
+      // const month = String(date.getMonth() + 1).padStart(2, '0');
+      // const year = date.getFullYear();
 
       const formattedPost = {
         ...post,
-        datePost: `${day}-${month}-${year}`,  // Fixed string interpolation here
+        // datePost: `${day}-${month}-${year}`,  // Fixed string interpolation here
         youtub: post.youtub,
       };
 
@@ -169,7 +168,7 @@ export async function GET(req: NextRequest) {
         ],
       },
       orderBy: {
-        datePost: 'asc',  
+        createdAt: 'asc',  
       },
     });
 
@@ -195,13 +194,13 @@ export async function GET(req: NextRequest) {
     );
 
     const formattedPosts = posts.map((post) => {
-      const date = new Date(post.datePost);
-      const day = String(date.getDate()).padStart(2, '0');
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const year = date.getFullYear();
+      // const date = new Date(post.datePost);
+      // const day = String(date.getDate()).padStart(2, '0');
+      // const month = String(date.getMonth() + 1).padStart(2, '0');
+      // const year = date.getFullYear();
       return {
         ...post,
-        datePost: `${day}-${month}-${year}`,  // Fixed string interpolation here
+        // datePost: `${day}-${month}-${year}`,  // Fixed string interpolation here
         youtub: post.youtub,
       };
     });
