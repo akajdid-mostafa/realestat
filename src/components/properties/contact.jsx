@@ -23,7 +23,7 @@ const ContactForm = ({ message, setMessage, defaultMessage }) => {
         email: '',
         phone: ''
     });
-
+console.log("dsd")
     useEffect(() => {
         setFormData(formData => ({ ...formData, message: defaultMessage }));
     }, [defaultMessage]);  // Update formData.message when defaultMessage changes
