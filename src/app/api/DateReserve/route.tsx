@@ -42,7 +42,6 @@ export async function POST(req: Request) {
         data: { status: Status.available }, // Ensure it stays 'available' if in the future
       });
     }
-
     const dateReserveData = {
       dateDebut: parsedDateDebut,
       dateFine: parsedDateFine,
@@ -55,7 +54,8 @@ export async function POST(req: Request) {
     const dateReserve = await prisma.dateReserve.create({
       data: dateReserveData,
     });
-
+  
+    
     const formattedDateReserve = {
       ...dateReserve,
       dateDebut: dateReserve.dateDebut ? formatDateToYYYYMMDD(dateReserve.dateDebut) : null,
