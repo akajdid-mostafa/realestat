@@ -209,7 +209,7 @@ const PropertySearchPage = ({
   return (
     <Box>
       <Box as="main">
-        <Box maxW="7xl" mx="auto" py={6} px={{ base: 4, sm: 6, lg: 8 }}>
+        <Box maxW="7xl" mx="auto" py={2} px={{ base: 4, sm: 6, lg: 8 }}>
           <Box borderRadius="lg" overflow="hidden" boxShadow="xl">
             <Box bg="white">
               <Flex borderBottom="1px" borderColor="gray.200" align="center" justify="center">

@@ -16,9 +16,6 @@ import CardService from '../components/service';
 import LoadingAnimation from '../components/Loading';
 import { WhatsApp } from '../components/whatssap';
 
-
-
-
 const HomePage = ({ siteInfo }) => { // Added isLoading to the function parameters
   const [isLoading, setIsLoading] = useState(true); // Add loading state
 
@@ -45,8 +42,10 @@ const HomePage = ({ siteInfo }) => { // Added isLoading to the function paramete
         <Cta3 />
         <Box>
           <Box overflowX="hidden">
-            <Container maxW="100%" px={4} py={4}>
-              <ContactForm />
+            <Container maxW={{ base: "100%", md: "80%", lg: "80%" }} px={4} py={4}>
+              <ContactForm 
+                displayProp='none'
+              />
             </Container>
           </Box>
         </Box>

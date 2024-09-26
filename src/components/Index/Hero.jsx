@@ -196,6 +196,7 @@ const Hero = () => {
             </Box>
           </Box>
         </Stack>
+        <Box mt={{base:2 , md:4 , lg :8}}>
         <PropertySearchPage
           properties={properties} // Pass fetched properties to PropertySearchPage
           onTabChange={handleTabChange}
@@ -206,6 +207,7 @@ const Hero = () => {
           searchDisplay={showSearch ? 'block' : 'none'} // Set display value based on condition
           num={3}
         />
+        </Box>
       </VStack>
     </Flex>
   );

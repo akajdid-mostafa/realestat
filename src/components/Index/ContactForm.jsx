@@ -15,7 +15,7 @@ import {
 import { useForm, ValidationError } from '@formspree/react';
 import { MdPerson, MdEmail, MdPhone } from 'react-icons/md';
 
-const ContactForm = forwardRef(({ siteInfo, formHeading, shouldHaveNegativeTopMargin }, ref) => {
+const ContactForm = forwardRef(({ siteInfo, formHeading, shouldHaveNegativeTopMargin ,displayProp }, ref) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -103,7 +103,7 @@ const ContactForm = forwardRef(({ siteInfo, formHeading, shouldHaveNegativeTopMa
         maxW={{ base: 'full', md: '50%' }}
         mr={{ base: 0, md: 6 }}
         mb={{ base: 6, md: 0 }}
-        display={{ base: 'none', md: 'block' }}
+        display={{ base: displayProp, md: 'block' }}
       >
         <Box
           rounded="lg"
