@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -67,10 +66,10 @@ export default function CardService() {
             key={index}
             initial="hidden"
             animate={controls}
-            variants={{
-              hidden: { opacity: 0, x: (index < 2) ? -100 : 100 }, // Reduce x offset for better performance on mobile
-              visible: { opacity: 1, x: 0 }
-            }}
+            // variants={{
+            //   hidden: { opacity: 0, x: (index < 2) ? -100 : 100 }, // Reduce x offset for better performance on mobile
+            //   visible: { opacity: 1, x: 0 }
+            // }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
             className="bg-white rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 ease-in-out hover:scale-105 relative flex flex-col justify-between"
             onMouseEnter={() => setHoveredIndex(index)}

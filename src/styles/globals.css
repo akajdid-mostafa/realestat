@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@media (max-width: 698px) {
+@media (max-width: 768px) {
   .about {
     margin-top: 16rem;
   }
@@ -68,6 +68,7 @@
   50% { transform: translate(200%, 100%); }
   100% { transform: translate(100%, 100%); }
 }
+
 
 .boxes .box:nth-child(1) {
   animation: box1 var(--duration) linear infinite;
