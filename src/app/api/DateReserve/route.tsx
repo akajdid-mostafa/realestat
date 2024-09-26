@@ -24,30 +24,26 @@ export async function POST(req: Request) {
       throw new Error('Post with the given ID does not exist');
     }
 
-    const parsedDateDebut = dateDebut ? new Date(dateDebut) : null;
-    const parsedDateFine = dateFine ? new Date(dateFine) : null;
-
-    const isDateNull = parsedDateDebut === null && parsedDateFine === null;
-
-    // Check if current date is greater than or equal to the dateDebut
     const now = new Date();
-    if (parsedDateDebut && now >= parsedDateDebut) {
-      // If current date is on or past dateDebut, change the status to 'taken'
+    const dateDebutDate = new Date(dateDebut);
+
+    if (now >= dateDebutDate) {
+      // If the current date is on or past the dateDebut, change the status to 'taken'
       await prisma.post.update({
         where: { id: postId },
-        data: { status: Status.taken },
+        data: { status: 'taken' }, // Change to 'taken' after dateDebut is passed
       });
-    } else if (post.category?.name === CategoryName.Location && parsedDateDebut) {
-      // Keep status available if the dateDebut is in the future
+    } else {
+      // If the dateDebut is in the future, keep the status 'available'
       await prisma.post.update({
         where: { id: postId },
-        data: { status: Status.available },
+        data: { status: 'available' }, // Ensure it stays 'available' if in the future
       });
     }
 
     const dateReserveData = {
-      dateDebut: parsedDateDebut,
-      dateFine: parsedDateFine,
+      dateDebut: dateDebutDate,
+      dateFine: new Date(dateFine),
       fullName,
       price: parseFloat(price),
       CIN,
@@ -73,6 +69,8 @@ export async function POST(req: Request) {
     );
   }
 }
+
+
 
 // GET
 export async function GET() {

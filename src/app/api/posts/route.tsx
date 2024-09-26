@@ -141,12 +141,13 @@ export async function GET(req: NextRequest) {
             where: { id: post.id },
             data: { status: Status.available },
           });
-        } else {
-          await prisma.post.update({
-            where: { id: post.id },
-            data: { status: Status.taken },
-          });
         }
+        // } else {
+        //   await prisma.post.update({
+        //     where: { id: post.id },
+        //     data: { status: Status.taken },
+        //   });
+        // }
       }
       return NextResponse.json(formattedPost, { status: 200 });
     }
