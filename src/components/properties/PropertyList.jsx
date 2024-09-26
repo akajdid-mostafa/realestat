@@ -6,10 +6,12 @@ import PropertySearchPage from './fillter';
 import NotFound from './notfound';
 import Pagination from './pagination';
 import { useRouter } from 'next/router';
-import { Block } from '@mui/icons-material';
+
+
 
 const POSTS_API_URL = 'https://immoceanrepo.vercel.app/api/posts';
 const DETAILS_API_URL = 'https://immoceanrepo.vercel.app/api/details';
+
 
 const PropertyList = () => {
     const showSearch = true; // or false based on your logic

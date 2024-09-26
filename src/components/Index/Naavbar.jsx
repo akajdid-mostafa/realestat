@@ -56,8 +56,8 @@ const Naavbar = () => {
           <Image
             src="/images/logoo.png"
             alt="logo"
-            height={50}
-            width={230}
+            width={200}          // Set a numeric width for aspect ratio
+            height={40}         // Set a numeric height for aspect ratio
           />
         </Link>
         <Flex
@@ -107,7 +107,7 @@ const Naavbar = () => {
               <DrawerCloseButton />
               <DrawerHeader>Menu</DrawerHeader>
               <DrawerBody>
-                <Flex direction="column" gap={4}>
+                <Flex direction="column" fontWeight="bold" gap={4}>
                   <NavLink href="/Index">Home</NavLink>
                   <NavLink href="/properties">Propriétés</NavLink>
                   <NavLink href="/about">About</NavLink>

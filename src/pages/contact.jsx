@@ -15,7 +15,9 @@ const ContactUsPage = ({ siteInfo }) => {
 				<Box>
 				<Container>
 					<Stack direction={['column', 'row']} mt={[0, '2rem']} mb={'3rem'}>
-							<ContactForm/>
+							<ContactForm
+							displayProp='block'
+							/>
 					</Stack>
 				</Container>
 				<Footer/>

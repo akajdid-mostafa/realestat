@@ -16,14 +16,14 @@ const Counters = () => {
     return (
       <Waypoint onEnter={handleWaypointEnter}>
         <div className="counter text-center flex flex-col items-center">
-          <div className="icon text-white text-5xl mb-4">
+          <div className="icon text-white text-3xl  md:text-3xl lg:text-4xl mb-4">
             <Icon />
           </div>
           <div className="counter-value my-4">
-            <span ref={ref} className="text-5xl text-white font-extrabold" />
-            <span className="text-5xl text-white font-extrabold">+</span>
+            <span ref={ref} className="text-3xl  md:text-3xl lg:text-4xl text-white font-extrabold" />
+            <span className="text-3xl  md:text-3xl lg:text-4xl text-white font-extrabold">+</span>
           </div>
-          <span className="text-white text-xl font-bold">{text}</span>
+          <span className="text-white text-xl  md:text-xl lg:text-2xl font-bold">{text}</span>
         </div>
       </Waypoint>
     );
