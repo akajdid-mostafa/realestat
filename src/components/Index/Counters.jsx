@@ -36,14 +36,14 @@ const Counters = () => {
           <div className="col-span-6 md:col-span-3">
             <Counter
               end={560}
-              text="Total Area Sq"
+              text="Surface totale m²"
               Icon={FaExpandArrowsAlt}
             />
           </div>
           <div className="col-span-6 md:col-span-3">
             <Counter
               end={983}
-              text="Apartments Sold"
+              text="Appartements vendus"
               Icon={FaBuilding}
             />
           </div>
