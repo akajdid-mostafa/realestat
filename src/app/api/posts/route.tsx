@@ -23,7 +23,6 @@ cloudinary.v2.config({
   api_key: '813952658855993',
   api_secret: '41BFZx9tensYKPnhu3CppsmU9Ng',
 });
-
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -170,7 +169,7 @@ export async function GET(req: NextRequest) {
               data: { status: Status.available },
             });
           } else if (dateDebut && dateDebut <= currentDate) {
-            await prisma.post.update({
+          await prisma.post.update({
               where: { id: post.id },
               data: { status: Status.taken },
             });
