@@ -25,7 +25,7 @@ const Naavbar = () => {
 
   return (
     <Box
-      bg="background"
+      bg="white"
       position="sticky"
       top={0}
       zIndex={50}
