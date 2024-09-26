@@ -20,8 +20,8 @@ export const WhatsApp = () => {
         src="/images/whatsapp.svg"
         alt="WhatsApp" 
         style={styles.icon} 
-        width={40}
-        height={40}
+        width={30}
+        height={30}
       />
     </a>
   );
