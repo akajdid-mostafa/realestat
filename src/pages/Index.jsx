@@ -25,32 +25,34 @@ const HomePage = ({ siteInfo }) => { // Added isLoading to the function paramete
   useEffect(() => {
     // Simulate a loading process, e.g., fetching data
     const timer = setTimeout(() => {
-        setIsLoading(false); // Set loading to false after a delay
+      setIsLoading(false); // Set loading to false after a delay
     }, 1000); // Adjust delay as needed
 
     return () => clearTimeout(timer); // Cleanup the timer
-}, []);
+  }, []);
 
 
   return (
     <ChakraBaseProvider theme={theme}>
-        <Layout siteInfo={siteInfo}>
-          <Hero />
-          <Popular />
-          <CardService />
-          <HomeFinancingSteps />
-          <Abouta />
-          <br />
-          <Counters />
-          <Cta3 />
-          <Box>
-            <Container maxW={{ base: "none", md: "container.xl" }} py={4}>
+      <Layout siteInfo={siteInfo}>
+        <Hero />
+        <Popular />
+        <CardService />
+        <HomeFinancingSteps />
+        <Abouta />
+        <br />
+        <Counters />
+        <Cta3 />
+        <Box>
+          <Box overflowX="hidden">
+            <Container maxW="100%" px={4} py={4}>
               <ContactForm />
             </Container>
           </Box>
-          <Footer />
-          <WhatsApp />
-        </Layout>
+        </Box>
+        <Footer />
+        <WhatsApp />
+      </Layout>
     </ChakraBaseProvider>
   )
 };
