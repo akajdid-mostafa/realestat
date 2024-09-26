@@ -11,9 +11,10 @@ import {
   InputGroup,
   Grid,
   GridItem,
+  InputRightElement,
 } from '@chakra-ui/react';
 import { SearchIcon } from '@chakra-ui/icons';
-import { FaBed, FaChevronDown, FaBath } from "react-icons/fa";
+import { FaBed, FaChevronDown, FaBath, FaTimes } from "react-icons/fa";
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
@@ -47,7 +48,7 @@ const PropertySearchPage = ({
   num,
 }) => {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState('');
+  const [activeTab, setActiveTab] = useState('ALL TYPE');
   const [selectedPropertyType, setSelectedPropertyType] = useState('View All');
   const [selectedCity, setSelectedCity] = useState('Select a city');
   const [cityInput, setCityInput] = useState('');
@@ -85,6 +86,15 @@ const PropertySearchPage = ({
     updateUrlWithoutNavigation({ tab: tab.replace(/\s/g, '+') });
   };
 
+  const handlePropertyTypeChange = (type) => {
+    setSelectedPropertyType(type);
+    if (typeof onPropertyTypeChange === 'function') {
+      onPropertyTypeChange(type);
+    }
+    // Update URL without navigation
+    updateUrlWithoutNavigation({ propertyType: type.replace(/\s/g, '+') });
+  };
+
   const handleCityChange = (city) => {
     setSelectedCity(city);
     if (typeof onCityChange === 'function') {
@@ -109,14 +119,7 @@ const PropertySearchPage = ({
     updateUrlWithoutNavigation({ bathroomsCount: count });
   };
 
-  const handlePropertyTypeChange = (type) => {
-    setSelectedPropertyType(type);
-    if (typeof onPropertyTypeChange === 'function') {
-      onPropertyTypeChange(type);
-    }
-    // Update URL without navigation
-    updateUrlWithoutNavigation({ propertyType: type.replace(/\s/g, '+') });
-  };
+  
 
   const handleCitySearch = (event) => {
     setCityInput(event.target.value);
@@ -124,11 +127,12 @@ const PropertySearchPage = ({
 
   const getSearchUrl = () => {
     const queryParams = new URLSearchParams({
+      tab: activeTab.replace(/\s/g, '+'),
+      propertyType: selectedPropertyType === 'View All' ? '' : selectedPropertyType.replace(/\s/g, '+'),
       city: selectedCity === 'Select a city' ? '' : selectedCity,
       roomCount: selectedRoomCount,
       bathroomsCount: selectedBathroomsCount,
-      tab: activeTab.replace(/\s/g, '+'),
-      propertyType: selectedPropertyType === 'View All' ? '' : selectedPropertyType.replace(/\s/g, '+')
+      
     }).toString();
 
     return `/properties?${queryParams}`;
@@ -181,7 +185,7 @@ const PropertySearchPage = ({
       if (searchDisplay === 'block') {
         onSearchChange(searchInput); // Trigger search change after debounce
       }
-    }, 200);
+    }, 100);
     return () => {
       clearTimeout(handler);
     };
@@ -229,12 +233,24 @@ const PropertySearchPage = ({
                 <Grid templateColumns={{ base: "1fr", md: `repeat(${num}, 1fr)` }} gap={4} width="100%">
                   {/* Updated input search with display from props */}
                   <GridItem display={searchDisplay}>
-                    <InputGroup size="lg" >
+                    <InputGroup size="lg">
                       <Input
                         placeholder="Search by ville or adresse..."
                         value={searchInput}
                         onChange={handleSearchInputChange}
                       />
+                      {searchInput && ( // Show the cancel icon only when there's input
+                        <InputRightElement>
+                          <Button
+                            onClick={() => setSearchInput('')} // Clear the input on click
+                            variant="link"
+                            color="gray.500"
+                            aria-label="Clear search"
+                          >
+                            <FaTimes />
+                          </Button>
+                        </InputRightElement>
+                      )}
                     </InputGroup>
                   </GridItem>
                   <GridItem>
