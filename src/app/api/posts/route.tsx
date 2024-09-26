@@ -125,32 +125,14 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ error: 'Post not found' }, { status: 404 });
       }
 
-      // const date = new Date(post.datePost);
-      // const day = String(date.getDate()).padStart(2, '0');
-      // const month = String(date.getMonth() + 1).padStart(2, '0');
-      // const year = date.getFullYear();
-
       const formattedPost = {
         ...post,
-        // datePost: `${day}-${month}-${year}`,  // Fixed string interpolation here
         youtub: post.youtub,
       };
-      if (post.category?.name === CategoryName.Location) {
-        if (post.DateReserve?.dateFine) {
-          await prisma.post.update({
-            where: { id: post.id },
-            data: { status: Status.available },
-          });
-        }
-        // } else {
-        //   await prisma.post.update({
-        //     where: { id: post.id },
-        //     data: { status: Status.taken },
-        //   });
-        // }
-      }
+
       return NextResponse.json(formattedPost, { status: 200 });
     }
+
     const posts = await prisma.post.findMany({
       include: {
         category: true,
@@ -165,7 +147,7 @@ export async function GET(req: NextRequest) {
         ],
       },
       orderBy: {
-        createdAt: 'desc',  
+        createdAt: 'desc',
       },
     });
 
@@ -174,13 +156,20 @@ export async function GET(req: NextRequest) {
     await Promise.all(
       posts.map(async (post) => {
         if (post.category?.name === CategoryName.Location && post.DateReserve) {
-          const dateFine = post.DateReserve.dateFine;
-          if (dateFine && new Date(dateFine) < currentDate) {
+          const dateDebut = post.DateReserve.dateDebut ? new Date(post.DateReserve.dateDebut) : null;
+          const dateFine = post.DateReserve.dateFine ? new Date(post.DateReserve.dateFine) : null;
+    
+          if (dateFine && dateFine < currentDate) {
             await prisma.post.update({
               where: { id: post.id },
               data: { status: Status.available },
             });
-          } else {
+          } else if (dateDebut && dateDebut > currentDate) {
+            await prisma.post.update({
+              where: { id: post.id },
+              data: { status: Status.available },
+            });
+          } else if (dateDebut && dateDebut <= currentDate) {
             await prisma.post.update({
               where: { id: post.id },
               data: { status: Status.taken },
@@ -189,15 +178,11 @@ export async function GET(req: NextRequest) {
         }
       })
     );
+    
 
     const formattedPosts = posts.map((post) => {
-      // const date = new Date(post.datePost);
-      // const day = String(date.getDate()).padStart(2, '0');
-      // const month = String(date.getMonth() + 1).padStart(2, '0');
-      // const year = date.getFullYear();
       return {
         ...post,
-        // datePost: `${day}-${month}-${year}`,  // Fixed string interpolation here
         youtub: post.youtub,
       };
     });
