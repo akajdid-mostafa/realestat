@@ -135,7 +135,6 @@ export async function GET(req: NextRequest) {
         // datePost: `${day}-${month}-${year}`,  // Fixed string interpolation here
         youtub: post.youtub,
       };
-
       if (post.category?.name === CategoryName.Location) {
         if (post.DateReserve?.dateFine) {
           await prisma.post.update({

@@ -24,13 +24,30 @@ export async function POST(req: Request) {
       throw new Error('Post with the given ID does not exist');
     }
 
-    const isDateNull = dateDebut === null && dateFine === null;
+    const parsedDateDebut = dateDebut ? new Date(dateDebut) : null;
+    const parsedDateFine = dateFine ? new Date(dateFine) : null;
+
+    const now = new Date();
+
+    if (parsedDateDebut && now >= parsedDateDebut) {
+      // If the current date is on or past the dateDebut, change the status to 'taken'
+      await prisma.post.update({
+        where: { id: postId },
+        data: { status: Status.taken }, // Change to 'taken' after dateDebut is passed
+      });
+    } else if (parsedDateDebut && now < parsedDateDebut) {
+      // If the dateDebut is in the future, keep the status 'available'
+      await prisma.post.update({
+        where: { id: postId },
+        data: { status: Status.available }, // Ensure it stays 'available' if in the future
+      });
+    }
 
     const dateReserveData = {
-      dateDebut: dateDebut ? new Date(dateDebut) : null,
-      dateFine: dateFine ? new Date(dateFine) : null,
+      dateDebut: parsedDateDebut,
+      dateFine: parsedDateFine,
       fullName,
-      price:parseFloat(price),
+      price: parseFloat(price),
       CIN,
       post: { connect: { id: postId } },
     };
@@ -38,25 +55,6 @@ export async function POST(req: Request) {
     const dateReserve = await prisma.dateReserve.create({
       data: dateReserveData,
     });
-
-    if (post.category?.name === CategoryName.Location) {
-      if (dateFine) {
-        await prisma.post.update({
-          where: { id: postId },
-          data: { status: Status.available },
-        });
-      } else {
-        await prisma.post.update({
-          where: { id: postId },
-          data: { status: Status.taken },
-        });
-      }
-    } else if (post.category?.name === CategoryName.Vente || isDateNull) {
-      await prisma.post.update({
-        where: { id: postId },
-        data: { status: Status.taken },
-      });
-    }
 
     const formattedDateReserve = {
       ...dateReserve,
@@ -73,6 +71,8 @@ export async function POST(req: Request) {
     );
   }
 }
+
+
 // GET
 export async function GET() {
   try {
