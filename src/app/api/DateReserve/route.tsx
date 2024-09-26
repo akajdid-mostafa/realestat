@@ -27,21 +27,24 @@ export async function POST(req: Request) {
     const parsedDateDebut = dateDebut ? new Date(dateDebut) : null;
     const parsedDateFine = dateFine ? new Date(dateFine) : null;
 
-    const now = new Date();
+    const isDateNull = parsedDateDebut === null && parsedDateFine === null;
 
+    // Check if current date is greater than or equal to the dateDebut
+    const now = new Date();
     if (parsedDateDebut && now >= parsedDateDebut) {
-      // If the current date is on or past the dateDebut, change the status to 'taken'
+      // If current date is on or past dateDebut, change the status to 'taken'
       await prisma.post.update({
         where: { id: postId },
-        data: { status: Status.taken }, // Change to 'taken' after dateDebut is passed
+        data: { status: Status.taken },
       });
-    } else if (parsedDateDebut && now < parsedDateDebut) {
-      // If the dateDebut is in the future, keep the status 'available'
+    } else if (post.category?.name === CategoryName.Location && parsedDateDebut) {
+      // Keep status available if the dateDebut is in the future
       await prisma.post.update({
         where: { id: postId },
-        data: { status: Status.available }, // Ensure it stays 'available' if in the future
+        data: { status: Status.available },
       });
     }
+
     const dateReserveData = {
       dateDebut: parsedDateDebut,
       dateFine: parsedDateFine,
@@ -54,8 +57,7 @@ export async function POST(req: Request) {
     const dateReserve = await prisma.dateReserve.create({
       data: dateReserveData,
     });
-  
-    
+
     const formattedDateReserve = {
       ...dateReserve,
       dateDebut: dateReserve.dateDebut ? formatDateToYYYYMMDD(dateReserve.dateDebut) : null,
@@ -71,7 +73,6 @@ export async function POST(req: Request) {
     );
   }
 }
-
 
 // GET
 export async function GET() {
