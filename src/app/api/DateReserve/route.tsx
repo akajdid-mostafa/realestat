@@ -25,25 +25,25 @@ export async function POST(req: Request) {
     }
 
     const now = new Date();
-    const dateDebutDate = new Date(dateDebut);
+    // const dateDebutDate = new Date(dateDebut);
 
-    if (now >= dateDebutDate) {
-      // If the current date is on or past the dateDebut, change the status to 'taken'
-      await prisma.post.update({
-        where: { id: postId },
-        data: { status: 'taken' }, // Change to 'taken' after dateDebut is passed
-      });
-    } else {
-      // If the dateDebut is in the future, keep the status 'available'
-      await prisma.post.update({
-        where: { id: postId },
-        data: { status: 'available' }, // Ensure it stays 'available' if in the future
-      });
-    }
+    // if (now >= dateDebut) {
+    //   // If the current date is on or past the dateDebut, change the status to 'taken'
+    //   await prisma.post.update({
+    //     where: { id: postId },
+    //     data: { status: 'taken' }, // Change to 'taken' after dateDebut is passed
+    //   });
+    // } else {
+    //   // If the dateDebut is in the future, keep the status 'available'
+    //   await prisma.post.update({
+    //     where: { id: postId },
+    //     data: { status: 'available' }, // Ensure it stays 'available' if in the future
+    //   });
+    // }
 
     const dateReserveData = {
-      dateDebut: dateDebutDate,
-      dateFine: new Date(dateFine),
+      dateDebut,
+      dateFine,
       fullName,
       price: parseFloat(price),
       CIN,
