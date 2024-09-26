@@ -136,7 +136,7 @@ const PropertyList = () => {
     }, [router.query, filteredProperties, router]);
 
     useEffect(() => {
-        const { city, roomCount, bathroomsCount  ,tab  } = router.query;
+        const { city, roomCount, bathroomsCount } = router.query;
         
         if (router.isReady) {
             handleCityChange(city || '');
@@ -158,6 +158,7 @@ const PropertyList = () => {
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
+        
         const currentQuery = {
             ...router.query,
             page: pageNumber,
@@ -167,9 +168,8 @@ const PropertyList = () => {
             roomCount: selectedRoomCount, // Keep the selected room count
             bathroomsCount: selectedBathroomsCount, // Keep the selected bathroom count
         };
+    
         router.replace({
-            pathname: router.pathname, // Keep the pathname
-            query: currentQuery, // Use the updated query object
             pathname: router.pathname,
             query: currentQuery,
         }, undefined, { shallow: true });
