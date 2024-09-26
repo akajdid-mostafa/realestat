@@ -27,7 +27,7 @@ const services = [
   },
   {
     image: "/images/vent.jpg",
-    title: "Vente d'un bien immobilier",
+    title: "Vente d'un bbien immobilier",
     description: "Vendez votre propriété en toute sérénité avec notre expertise. Que ce soit via notre programme innovant ou une vente traditionnelle, nous vous accompagnons à chaque étape pour une transaction réussie.",
     cta: "Vendre votre bien",
     href: "/service",
