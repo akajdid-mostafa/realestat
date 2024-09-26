@@ -114,3 +114,14 @@
   background-color: rgba(0, 0, 0, 0.2); /* Light black overlay */
   transition: background-color 0.3s ease-in-out;
 }
+/* globals.css */
+body {
+  margin: 0;
+  overflow-x: hidden;
+}
+
+/* Ensure containers do not exceed the viewport width */
+.container {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
