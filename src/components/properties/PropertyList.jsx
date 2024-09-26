@@ -24,7 +24,7 @@ const PropertyList = () => {
     const [selectedBathroomsCount, setSelectedBathroomsCount] = useState('Tous Salle de bain');
     const [searchQuery, setSearchQuery] = useState(''); // State for search query
     const router = useRouter();
-    const itemsPerPage = 3;
+    const itemsPerPage = 12;
 
 
     const totalPages = Math.ceil(filteredProperties.length / itemsPerPage);
