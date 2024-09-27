@@ -98,15 +98,23 @@ const PopularCard = ({ currentCategory }) => {
   }, []);
 
   useEffect(() => {
+
     const interval = () => {
-      setCurrentSlide((prev) => (prev + 1) % filteredData.length);
+      if (window.innerWidth >= 1024) { // Changed from 1524 to 1024 for 'lg'
+        setCurrentSlide(prev => (prev + 1) % (filteredData.length - 2));
+      }
+      else if (window.innerWidth >= 640) {
+        setCurrentSlide(prev => (prev + 1) % (filteredData.length - 1));
+      } else {
+        setCurrentSlide(prev => (prev + 1) % filteredData.length);
+      }
     };
 
     if (gridDisplay) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     } else {
-      intervalRef.current = setInterval(interval, 2000);
+      intervalRef.current = setInterval(interval, 5000);
     }
 
     return () => {

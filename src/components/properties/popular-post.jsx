@@ -56,15 +56,15 @@ const Popular = () => {
 
     useEffect(() => {
         const handleResize = () => {
-            if (window.innerWidth >= 1524) {
+            if (window.innerWidth >= 1024) { // Changed from 1524 to 1024 for 'lg'
                 setGridDisplay(true);
                 setSlidesToShow(3);
-            } else if (window.innerWidth >= 768) {
+            } else if (window.innerWidth >= 640) { // Changed from 768 to 640 for 'md'
                 setGridDisplay(false);
                 setSlidesToShow(2);
             } else {
                 setGridDisplay(false);
-                setSlidesToShow(1);
+                setSlidesToShow(1); // 'base' remains unchanged
             }
         };
 
@@ -76,7 +76,7 @@ const Popular = () => {
 
     useEffect(() => {
         const interval = () => {
-            if (window.innerWidth >= 768) {
+            if (window.innerWidth >= 640) {
                 setCurrentSlide(prev => (prev + 1) % (totalSlides - 1));
             } else {
                 setCurrentSlide(prev => (prev + 1) % totalSlides);
