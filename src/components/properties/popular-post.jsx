@@ -360,22 +360,48 @@ const Popular = () => {
                                         <Flex justify="space-between" align="center" bg="gray.100" p={4}>
                                             <Text fontWeight="bold" color="blue.800" fontSize="xl">{card.price}</Text>
                                             <Flex>
-                                                <IconButton
-                                                    as="a"
-                                                    href={`tel:0762544011`}
-                                                    aria-label="Call"
-                                                    icon={<MdPhone />}
-                                                    colorScheme="green"
-                                                    mr={2}
-                                                />
-                                                <IconButton
-                                                    as="a"
-                                                    href={`https://wa.me/+212762544011`}
-                                                    aria-label="WhatsApp"
-                                                    icon={<FaWhatsapp />}
-                                                    colorScheme="green"
-                                                />
-                                            </Flex>
+                                        <Button
+                                            leftIcon={<Icon as={SiWhatsapp} />}
+                                            colorScheme="green"
+                                            onClick={() => {
+                                                const message = encodeURIComponent(`Interested in property ${card.title} with ID ${card.id}, priced at ${card.price}. View more at http://localhost:3000/properties?modal=yes&id=${card.id}`);
+                                                window.open(`https://wa.me/123456789?text=${message}`, "_blank");
+                                            }}
+                                            position="relative"
+                                            zIndex="1"
+                                            px="4" // Reduced padding on x-axis
+                                            py="2" // Reduced padding on y-axis
+                                            color="white"
+                                            fontWeight="bold"
+                                            fontSize={{ base: "xs", md: "sm", lg: "md" }} // Smaller font sizes
+                                            bg="#198754"
+                                            borderRadius="15px"
+                                            boxShadow="md"
+                                            overflow="hidden"
+                                            transition="all 0.25s"
+                                            _hover={{
+                                                color: "#white",
+                                                _before: {
+                                                    width: "100%",
+                                                },
+                                            }}
+                                            _before={{
+                                                content: '""',
+                                                position: "absolute",
+                                                top: 0,
+                                                left: 0,
+                                                height: "100%",
+                                                width: "0",
+                                                borderRadius: "15px",
+                                                bg: "#20c997",
+                                                zIndex: "-1",
+                                                boxShadow: "md",
+                                                transition: "all 0.25s",
+                                            }}
+                                        >
+                                            WhatsApp
+                                        </Button>
+                                    </Flex>
                                         </Flex>
 
                                     </Box>
