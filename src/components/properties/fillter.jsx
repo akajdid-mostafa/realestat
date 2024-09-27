@@ -119,7 +119,7 @@ const PropertySearchPage = ({
     updateUrlWithoutNavigation({ bathroomsCount: count });
   };
 
-  
+
 
   const handleCitySearch = (event) => {
     setCityInput(event.target.value);
@@ -132,7 +132,7 @@ const PropertySearchPage = ({
       city: selectedCity === 'Select a city' ? '' : selectedCity,
       roomCount: selectedRoomCount,
       bathroomsCount: selectedBathroomsCount,
-      
+
     }).toString();
 
     return `/properties?${queryParams}`;
@@ -232,27 +232,7 @@ const PropertySearchPage = ({
               <Flex p={4} align="center" gap={4} flexDir={{ base: "column", md: "row" }}>
                 <Grid templateColumns={{ base: "1fr", md: `repeat(${num}, 1fr)` }} gap={4} width="100%">
                   {/* Updated input search with display from props */}
-                  <GridItem display={searchDisplay}>
-                    <InputGroup size="lg">
-                      <Input
-                        placeholder="Search by ville or adresse..."
-                        value={searchInput}
-                        onChange={handleSearchInputChange}
-                      />
-                      {searchInput && ( // Show the cancel icon only when there's input
-                        <InputRightElement>
-                          <Button
-                            onClick={() => setSearchInput('')} // Clear the input on click
-                            variant="link"
-                            color="gray.500"
-                            aria-label="Clear search"
-                          >
-                            <FaTimes />
-                          </Button>
-                        </InputRightElement>
-                      )}
-                    </InputGroup>
-                  </GridItem>
+
                   <GridItem>
                     <Menu>
                       <MenuButton as={Button} rightIcon={<FaChevronDown />} w="100%" size="lg">
@@ -305,6 +285,27 @@ const PropertySearchPage = ({
                         ))}
                       </MenuList>
                     </Menu>
+                  </GridItem>
+                  <GridItem display={searchDisplay}>
+                    <InputGroup size="lg">
+                      <Input
+                        placeholder="Search by ville or adresse..."
+                        value={searchInput}
+                        onChange={handleSearchInputChange}
+                      />
+                      {searchInput && ( // Show the cancel icon only when there's input
+                        <InputRightElement>
+                          <Button
+                            onClick={() => setSearchInput('')} // Clear the input on click
+                            variant="link"
+                            color="gray.500"
+                            aria-label="Clear search"
+                          >
+                            <FaTimes />
+                          </Button>
+                        </InputRightElement>
+                      )}
+                    </InputGroup>
                   </GridItem>
                 </Grid>
                 <Button

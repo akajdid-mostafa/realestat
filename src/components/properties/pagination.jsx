@@ -1,7 +1,7 @@
 import React from 'react';
-import { Button, Flex } from '@chakra-ui/react';
+import { Button, Flex, Select, Text } from '@chakra-ui/react';
 
-const Pagination = ({ totalPages, currentPage, onPageChange }) => {
+const Pagination = ({ totalPages, currentPage, onPageChange, rowsPerPage, totalRows, onRowsPerPageChange }) => {
     const getPageButtons = () => {
         const pages = [];
         const maxButtons = 5; // Maximum number of page buttons to display besides first and last
@@ -56,69 +56,92 @@ const Pagination = ({ totalPages, currentPage, onPageChange }) => {
 
     const pageButtons = getPageButtons();
 
+    const startRow = (currentPage - 1) * rowsPerPage + 1;
+    const endRow = Math.min(currentPage * rowsPerPage, totalRows);
+
     return (
-        <Flex justify="center" align="center" mt={8}>
-            <Button
-                onClick={() => onPageChange(currentPage - 1)}
-                isDisabled={currentPage === 1}
-                variant="outline"
-                mr={2}
-                borderRadius="lg"
-                bg={currentPage === 1 ? 'white' : 'blue.600'}
-                color={currentPage === 1 ? 'black' : 'white'}
-                borderColor="white" // Set border color to white
-                _hover={{
-                    bg: 'blue.600',
-                    color: 'white',
-                }}
-                _active={{
-                    bg: 'blue.600',
-                    color: 'white',
-                }}
-            >
-                Previous
-            </Button>
-            {pageButtons.map((page, index) => (
+        <Flex direction="column" align="center" mt={8}>
+            <Flex justify="space-between" align="center" width="100%" mb={4}>
+                <Flex align="center">
+                    <Text mr={2}>Rows per page:</Text>
+                    <Select
+                        value={rowsPerPage}
+                        onChange={(e) => onRowsPerPageChange(Number(e.target.value))}
+                        width="auto"
+                    >
+                        <option value={12}>12</option>
+                        <option value={24}>24</option>
+                        <option value={36}>36</option>
+                        <option value={72}>72</option>
+                    </Select>
+                </Flex>
+                <Text>
+                    {startRow}-{endRow} of {totalRows}
+                </Text>
+            </Flex>
+            <Flex justify="center" align="center">
                 <Button
-                    key={index}
-                    onClick={() => {
-                        if (page !== '...') onPageChange(page);
-                    }}
-                    variant={currentPage === page ? 'solid' : 'outline'}
-                    mx={1}
+                    onClick={() => onPageChange(currentPage - 1)}
+                    isDisabled={currentPage === 1}
+                    variant="outline"
+                    mr={2}
                     borderRadius="lg"
-                    bg={currentPage === page ? 'blue.600' : 'white'}
-                    color={currentPage === page ? 'white' : 'black'}
+                    bg={currentPage === 1 ? 'white' : 'blue.600'}
+                    color={currentPage === 1 ? 'black' : 'white'}
                     borderColor="white" // Set border color to white
                     _hover={{
                         bg: 'blue.600',
                         color: 'white',
                     }}
-                    isDisabled={page === '...'}
+                    _active={{
+                        bg: 'blue.600',
+                        color: 'white',
+                    }}
                 >
-                    {page}
+                    Previous
                 </Button>
-            ))}
-            <Button
-                onClick={() => onPageChange(currentPage + 1)}
-                isDisabled={currentPage === totalPages}
-                variant="outline"
-                ml={2}
-                borderRadius="md"
-                bg={currentPage === totalPages ? 'white' : 'blue.600'}
-                color={currentPage === totalPages ? 'black' : 'white'}
-                borderColor="white" // Set border color to white
-                _hover={{
-                    bg: 'blue.600',
-                    color: 'white',
-                }}
-                _active={{
-                    bg: 'blue.600',
-                    color: 'white',
-                }}
-            >
-                Next
-            </Button>
+                {pageButtons.map((page, index) => (
+                    <Button
+                        key={index}
+                        onClick={() => {
+                            if (page !== '...') onPageChange(page);
+                        }}
+                        variant={currentPage === page ? 'solid' : 'outline'}
+                        mx={1}
+                        borderRadius="lg"
+                        bg={currentPage === page ? 'blue.600' : 'white'}
+                        color={currentPage === page ? 'white' : 'black'}
+                        borderColor="white" // Set border color to white
+                        _hover={{
+                            bg: 'blue.600',
+                            color: 'white',
+                        }}
+                        isDisabled={page === '...'}
+                    >
+                        {page}
+                    </Button>
+                ))}
+                <Button
+                    onClick={() => onPageChange(currentPage + 1)}
+                    isDisabled={currentPage === totalPages}
+                    variant="outline"
+                    ml={2}
+                    borderRadius="md"
+                    bg={currentPage === totalPages ? 'white' : 'blue.600'}
+                    color={currentPage === totalPages ? 'black' : 'white'}
+                    borderColor="white" // Set border color to white
+                    _hover={{
+                        bg: 'blue.600',
+                        color: 'white',
+                    }}
+                    _active={{
+                        bg: 'blue.600',
+                        color: 'white',
+                    }}
+                >
+                    Next
+                </Button>
+            </Flex>
         </Flex>
     );
 };

@@ -7,11 +7,8 @@ import NotFound from './notfound';
 import Pagination from './pagination';
 import { useRouter } from 'next/router';
 
-
-
 const POSTS_API_URL = 'https://immoceanrepo.vercel.app/api/posts';
 const DETAILS_API_URL = 'https://immoceanrepo.vercel.app/api/details';
-
 
 const PropertyList = () => {
     const showSearch = true; // or false based on your logic
@@ -25,13 +22,10 @@ const PropertyList = () => {
     const [selectedRoomCount, setSelectedRoomCount] = useState('Tous chambre');
     const [selectedBathroomsCount, setSelectedBathroomsCount] = useState('Tous Salle de bain');
     const [searchQuery, setSearchQuery] = useState(''); // State for search query
+    const [itemsPerPage, setItemsPerPage] = useState(3); // State for items per page
     const router = useRouter();
-    const itemsPerPage = 12;
-
 
     const totalPages = Math.ceil(filteredProperties.length / itemsPerPage);
-
-
 
     useEffect(() => {
         const fetchData = async () => {
@@ -61,8 +55,6 @@ const PropertyList = () => {
     useEffect(() => {
         let filtered = properties;
 
-        
-
         if (activeTab === 'FOR Location') {
             filtered = filtered.filter(property => property.categoryId === 2);
         } else if (activeTab === 'FOR Vente') {
@@ -72,11 +64,9 @@ const PropertyList = () => {
         if (selectedPropertyType !== 'View All') {
             filtered = filtered.filter(property => property.type.type === selectedPropertyType);
         }
-
         if (selectedCity && selectedCity !== 'All Ville') {
             filtered = filtered.filter(property => property.ville.toLowerCase().includes(selectedCity.toLowerCase()));
         }
-
         if (selectedRoomCount !== 'Tous chambre') {
             filtered = filtered.filter(property => {
                 const rooms = parseInt(property.detail?.rooms, 10);
@@ -144,19 +134,9 @@ const PropertyList = () => {
             handleCityChange(city || '');
             handleRoomCountChange(roomCount || 'Tous chambre');
             handleBathroomsCountChange(bathroomsCount || 'Tous Salle de bain');
-            // handlePropertyTypeChange(PropertyType || 'View All'); // Set default if not provided
-            // handleTabChange(tab || 'ALL TYPE');
         }
         
     }, [router.isReady, router.query]);
-
-    // useEffect(() => {
-    //     const { } = router.query; // Extract propertyType and tab from router.query
-    //     if (router.isReady) {
-    //         handlePropertyTypeChange(PropertyType || 'View All'); // Set default if not provided
-    //         handleTabChange(ActiveTab || 'ALL TYPE'); // Set default if not provided
-    //     }
-    // }, [router.isReady, router.query]);
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
@@ -164,11 +144,11 @@ const PropertyList = () => {
         const currentQuery = {
             ...router.query,
             page: pageNumber,
-            tab: activeTab, // Keep the active tab
-            propertyType: selectedPropertyType, // Keep the selected property type
-            city: selectedCity, // Keep the selected city
-            roomCount: selectedRoomCount, // Keep the selected room count
-            bathroomsCount: selectedBathroomsCount, // Keep the selected bathroom count
+            tab: activeTab,
+            propertyType: selectedPropertyType,
+            city: selectedCity,
+            roomCount: selectedRoomCount,
+            bathroomsCount: selectedBathroomsCount,
         };
     
         router.replace({
@@ -176,7 +156,6 @@ const PropertyList = () => {
             query: currentQuery,
         }, undefined, { shallow: true });
     };
-
 
     const handleTabChange = (tab) => {
         setActiveTab(tab);
@@ -203,6 +182,11 @@ const PropertyList = () => {
         setSearchQuery(query);
     };
 
+    const handleItemsPerPageChange = (newItemsPerPage) => {
+        setItemsPerPage(newItemsPerPage);
+        setCurrentPage(1); // Reset to first page when items per page changes
+    };
+
     return (
         <Box style={{ overflow: 'visible' }}>
             <PropertySearchPage
@@ -212,8 +196,8 @@ const PropertyList = () => {
                 onCityChange={handleCityChange}
                 onRoomCountChange={handleRoomCountChange}
                 onBathroomsCountChange={handleBathroomsCountChange}
-                onSearchChange={handleSearchChange} // Pass search change handler
-                searchDisplay={showSearch ? 'block' : 'none'} // Set display value based on condition
+                onSearchChange={handleSearchChange}
+                searchDisplay={showSearch ? 'block' : 'none'}
                 num={4}
             />
             <Box p={4} display="flex" justifyContent="center">
@@ -242,6 +226,9 @@ const PropertyList = () => {
                             totalPages={totalPages}
                             currentPage={currentPage}
                             onPageChange={handlePageChange}
+                            rowsPerPage={itemsPerPage}
+                            totalRows={filteredProperties.length}
+                            onRowsPerPageChange={handleItemsPerPageChange}
                         />
                     </Box>
                 ) : (
