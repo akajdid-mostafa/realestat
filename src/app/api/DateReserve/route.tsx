@@ -14,7 +14,6 @@ export async function POST(req: Request) {
     if (!fullName || !CIN || !postId) {
       throw new Error('Missing required fields');
     }
-
     const post = await prisma.post.findUnique({
       where: { id: postId },
       include: { category: true },
@@ -69,9 +68,6 @@ export async function POST(req: Request) {
     );
   }
 }
-
-
-
 // GET
 export async function GET() {
   try {
