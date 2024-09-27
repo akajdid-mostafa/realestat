@@ -32,7 +32,7 @@ export async function POST(req: Request) {
     parking,
     balcony,
     pool,
-    facade,
+    facade, // facade to be added to the title
     documents,
     postId,
     Proprietary
@@ -44,6 +44,7 @@ export async function POST(req: Request) {
   }
 
   try {
+    // Step 1: Create the Detail entry
     const detail = await prisma.detail.create({
       data: {
         constructionyear,
@@ -59,15 +60,34 @@ export async function POST(req: Request) {
         parking,
         balcony,
         pool,
-        facade,
+        facade, // Add facade to Detail
         documents,
         Proprietary,
         Guard,
-        post: { connect: { id: postId } },
+        post: { connect: { id: postId } }, // Connect the Detail to the Post
       },
     });
 
-    const response = NextResponse.json(detail, { status: 201 });
+    
+    const post = await prisma.post.findUnique({
+      where: { id: postId },
+      select: { title: true, type: { select: { type: true } }, category: { select: { name: true } } },
+    });
+
+    if (!post) {
+      const response = NextResponse.json({ error: 'Post not found' }, { status: 404 });
+      return setCorsHeaders(response);
+    }
+
+    const updatedTitle = `${post.type?.type ?? ''} ${post.category?.name ?? ''} / ${postId} ${surface ? `/ surface: ${surface}` : ''}`;
+
+  
+    const updatedPost = await prisma.post.update({
+      where: { id: postId },
+      data: { title: updatedTitle },
+    });
+
+    const response = NextResponse.json({ detail, updatedPost }, { status: 201 });
     return setCorsHeaders(response);
   } catch (error: unknown) {
     console.error('Error creating detail:', error);
