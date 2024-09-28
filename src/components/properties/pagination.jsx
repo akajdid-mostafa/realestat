@@ -1,10 +1,11 @@
 import React from 'react';
-import { Button, Flex, Select, Text } from '@chakra-ui/react';
+import { Button, Flex, Select, Text, Box } from '@chakra-ui/react';
+import { GrNext, GrPrevious } from "react-icons/gr";
 
 const Pagination = ({ totalPages, currentPage, onPageChange, rowsPerPage, totalRows, onRowsPerPageChange }) => {
     const getPageButtons = () => {
         const pages = [];
-        const maxButtons = 5; // Maximum number of page buttons to display besides first and last
+        const maxButtons = 3; // Maximum number of page buttons to display besides first and last
 
         // Helper function to add a range of pages
         const addRange = (start, end) => {
@@ -40,6 +41,11 @@ const Pagination = ({ totalPages, currentPage, onPageChange, rowsPerPage, totalR
             endPage = currentPage + halfRange;
         }
 
+        // Add ellipsis if current page is greater than 2
+        if (currentPage > 2) {
+            pages.push('...');
+        }
+
         // Add the range of pages around the current page
         addRange(startPage, endPage);
 
@@ -62,86 +68,97 @@ const Pagination = ({ totalPages, currentPage, onPageChange, rowsPerPage, totalR
     return (
         <Flex direction="column" align="center" mt={8}>
             <Flex justify="space-between" align="center" width="100%" mb={4}>
-                <Flex align="center">
-                    <Text mr={2}>Rows per page:</Text>
+                <Flex align="center" width="auto">
+                    <Text fontWeight="Bold" mr={2} fontSize={{ base: "sm", md: "lg", lg: "xl" }}>Cartes à chaque page :</Text>
                     <Select
                         value={rowsPerPage}
                         onChange={(e) => onRowsPerPageChange(Number(e.target.value))}
                         width="auto"
+                        size={{ base: "sm", md: "md", lg: "lg" }}// This sets the size of the Select component
                     >
-                        <option value={12}>12</option>
-                        <option value={24}>24</option>
-                        <option value={36}>36</option>
-                        <option value={72}>72</option>
+                        <option value={12} style={{ fontSize: '0.8rem' }}>12</option> 
+                        <option value={24} style={{ fontSize: '0.8rem' }}>24</option>
+                        <option value={36} style={{ fontSize: '0.8rem' }}>36</option>
+                        <option value={72} style={{ fontSize: '0.8rem' }}>72</option>
                     </Select>
                 </Flex>
-                <Text>
+                <Text fontWeight="Bold" fontSize={{ base: "sm", md: "md", lg: "lg" }}>
                     {startRow}-{endRow} of {totalRows}
                 </Text>
             </Flex>
-            <Flex justify="center" align="center">
-                <Button
-                    onClick={() => onPageChange(currentPage - 1)}
-                    isDisabled={currentPage === 1}
-                    variant="outline"
-                    mr={2}
-                    borderRadius="lg"
-                    bg={currentPage === 1 ? 'white' : 'blue.600'}
-                    color={currentPage === 1 ? 'black' : 'white'}
-                    borderColor="white" // Set border color to white
-                    _hover={{
-                        bg: 'blue.600',
-                        color: 'white',
-                    }}
-                    _active={{
-                        bg: 'blue.600',
-                        color: 'white',
-                    }}
-                >
-                    Previous
-                </Button>
-                {pageButtons.map((page, index) => (
-                    <Button
-                        key={index}
-                        onClick={() => {
-                            if (page !== '...') onPageChange(page);
-                        }}
-                        variant={currentPage === page ? 'solid' : 'outline'}
-                        mx={1}
-                        borderRadius="lg"
-                        bg={currentPage === page ? 'blue.600' : 'white'}
-                        color={currentPage === page ? 'white' : 'black'}
-                        borderColor="white" // Set border color to white
-                        _hover={{
-                            bg: 'blue.600',
-                            color: 'white',
-                        }}
-                        isDisabled={page === '...'}
-                    >
-                        {page}
-                    </Button>
-                ))}
-                <Button
-                    onClick={() => onPageChange(currentPage + 1)}
-                    isDisabled={currentPage === totalPages}
-                    variant="outline"
-                    ml={2}
-                    borderRadius="md"
-                    bg={currentPage === totalPages ? 'white' : 'blue.600'}
-                    color={currentPage === totalPages ? 'black' : 'white'}
-                    borderColor="white" // Set border color to white
-                    _hover={{
-                        bg: 'blue.600',
-                        color: 'white',
-                    }}
-                    _active={{
-                        bg: 'blue.600',
-                        color: 'white',
-                    }}
-                >
-                    Next
-                </Button>
-            </Flex>
+            <Box overflowX="auto" width="100%">
+                <Flex justify="center" align="center" whiteSpace="nowrap">
+                    {currentPage > 1 && (
+                        <Button
+                            onClick={() => onPageChange(currentPage - 1)}
+                            variant="outline"
+                            mr={2}
+                            borderRadius="lg"
+                            bg="blue.600"
+                            color="white"
+                            borderColor="white" // Set border color to white
+                            _hover={{
+                                bg: 'blue.600',
+                                color: 'white',
+                            }}
+                            _active={{
+                                bg: 'blue.600',
+                                color: 'white',
+                            }}
+                            size={{ base: "xs", md: "md", lg: "lg" }} // Smaller size for mobile
+                            p={{ base: 1, md: 2, lg: 3 }} // Smaller padding for mobile
+                        >
+                            <GrPrevious />
+                        </Button>
+                    )}
+                    {pageButtons.map((page, index) => (
+                        <Button
+                            key={index}
+                            onClick={() => {
+                                if (page !== '...') onPageChange(page);
+                            }}
+                            variant={currentPage === page ? 'solid' : 'outline'}
+                            mx={1}
+                            borderRadius="lg"
+                            bg={currentPage === page ? 'blue.600' : 'white'}
+                            color={currentPage === page ? 'white' : 'black'}
+                            borderColor="white" // Set border color to white
+                            _hover={{
+                                bg: 'blue.600',
+                                color: 'white',
+                            }}
+                            isDisabled={page === '...'}
+                            size={{ base: "xs", md: "md", lg: "lg" }} // Smaller size for mobile
+                            p={{ base: 1, md: 2, lg: 3 }} // Smaller padding for mobile
+                        >
+                            {page}
+                        </Button>
+                    ))}
+                    {currentPage < totalPages && (
+                        <Button
+                            onClick={() => onPageChange(currentPage + 1)}
+                            variant="outline"
+                            ml={2}
+                            borderRadius="md"
+                            bg="blue.600"
+                            color="white"
+                            borderColor="white" // Set border color to white
+                            _hover={{
+                                bg: 'blue.600',
+                                color: 'white',
+                            }}
+                            _active={{
+                                bg: 'blue.600',
+                                color: 'white',
+                            }}
+                            size={{ base: "xs", md: "md", lg: "lg" }} // Smaller size for mobile
+                            p={{ base: 1, md: 2, lg: 3 }} // Smaller padding for mobile
+                        >
+                            <GrNext />
+                        </Button>
+                    )}
+                </Flex>
+            </Box>
         </Flex>
     );
 };

@@ -38,25 +38,16 @@ const PopularCard = ({ currentCategory }) => {
       id: post.id,
       imageSrc: post.img[0] || "/images/card.jpeg",
       title: post.title,
-      urltube:
-        post.youtub ||
-        "https://www.youtube.com/embed/rjKsKbU2Wuo?autoplay=1&controls=1",
       type: post.type?.type || "Unknown",
       location: post.adress,
       ville: post.ville,
+      detail: detail, // Changed '=' to ':' for correct object property assignment
       category: post.category?.name || "Unknown",
-      bedrooms: detail.bedromms || 0,
-      kitchen: detail.kitchen || 0,
-      bathrooms: detail.bathrooms || 0,
-      latitude: post.lat,
-      longitude: post.lon,
-      area: detail.surface || "N/A",
-      floor: detail.floor || "N/A",
+      rooms: detail.rooms ,
+      bathrooms: detail.bathrooms ,
+      area: detail.surface ,
       price: `$${post.prix || "0"}`,
-      images: post.img.map((url, index) => ({
-        alt: `image${index + 1}`,
-        url,
-      })),
+      
     };
   });
 
@@ -217,8 +208,31 @@ const PopularCard = ({ currentCategory }) => {
                       {card.location}
                     </Text>
                   </Flex>
-                  <HStack spacing={4} mt={2}>
-                    <Flex alignItems="center">
+                  {/* <HStack spacing={4} mt={2}> */}
+                  <Flex
+                        justify="space-between"
+                        mt={2}
+                    >
+                        {card.detail && card.rooms && (
+                            <Flex align="center">
+                                <FaBed />
+                                <Text ml={1}>{card.rooms} chambre</Text>
+                            </Flex>
+                        )}
+                        {card.detail && card.bathrooms && (
+                            <Flex align="center">
+                                <FaBath />
+                                <Text ml={1}>{card.bathrooms } salle de bain</Text>
+                            </Flex>
+                        )}
+                        {card.detail && card.area && (
+                            <Flex align="center">
+                                <FaExpandArrowsAlt />
+                                <Text ml={1}>{card.area} m²</Text>
+                            </Flex>
+                        )}
+                    </Flex>
+                    {/* <Flex alignItems="center">
                       <FaBed />
                       <Text ml={1}>{card.bedrooms} Bedrooms</Text>
                     </Flex>
@@ -229,8 +243,8 @@ const PopularCard = ({ currentCategory }) => {
                     <Flex alignItems="center">
                       <FaExpandArrowsAlt />
                       <Text ml={1}>{card.area}</Text>
-                    </Flex>
-                  </HStack>
+                    </Flex> */}
+                  {/* </HStack> */}
                 </Box>
                 <Flex
                   justify="space-between"

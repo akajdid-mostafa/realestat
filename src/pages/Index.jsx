@@ -16,6 +16,7 @@ import CardService from '../components/service';
 import LoadingAnimation from '../components/Loading';
 import { WhatsApp } from '../components/whatssap';
 
+
 const HomePage = ({ siteInfo }) => { // Added isLoading to the function parameters
   const [isLoading, setIsLoading] = useState(true); // Add loading state
 
@@ -49,6 +50,7 @@ const HomePage = ({ siteInfo }) => { // Added isLoading to the function paramete
             </Container>
           </Box>
         </Box>
+
         <Footer />
         <WhatsApp />
       </Layout>
