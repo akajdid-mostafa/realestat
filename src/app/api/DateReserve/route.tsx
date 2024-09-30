@@ -7,6 +7,7 @@ function formatDateToYYYYMMDD(date: Date): string {
   return date.toISOString().split('T')[0];
 }
 
+// Function to get all dates between dateDebut and dateFine
 function getDatesInRange(dateDebut: Date, dateFine: Date): Date[] {
   const dates: Date[] = [];
   
@@ -53,8 +54,9 @@ export async function POST(req: Request) {
     });
 
     if (dateDebut && dateFine) {
+      // Get all dates between dateDebut and dateFine
       const datesInRange = getDatesInRange(new Date(dateDebut), new Date(dateFine));
-      console.log('Dates in range:', datesInRange);
+      console.log('Dates in range:', datesInRange); // This will log all the dates between dateDebut and dateFine
     }
 
     if (post.category?.name === CategoryName.Location) {
@@ -82,17 +84,20 @@ export async function POST(req: Request) {
       dateFine: dateReserve.dateFine ? formatDateToYYYYMMDD(dateReserve.dateFine) : null,
     };
 
-    return NextResponse.json({ ...formattedDateReserve, getDatesInRange }, { status: 201 });
+    return NextResponse.json(formattedDateReserve, { status: 201 });
   } catch (error) {
     console.error('Detailed error:', error);
     return NextResponse.json(
-      { error: `Error creating DateReserve: ${error instanceof Error ? error.message : 'Unknown error'}` },
-      { status: 400 }
+      JSON.stringify({
+        error: `fetching DateReserves: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      }),
+      { status: 500 }
     );
   }
 }
 
-GET
+
+// GET
 export async function GET() {
   try {
     const dateReserves = await prisma.dateReserve.findMany({
@@ -110,11 +115,13 @@ export async function GET() {
       dateFine: dateReserve.dateFine ? formatDateToYYYYMMDD(dateReserve.dateFine) : null,
     }));
 
-    return NextResponse.json({formattedDateReserves,getDatesInRange }, { status: 200 });
+    return NextResponse.json(formattedDateReserves, { status: 200 });
   } catch (error) {
     console.error('Detailed error:', error);
     return NextResponse.json(
-      { error: `Error fetching DateReserves: ${error instanceof Error ? error.message : 'Unknown error'}` },
+      JSON.stringify({
+        error: `fetching DateReserves: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      }),
       { status: 500 }
     );
   }
@@ -143,9 +150,8 @@ export async function GET() {
 //     return NextResponse.json(formattedDateReserves, { status: 200 });
 //   } catch (error) {
 //     return NextResponse.json(
-//       { error: `Error fetching DateReserves: ${error instanceof Error ? error.message : 'Unknown error'}` },
+//       { error: Error fetching DateReserves: ${error instanceof Error ? error.message : 'Unknown error'} },
 //       { status: 500 }
 //     );
 //   }
 // }
-
