@@ -8,13 +8,12 @@ function formatDateToYYYYMMDD(date: Date): string {
 }
 
 // Function to get all dates between dateDebut and dateFine
-function getDatesInRange(dateDebut: Date, dateFine: Date): Date[] {
-  const dates: Date[] = [];
-  
+function getDatesInRange(dateDebut: Date, dateFine: Date): string[] {
+  const dates: string[] = [];
   let currentDate = new Date(dateDebut);
 
   while (currentDate <= dateFine) {
-    dates.push(new Date(currentDate)); // Push a copy of the current date to avoid mutation issues
+    dates.push(formatDateToYYYYMMDD(new Date(currentDate))); // Push a formatted copy of the current date to avoid mutation issues
     currentDate.setDate(currentDate.getDate() + 1); // Increment by 1 day
   }
 
@@ -53,10 +52,10 @@ export async function POST(req: Request) {
       data: dateReserveData,
     });
 
+    let datesInRange: string[] = [];
     if (dateDebut && dateFine) {
       // Get all dates between dateDebut and dateFine
-      const datesInRange = getDatesInRange(new Date(dateDebut), new Date(dateFine));
-      console.log('Dates in range:', datesInRange); // This will log all the dates between dateDebut and dateFine
+      datesInRange = getDatesInRange(new Date(dateDebut), new Date(dateFine));
     }
 
     if (post.category?.name === CategoryName.Location) {
@@ -84,7 +83,7 @@ export async function POST(req: Request) {
       dateFine: dateReserve.dateFine ? formatDateToYYYYMMDD(dateReserve.dateFine) : null,
     };
 
-    return NextResponse.json(formattedDateReserve, { status: 201 });
+    return NextResponse.json({ ...formattedDateReserve, datesInRange }, { status: 201 });
   } catch (error) {
     console.error('Detailed error:', error);
     return NextResponse.json(
@@ -112,7 +111,7 @@ export async function GET() {
       dateFine: dateReserve.dateFine ? formatDateToYYYYMMDD(dateReserve.dateFine) : null,
     }));
 
-    return NextResponse.json(formattedDateReserves, { status: 200 });
+    return NextResponse.json({formattedDateReserves,getDatesInRange }, { status: 200 });
   } catch (error) {
     console.error('Detailed error:', error);
     return NextResponse.json(
