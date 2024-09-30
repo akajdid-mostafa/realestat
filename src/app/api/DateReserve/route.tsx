@@ -15,7 +15,7 @@ function getDatesInRange(dateDebut: Date, dateFine: Date): Date[] {
 
   while (currentDate <= dateFine) {
     dates.push(new Date(currentDate)); // Push a copy of the current date to avoid mutation issues
-    currentDate.setDate(currentDate.getDate()); // Increment by 1 day
+    currentDate.setDate(currentDate.getDate() + 1); // Increment by 1 day
   }
 
   return dates;
@@ -54,9 +54,8 @@ export async function POST(req: Request) {
     });
 
     if (dateDebut && dateFine) {
-      // Get all dates between dateDebut and dateFine
       const datesInRange = getDatesInRange(new Date(dateDebut), new Date(dateFine));
-      console.log('Dates in range:', datesInRange); // This will log all the dates between dateDebut and dateFine
+      console.log('Dates in range:', datesInRange);
     }
 
     if (post.category?.name === CategoryName.Location) {
@@ -88,14 +87,11 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error('Detailed error:', error);
     return NextResponse.json(
-      JSON.stringify({
-        error: `fetching DateReserves: ${error instanceof Error ? error.message : 'Unknown error'}`,
-      }),
-      { status: 500 }
+      { error: `Error creating DateReserve: ${error instanceof Error ? error.message : 'Unknown error'} `},
+      { status: 400 }
     );
   }
 }
-
 
 // GET
 export async function GET() {
@@ -119,39 +115,8 @@ export async function GET() {
   } catch (error) {
     console.error('Detailed error:', error);
     return NextResponse.json(
-      JSON.stringify({
-        error: `fetching DateReserves: ${error instanceof Error ? error.message : 'Unknown error'}`,
-      }),
+      { error:`Error fetching DateReserves: ${error instanceof Error ? error.message : 'Unknown error'}` },
       { status: 500 }
     );
   }
 }
-
-// export async function GET() {
-//   try {
-//     const dateReserves = await prisma.dateReserve.findMany({
-//       include: { post: true },
-//       orderBy: { updatedAt: 'desc' }
-//     });
-
-//     const formattedDateReserves = dateReserves.map(dateReserve => {
-//       const reservedDates = dateReserve.dateDebut && dateReserve.dateFine
-//         ? getDatesInRange(dateReserve.dateDebut, dateReserve.dateFine)
-//         : [];
-
-//       return {
-//         ...dateReserve,
-//         dateDebut: dateReserve.dateDebut ? formatDateToYYYYMMDD(dateReserve.dateDebut) : null,
-//         dateFine: dateReserve.dateFine ? formatDateToYYYYMMDD(dateReserve.dateFine) : null,
-//         reservedDates,
-//       };
-//     });
-
-//     return NextResponse.json(formattedDateReserves, { status: 200 });
-//   } catch (error) {
-//     return NextResponse.json(
-//       { error: Error fetching DateReserves: ${error instanceof Error ? error.message : 'Unknown error'} },
-//       { status: 500 }
-//     );
-//   }
-// }
