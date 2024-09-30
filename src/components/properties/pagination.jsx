@@ -74,12 +74,13 @@ const Pagination = ({ totalPages, currentPage, onPageChange, rowsPerPage, totalR
                         value={rowsPerPage}
                         onChange={(e) => onRowsPerPageChange(Number(e.target.value))}
                         width="auto"
-                        size={{ base: "sm", md: "md", lg: "lg" }}// This sets the size of the Select component
+                        fontWeight="bold"
+                        size={{ base: "sm", md: "md", lg: "md" }}// This sets the size of the Select component
                     >
-                        <option value={12} style={{ fontSize: '0.8rem' }}>12</option> 
-                        <option value={24} style={{ fontSize: '0.8rem' }}>24</option>
-                        <option value={36} style={{ fontSize: '0.8rem' }}>36</option>
-                        <option value={72} style={{ fontSize: '0.8rem' }}>72</option>
+                        <option value={12} style={{ fontWeight:'bold'  , fontSize: '15px' }}>12</option> 
+                        <option value={24} style={{ fontWeight:'bold'  ,fontSize: '15px' }}>24</option>
+                        <option value={36} style={{ fontWeight:'bold'  ,fontSize: '15px' }}>36</option>
+                        <option value={72} style={{ fontWeight:'bold'  ,fontSize: '15px' }}>72</option>
                     </Select>
                 </Flex>
                 <Text fontWeight="Bold" fontSize={{ base: "sm", md: "md", lg: "lg" }}>
