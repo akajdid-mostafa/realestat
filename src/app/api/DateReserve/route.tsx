@@ -7,6 +7,20 @@ function formatDateToYYYYMMDD(date: Date): string {
   return date.toISOString().split('T')[0];
 }
 
+// Function to get all dates between dateDebut and dateFine
+function getDatesInRange(dateDebut: Date, dateFine: Date): Date[] {
+  const dates: Date[] = [];
+  
+  let currentDate = new Date(dateDebut);
+
+  while (currentDate <= dateFine) {
+    dates.push(new Date(currentDate)); // Push a copy of the current date to avoid mutation issues
+    currentDate.setDate(currentDate.getDate() + 1); // Increment by 1 day
+  }
+
+  return dates;
+}
+
 export async function POST(req: Request) {
   try {
     const { dateDebut, dateFine, fullName, price, CIN, postId } = await req.json();
@@ -14,6 +28,7 @@ export async function POST(req: Request) {
     if (!fullName || !CIN || !postId) {
       throw new Error('Missing required fields');
     }
+
     const post = await prisma.post.findUnique({
       where: { id: postId },
       include: { category: true },
@@ -23,26 +38,11 @@ export async function POST(req: Request) {
       throw new Error('Post with the given ID does not exist');
     }
 
-    const now = new Date();
-    // const dateDebutDate = new Date(dateDebut);
-
-    // if (now >= dateDebut) {
-    //   // If the current date is on or past the dateDebut, change the status to 'taken'
-    //   await prisma.post.update({
-    //     where: { id: postId },
-    //     data: { status: 'taken' }, // Change to 'taken' after dateDebut is passed
-    //   });
-    // } else {
-    //   // If the dateDebut is in the future, keep the status 'available'
-    //   await prisma.post.update({
-    //     where: { id: postId },
-    //     data: { status: 'available' }, // Ensure it stays 'available' if in the future
-    //   });
-    // }
+    const isDateNull = dateDebut === null && dateFine === null;
 
     const dateReserveData = {
-      dateDebut,
-      dateFine,
+      dateDebut: dateDebut ? new Date(dateDebut) : null,
+      dateFine: dateFine ? new Date(dateFine) : null,
       fullName,
       price: parseFloat(price),
       CIN,
@@ -52,6 +52,31 @@ export async function POST(req: Request) {
     const dateReserve = await prisma.dateReserve.create({
       data: dateReserveData,
     });
+
+    if (dateDebut && dateFine) {
+      // Get all dates between dateDebut and dateFine
+      const datesInRange = getDatesInRange(new Date(dateDebut), new Date(dateFine));
+      console.log('Dates in range:', datesInRange); // This will log all the dates between dateDebut and dateFine
+    }
+
+    if (post.category?.name === CategoryName.Location) {
+      if (dateFine) {
+        await prisma.post.update({
+          where: { id: postId },
+          data: { status: Status.available },
+        });
+      } else {
+        await prisma.post.update({
+          where: { id: postId },
+          data: { status: Status.taken },
+        });
+      }
+    } else {
+      await prisma.post.update({
+        where: { id: postId },
+        data: { status: Status.taken },
+      });
+    }
 
     const formattedDateReserve = {
       ...dateReserve,
@@ -68,6 +93,7 @@ export async function POST(req: Request) {
     );
   }
 }
+
 // GET
 export async function GET() {
   try {
