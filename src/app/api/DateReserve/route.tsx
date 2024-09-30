@@ -7,6 +7,7 @@ function formatDateToYYYYMMDD(date: Date): string {
   return date.toISOString().split('T')[0];
 }
 
+// Function to get all dates between dateDebut and dateFine
 function getDatesInRange(dateDebut: Date, dateFine: Date): Date[] {
   const dates: Date[] = [];
   
@@ -14,7 +15,7 @@ function getDatesInRange(dateDebut: Date, dateFine: Date): Date[] {
 
   while (currentDate <= dateFine) {
     dates.push(new Date(currentDate)); // Push a copy of the current date to avoid mutation issues
-    currentDate.setDate(currentDate.getDate()); // Increment by 1 day
+    currentDate.setDate(currentDate.getDate() + 1); // Increment by 1 day
   }
 
   return dates;
@@ -92,7 +93,7 @@ export async function POST(req: Request) {
   }
 }
 
-GET
+// GET
 export async function GET() {
   try {
     const dateReserves = await prisma.dateReserve.findMany({
@@ -119,33 +120,3 @@ export async function GET() {
     );
   }
 }
-
-// export async function GET() {
-//   try {
-//     const dateReserves = await prisma.dateReserve.findMany({
-//       include: { post: true },
-//       orderBy: { updatedAt: 'desc' }
-//     });
-
-//     const formattedDateReserves = dateReserves.map(dateReserve => {
-//       const reservedDates = dateReserve.dateDebut && dateReserve.dateFine
-//         ? getDatesInRange(dateReserve.dateDebut, dateReserve.dateFine)
-//         : [];
-
-//       return {
-//         ...dateReserve,
-//         dateDebut: dateReserve.dateDebut ? formatDateToYYYYMMDD(dateReserve.dateDebut) : null,
-//         dateFine: dateReserve.dateFine ? formatDateToYYYYMMDD(dateReserve.dateFine) : null,
-//         reservedDates,
-//       };
-//     });
-
-//     return NextResponse.json(formattedDateReserves, { status: 200 });
-//   } catch (error) {
-//     return NextResponse.json(
-//       { error: `Error fetching DateReserves: ${error instanceof Error ? error.message : 'Unknown error'}` },
-//       { status: 500 }
-//     );
-//   }
-// }
-
