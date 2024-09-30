@@ -170,8 +170,6 @@ export async function GET(req: NextRequest) {
       };
       return NextResponse.json(formattedPost, { status: 200 });
     }
-
-   
     const filters = {
       ...(status && { status: status as Status }),
       ...(categoryId && { categoryId: parseInt(categoryId, 10) }),
@@ -229,46 +227,50 @@ export async function GET(req: NextRequest) {
       await Promise.all(
         posts.map(async (post) => {
           if (post.category?.name === CategoryName.Location && post.DateReserve?.length > 0) {
-
             const earliestDateFine = post.DateReserve
               .map((reserve) => reserve.dateFine)
-              .filter((dateFine): dateFine is Date => dateFine !== null) 
+              .filter((dateFine): dateFine is Date => dateFine !== null)
               .reduce((minDate, currDate) => {
                 return new Date(currDate) < new Date(minDate) ? currDate : minDate;
               });
-
+      
             const earliestDateDebut = post.DateReserve
               .map((reserve) => reserve.dateDebut)
-              .filter((dateDebut): dateDebut is Date => dateDebut !== null) 
+              .filter((dateDebut): dateDebut is Date => dateDebut !== null)
               .reduce((minDate, currDate) => {
                 return new Date(currDate) < new Date(minDate) ? currDate : minDate;
               });
-
+      
             if (earliestDateFine && new Date(earliestDateFine) < currentDate) {
+              // Reservation has ended, mark post as available
               await prisma.post.update({
                 where: { id: post.id },
                 data: { status: Status.available },
               });
             } 
             
-            else if (earliestDateDebut && isSameDay(new Date(earliestDateDebut), currentDate)) {
+            // Check if the current date is between the start and end of the reservation period
+            else if (
+              earliestDateDebut &&
+              earliestDateFine &&
+              new Date(earliestDateDebut) <= currentDate &&
+              new Date(earliestDateFine) >= currentDate
+            ) {
+              // Current date is within the reservation period, mark post as taken
               await prisma.post.update({
                 where: { id: post.id },
                 data: { status: Status.taken },
               });
             }
           } else if (!post.DateReserve || post.DateReserve.length === 0) {
+            // No reservations, mark post as available
             await prisma.post.update({
               where: { id: post.id },
               data: { status: Status.available },
             });
           }
         })
-      );
-
-
-    
-
+      );     
           const formattedPosts = posts.map((post) => {
             return {
               ...post,
