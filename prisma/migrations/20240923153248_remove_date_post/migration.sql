@@ -22,7 +22,6 @@ CREATE TABLE "User" (
 CREATE TABLE "Post" (
     "id" SERIAL NOT NULL,
     "img" JSONB[],
-    "datePost" TIMESTAMP(3) NOT NULL,
     "lat" DOUBLE PRECISION NOT NULL,
     "lon" DOUBLE PRECISION NOT NULL,
     "prix" TEXT NOT NULL,

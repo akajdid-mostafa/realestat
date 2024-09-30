@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from 'next/server';
-import { PrismaClient, CategoryName, Status } from '@prisma/client';
+import { PrismaClient, CategoryName, Status} from '@prisma/client';
 import dotenv from 'dotenv';
 import cloudinary from 'cloudinary';
 
@@ -26,83 +26,115 @@ cloudinary.v2.config({
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const {  lat, lon, prix, adress, ville, status, title, categoryId, typeId, Detail, img, youtub, comment  } = body;
+    const { lat, lon, prix, adress, ville, status, categoryId, typeId, Detail, img, youtub, comment } = body;
 
-    console.log('Received data:', body);
+    
+    let parsedDetail;
+    if (Detail) {
+      try {
+        parsedDetail = JSON.parse(Detail);
+      } catch (error) {
+        return NextResponse.json({ error: 'Invalid Detail format' }, { status: 400 });
+      }
+    }
 
     const missingFields = [];
     if (!img || !Array.isArray(img) || img.length === 0) missingFields.push('img');
-   
     if (!lat) missingFields.push('lat');
     if (!lon) missingFields.push('lon');
-    if (!prix ) missingFields.push('prix'); 
+    if (!prix) missingFields.push('prix');
     if (!adress) missingFields.push('adress');
     if (!ville) missingFields.push('ville');
     if (!status) missingFields.push('status');
-    if (!title) missingFields.push('title');
     if (!categoryId) missingFields.push('categoryId');
     if (!typeId) missingFields.push('typeId');
 
     if (missingFields.length > 0) {
-      console.error('Missing Fields:', missingFields);
       return NextResponse.json({ error: 'Missing required fields', fields: missingFields }, { status: 400 });
     }
 
-    if (!Object.values(Status).includes(status as Status)) {
-      console.error('Invalid status value:', status);
-      return NextResponse.json({ error: 'Invalid status value' }, { status: 400 });
+   
+    const category = await prisma.category.findUnique({
+      where: { id: parseInt(categoryId) },
+      select: { name: true },
+    });
+
+    const type = await prisma.type.findUnique({
+      where: { id: parseInt(typeId) },
+      select: { type: true },
+    });
+
+    if (!category || !type) {
+      return NextResponse.json({ error: 'Invalid categoryId or typeId' }, { status: 400 });
     }
 
+    
     const uploadedImages = await Promise.all(
       img.map(async (imageUrl: string) => {
         const result = await cloudinary.v2.uploader.upload(imageUrl, {
           folder: 'your_folder_name',
         });
-        return {
-          url: result.secure_url,
-          public_id: result.public_id,
-          format: result.format,
-          width: result.width,
-          height: result.height,
-        };
+        return result.secure_url;
       })
     );
 
-
-  
+    
     const post = await prisma.post.create({
       data: {
-        img: uploadedImages.map((image) => image.url),
-        
+        img: uploadedImages,
         lat: parseFloat(lat),
         lon: parseFloat(lon),
-        prix,  
+        prix,
         adress,
         ville,
         status: status as Status,
-        title,
+        title: '', 
         youtub,
         comment,
         category: { connect: { id: parseInt(categoryId) } },
         type: { connect: { id: parseInt(typeId) } },
-        Detail: Detail ? { create: JSON.parse(Detail) } : undefined,
       },
       include: {
         category: true,
         type: true,
-        DateReserve: true,
-        Detail: true,
       },
     });
 
-    // Include the `id` of the created post in the response
-    return NextResponse.json({ id: post.id, post }, { status: 201 });
+ 
+    let createdDetail = null;
+    if (parsedDetail) {
+      createdDetail = await prisma.detail.create({
+        data: {
+          ...parsedDetail,
+          postId: post.id, 
+        },
+      });
+    }
+
+    
+    const updatedTitle = `${post.type?.type ?? ''} a ${post.category?.name ?? ''} # ${post.id} ${createdDetail?.surface ? `/ surface: ${createdDetail.surface}m` : ''}`;
+
+    const updatedPost = await prisma.post.update({
+      where: { id: post.id },
+      data: { title: updatedTitle },
+      include: {
+        category: true,
+        type: true,
+        Detail: true, 
+      },
+    });
+
+    return NextResponse.json({ id: updatedPost.id, post: updatedPost }, { status: 201 });
   } catch (error: any) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     console.error('Error creating post:', errorMessage);
     return NextResponse.json({ error: 'Error creating post', details: errorMessage }, { status: 500 });
   }
 }
+
+
+
+
 // GET
 export async function GET(req: NextRequest) {
   try {
@@ -124,10 +156,30 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ error: 'Post not found' }, { status: 404 });
       }
 
+      // const date = new Date(post.datePost);
+      // const day = String(date.getDate()).padStart(2, '0');
+      // const month = String(date.getMonth() + 1).padStart(2, '0');
+      // const year = date.getFullYear();
+
       const formattedPost = {
         ...post,
+        
         youtub: post.youtub,
       };
+
+      if (post.category?.name === CategoryName.Location) {
+        if (post.DateReserve?.dateFine) {
+          await prisma.post.update({
+            where: { id: post.id },
+            data: { status: Status.available },
+          });
+        } else {
+          await prisma.post.update({
+            where: { id: post.id },
+            data: { status: Status.taken },
+          });
+        }
+      }
 
       return NextResponse.json(formattedPost, { status: 200 });
     }
@@ -146,7 +198,7 @@ export async function GET(req: NextRequest) {
         ],
       },
       orderBy: {
-        createdAt: 'desc',
+        createdAt: 'asc',  
       },
     });
 
@@ -155,21 +207,14 @@ export async function GET(req: NextRequest) {
     await Promise.all(
       posts.map(async (post) => {
         if (post.category?.name === CategoryName.Location && post.DateReserve) {
-          const dateDebut = post.DateReserve.dateDebut ? new Date(post.DateReserve.dateDebut) : null;
-          const dateFine = post.DateReserve.dateFine ? new Date(post.DateReserve.dateFine) : null;
-    
-          if (dateFine && dateFine < currentDate) {
+          const dateFine = post.DateReserve.dateFine;
+          if (dateFine && new Date(dateFine) < currentDate) {
             await prisma.post.update({
               where: { id: post.id },
               data: { status: Status.available },
             });
-          } else if (dateDebut && dateDebut > currentDate) {
+          } else {
             await prisma.post.update({
-              where: { id: post.id },
-              data: { status: Status.available },
-            });
-          } else if (dateDebut && dateDebut <= currentDate) {
-          await prisma.post.update({
               where: { id: post.id },
               data: { status: Status.taken },
             });
@@ -177,11 +222,15 @@ export async function GET(req: NextRequest) {
         }
       })
     );
-    
 
     const formattedPosts = posts.map((post) => {
+      // // const date = new Date(post.datePost);
+      // const day = String(date.getDate()).padStart(2, '0');
+      // const month = String(date.getMonth() + 1).padStart(2, '0');
+      // const year = date.getFullYear();
       return {
         ...post,
+        // datePost: `${day}-${month}-${year}`,  // Fixed string interpolation here
         youtub: post.youtub,
       };
     });
@@ -194,3 +243,211 @@ export async function GET(req: NextRequest) {
   }
 }
 
+// export async function GET(req: NextRequest) {
+//   try {
+//     const url = new URL(req.url);
+    
+//     const postId = url.searchParams.get('id');
+//     const status = url.searchParams.get('status');   
+//     const categoryId = url.searchParams.get('categoryId');  
+//     // const ville = url.searchParams.get('ville');
+//     const typeId = url.searchParams.get('typeId');    
+//     const search = url.searchParams.get('search');    
+//     const bedromms = url.searchParams.get('bedromms'); // Fixed typo from 'bedromms' to 'bedrooms'
+//     const rooms = url.searchParams.get('rooms');
+
+//     if (postId) {
+//       const post = await prisma.post.findUnique({
+//         where: { id: parseInt(postId, 10) },
+//         include: {
+//           category: true,
+//           type: true,
+//           DateReserve: true,
+//           Detail: true,
+//         },
+//       });
+      
+
+//       if (!post) {
+//         return NextResponse.json({ error: 'Post not found' }, { status: 404 });
+//       }
+
+//       const formattedPost = {
+//         ...post,
+//         youtub: post.youtub,
+//       };
+
+//       // if (post.category?.name === CategoryName.Location) {
+//       //   if (post.DateReserve?.dateFine) {
+//       //     await prisma.post.update({
+//       //       where: { id: post.id },
+//       //       data: { status: Status.available },
+//       //     });
+//       //   } else {
+//       //     await prisma.post.update({
+//       //       where: { id: post.id },
+//       //       data: { status: Status.taken },
+//       //     });
+//       //   }
+//       // }
+      
+
+//       return NextResponse.json(formattedPost, { status: 200 });
+//     }
+
+   
+//     const filters = {
+//       ...(status && { status: status as Status }),
+//       ...(categoryId && { categoryId: parseInt(categoryId, 10) }),
+//       ...(typeId && { typeId: parseInt(typeId, 10) }),
+//       ...(bedromms || rooms ? { 
+//         Detail: { 
+//           ...(bedromms && { bedromms: { gt: '5' } }), 
+//           ...(rooms && { rooms: { gt: '5' } })
+//         }
+//       } : {}),
+//       ...(search
+//         ? {
+//             OR: [
+//               {
+//                 ville: {
+//                   contains: search, 
+//                 },
+//               },
+//               {
+//                 adress: {
+//                   contains: search, 
+//                 },
+//               },
+//             ],
+//           }
+//         : {}),
+      
+//     };
+    
+//     const posts = await prisma.post.findMany({
+//       where: {
+//         ...filters,
+        
+//       },
+//       include: {
+//         category: true,
+//         type: true,
+//         DateReserve: true,
+//         Detail: true,
+//       },
+//       orderBy: {
+//         createdAt: 'desc',
+//       },
+//     });
+    
+    
+
+    
+    
+    
+
+//     // const currentDate = new Date();
+
+//     // await Promise.all(
+//     //   posts.map(async (post) => {
+//     //     // Check if the post belongs to 'Location' category and has DateReserve entries
+//     //     if (post.category?.name === CategoryName.Location && post.DateReserve?.length > 0) {
+    
+//     //       // Find the smallest dateFine from the DateReserve array, ignoring null values
+//     //       const earliestDateFine = post.DateReserve
+//     //         .map((reserve) => reserve.dateFine)
+//     //         .filter((dateFine): dateFine is Date => dateFine !== null) // Filter out null dateFine
+//     //         .reduce((minDate, currDate) => {
+//     //           return new Date(currDate) < new Date(minDate) ? currDate : minDate;
+//     //         });
+    
+//     //       // If the smallest dateFine is in the past, mark post as available
+//     //       if (earliestDateFine && new Date(earliestDateFine) < currentDate) {
+//     //         await prisma.post.update({
+//     //           where: { id: post.id },
+//     //           data: { status: Status.available },
+//     //         });
+//     //       } else {
+//     //         // Otherwise, mark the post as taken
+//     //         await prisma.post.update({
+//     //           where: { id: post.id },
+//     //           data: { status: Status.taken },
+//     //         });
+//     //       }
+//     //     } else if (!post.DateReserve || post.DateReserve.length === 0) {
+//     //       // If there are no reservations, mark post as available
+//     //       await prisma.post.update({
+//     //         where: { id: post.id },
+//     //         data: { status: Status.available },
+//     //       });
+//     //     }
+//     //   })
+//     // );
+//     const currentDate = new Date();
+
+//       function isSameDay(date1: Date, date2: Date): boolean {
+//         return (
+//           date1.getFullYear() === date2.getFullYear() &&
+//           date1.getMonth() === date2.getMonth() &&
+//           date1.getDate() === date2.getDate()
+//         );
+//       }
+
+//       await Promise.all(
+//         posts.map(async (post) => {
+//           if (post.category?.name === CategoryName.Location && post.DateReserve?.length > 0) {
+
+//             const earliestDateFine = post.DateReserve
+//               .map((reserve) => reserve.dateFine)
+//               .filter((dateFine): dateFine is Date => dateFine !== null) 
+//               .reduce((minDate, currDate) => {
+//                 return new Date(currDate) < new Date(minDate) ? currDate : minDate;
+//               });
+
+//             const earliestDateDebut = post.DateReserve
+//               .map((reserve) => reserve.dateDebut)
+//               .filter((dateDebut): dateDebut is Date => dateDebut !== null) 
+//               .reduce((minDate, currDate) => {
+//                 return new Date(currDate) < new Date(minDate) ? currDate : minDate;
+//               });
+
+//             if (earliestDateFine && new Date(earliestDateFine) < currentDate) {
+//               await prisma.post.update({
+//                 where: { id: post.id },
+//                 data: { status: Status.available },
+//               });
+//             } 
+            
+//             else if (earliestDateDebut && isSameDay(new Date(earliestDateDebut), currentDate)) {
+//               await prisma.post.update({
+//                 where: { id: post.id },
+//                 data: { status: Status.taken },
+//               });
+//             }
+//           } else if (!post.DateReserve || post.DateReserve.length === 0) {
+//             await prisma.post.update({
+//               where: { id: post.id },
+//               data: { status: Status.available },
+//             });
+//           }
+//         })
+//       );
+
+
+    
+
+//           const formattedPosts = posts.map((post) => {
+//             return {
+//               ...post,
+//               youtub: post.youtub,
+//             };
+//           });
+
+//           return NextResponse.json(formattedPosts, { status: 200 });
+//         } catch (error: any) {
+//           const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+//           console.error('Error retrieving posts:', errorMessage);
+//           return NextResponse.json({ error: 'Error retrieving posts', details: errorMessage }, { status: 500 });
+//         }
+//       }

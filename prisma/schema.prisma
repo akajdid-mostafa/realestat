@@ -3,7 +3,6 @@ datasource db {
   url = env("POSTGRES_PRISMA_URL") // uses connection pooling
   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -33,7 +32,7 @@ model Post {
   Detail      Detail?
   category    Category?    @relation(fields: [categoryId], references: [id])
   type        Type?        @relation(fields: [typeId], references: [id])
-  DateReserve DateReserve?
+  DateReserve DateReserve[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
@@ -87,7 +86,7 @@ model DateReserve {
   fullName  String
   CIN       String
   price     Float
-  postId    Int?      @unique
+  postId    Int?     
   post      Post?     @relation(fields: [postId], references: [id])
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
