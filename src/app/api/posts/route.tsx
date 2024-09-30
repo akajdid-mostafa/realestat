@@ -255,6 +255,8 @@ export async function GET(req: NextRequest) {
     // const ville = url.searchParams.get('ville');
     const typeId = url.searchParams.get('typeId');    
     const search = url.searchParams.get('search');    
+    const bedromms = url.searchParams.get('bedromms'); // Fixed typo from 'bedromms' to 'bedrooms'
+    const rooms = url.searchParams.get('rooms');
 
     if (postId) {
       const post = await prisma.post.findUnique({
@@ -300,6 +302,12 @@ export async function GET(req: NextRequest) {
       ...(status && { status: status as Status }),
       ...(categoryId && { categoryId: parseInt(categoryId, 10) }),
       ...(typeId && { typeId: parseInt(typeId, 10) }),
+      ...(bedromms || rooms ? { 
+        Detail: { 
+          ...(bedromms && { bedromms: { gt: '5' } }), 
+          ...(rooms && { rooms: { gt: '5' } })
+        }
+      } : {}),
       ...(search
         ? {
             OR: [
@@ -316,6 +324,7 @@ export async function GET(req: NextRequest) {
             ],
           }
         : {}),
+      
     };
     
     const posts = await prisma.post.findMany({
@@ -379,74 +388,68 @@ export async function GET(req: NextRequest) {
     // );
     const currentDate = new Date();
 
-// Helper function to compare two dates and see if they are the same day
-function isSameDay(date1: Date, date2: Date): boolean {
-  return (
-    date1.getFullYear() === date2.getFullYear() &&
-    date1.getMonth() === date2.getMonth() &&
-    date1.getDate() === date2.getDate()
-  );
-}
-
-await Promise.all(
-  posts.map(async (post) => {
-    // Check if the post belongs to 'Location' category and has DateReserve entries
-    if (post.category?.name === CategoryName.Location && post.DateReserve?.length > 0) {
-
-      // Find the smallest dateFine from the DateReserve array, ignoring null values
-      const earliestDateFine = post.DateReserve
-        .map((reserve) => reserve.dateFine)
-        .filter((dateFine): dateFine is Date => dateFine !== null) // Filter out null dateFine
-        .reduce((minDate, currDate) => {
-          return new Date(currDate) < new Date(minDate) ? currDate : minDate;
-        });
-
-      // Find the earliest dateDebut from the DateReserve array
-      const earliestDateDebut = post.DateReserve
-        .map((reserve) => reserve.dateDebut)
-        .filter((dateDebut): dateDebut is Date => dateDebut !== null) // Filter out null dateDebut
-        .reduce((minDate, currDate) => {
-          return new Date(currDate) < new Date(minDate) ? currDate : minDate;
-        });
-
-      // If the smallest dateFine is in the past, mark post as available
-      if (earliestDateFine && new Date(earliestDateFine) < currentDate) {
-        await prisma.post.update({
-          where: { id: post.id },
-          data: { status: Status.available },
-        });
-      } 
-      
-      else if (earliestDateDebut && isSameDay(new Date(earliestDateDebut), currentDate)) {
-        await prisma.post.update({
-          where: { id: post.id },
-          data: { status: Status.taken },
-        });
+      function isSameDay(date1: Date, date2: Date): boolean {
+        return (
+          date1.getFullYear() === date2.getFullYear() &&
+          date1.getMonth() === date2.getMonth() &&
+          date1.getDate() === date2.getDate()
+        );
       }
-    } else if (!post.DateReserve || post.DateReserve.length === 0) {
-      // If there are no reservations, mark post as available
-      await prisma.post.update({
-        where: { id: post.id },
-        data: { status: Status.available },
-      });
-    }
-  })
-);
+
+      await Promise.all(
+        posts.map(async (post) => {
+          if (post.category?.name === CategoryName.Location && post.DateReserve?.length > 0) {
+
+            const earliestDateFine = post.DateReserve
+              .map((reserve) => reserve.dateFine)
+              .filter((dateFine): dateFine is Date => dateFine !== null) 
+              .reduce((minDate, currDate) => {
+                return new Date(currDate) < new Date(minDate) ? currDate : minDate;
+              });
+
+            const earliestDateDebut = post.DateReserve
+              .map((reserve) => reserve.dateDebut)
+              .filter((dateDebut): dateDebut is Date => dateDebut !== null) 
+              .reduce((minDate, currDate) => {
+                return new Date(currDate) < new Date(minDate) ? currDate : minDate;
+              });
+
+            if (earliestDateFine && new Date(earliestDateFine) < currentDate) {
+              await prisma.post.update({
+                where: { id: post.id },
+                data: { status: Status.available },
+              });
+            } 
+            
+            else if (earliestDateDebut && isSameDay(new Date(earliestDateDebut), currentDate)) {
+              await prisma.post.update({
+                where: { id: post.id },
+                data: { status: Status.taken },
+              });
+            }
+          } else if (!post.DateReserve || post.DateReserve.length === 0) {
+            await prisma.post.update({
+              where: { id: post.id },
+              data: { status: Status.available },
+            });
+          }
+        })
+      );
 
 
     
 
-    const formattedPosts = posts.map((post) => {
-      return {
-        ...post,
-        youtub: post.youtub,
-      };
-    });
+          const formattedPosts = posts.map((post) => {
+            return {
+              ...post,
+              youtub: post.youtub,
+            };
+          });
 
-    return NextResponse.json(formattedPosts, { status: 200 });
-  } catch (error: any) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error('Error retrieving posts:', errorMessage);
-    return NextResponse.json({ error: 'Error retrieving posts', details: errorMessage }, { status: 500 });
-  }
-}
+          return NextResponse.json(formattedPosts, { status: 200 });
+        } catch (error: any) {
+          const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+          console.error('Error retrieving posts:', errorMessage);
+          return NextResponse.json({ error: 'Error retrieving posts', details: errorMessage }, { status: 500 });
+        }
+      }
