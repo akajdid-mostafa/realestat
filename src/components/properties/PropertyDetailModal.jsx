@@ -186,22 +186,24 @@ const PropertyDetailModal = ({ isOpen, onClose }) => {
                                     </Text>
                                 </Box>
                                 <Map center={{ lat: property?.lat, lng: property?.lon }} zoom={14} />
-                                <Box>
-                                    <Box position="relative" mt={8} mb={8}>
-                                        <Box position="absolute" left={0} top="50%" transform="translateY(-50%)" width="4px" height="100%" bg="blue.600"></Box>
-                                        <Text
-                                            fontSize={{ base: "xl", md: "2xl" }}
-                                            fontWeight="bold"
-                                            pl={6}
-                                        >
-                                            Vidéo YouTube
-                                        </Text>
+                                {property?.youtubeUrl && ( // Check if youtubeUrl is not null
+                                    <Box>
+                                        <Box position="relative" mt={8} mb={8}>
+                                            <Box position="absolute" left={0} top="50%" transform="translateY(-50%)" width="4px" height="100%" bg="blue.600"></Box>
+                                            <Text
+                                                fontSize={{ base: "xl", md: "2xl" }}
+                                                fontWeight="bold"
+                                                pl={6}
+                                            >
+                                                Vidéo YouTube
+                                            </Text>
+                                        </Box>
+                                        <VideoSection
+                                            src={property?.youtubeUrl}
+                                            heading={property?.title}
+                                        />
                                     </Box>
-                                    <VideoSection
-                                        src={property?.youtubeUrl}
-                                        heading={property?.title}
-                                    />
-                                </Box>
+                                )}
                             </Box>
                             <ContactForm defaultMessage={message} />
                         </Flex>

@@ -20,14 +20,13 @@ import { MdPhone } from 'react-icons/md';
 import { FaWhatsapp } from 'react-icons/fa';
 import { SiWhatsapp } from "react-icons/si";
 
-
-
 const Popular = () => {
     const [gridDisplay, setGridDisplay] = useState(false);
     const [slidesToShow, setSlidesToShow] = useState(1);
     const [currentSlide, setCurrentSlide] = useState(0);
     const [posts, setPosts] = useState([]);
     const [details, setDetails] = useState([]);
+    const [filterType, setFilterType] = useState('All');
     const totalSlides = posts.length;
     const intervalRef = useRef(null);
 
@@ -124,6 +123,18 @@ const Popular = () => {
         };
     }) : [];
 
+    // Filter data based on selected type
+    const filteredData = filterType === 'All' ? transformedData : transformedData.filter(card => card.type === filterType);
+
+    // Get unique types from the data
+    const uniqueTypes = [...new Set(transformedData.map(card => card.type))];
+
+    // Handle filter type change
+    const handleFilterTypeChange = (type) => {
+        setFilterType(type);
+        setCurrentSlide(0); // Reset to the first slide
+    };
+
     return (
         <Box display="flex" flexDirection="column" alignItems="center" p={4}>
             <Box textAlign="center" mt={8} mb={6}>
@@ -132,13 +143,26 @@ const Popular = () => {
                     Avec plus d'un million de biens disponibles, il est facile de trouver le bien qui vous convient.
                 </Text>
             </Box>
+
+            {/* Filter Buttons */}
+            <Flex mb={4} wrap="wrap" justifyContent="center">
+                <Button onClick={() => handleFilterTypeChange('All')} m={2} colorScheme={filterType === 'All' ? 'blue' : 'gray'}>
+                    View All
+                </Button>
+                {uniqueTypes.map(type => (
+                    <Button key={type} onClick={() => handleFilterTypeChange(type)} m={2} colorScheme={filterType === type ? 'blue' : 'gray'}>
+                        {type}
+                    </Button>
+                ))}
+            </Flex>
+
             {gridDisplay ? (
                 <Grid
                     templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }}
                     gap={6}
                     maxW="7xl"
                 >
-                    {transformedData.slice(0, 6).map(card => (
+                    {filteredData.slice(0, 6).map(card => (
                         <Box
                             key={card.id}
                             className="property-item homeya-box card"
@@ -284,7 +308,7 @@ const Popular = () => {
                     currentSlide={currentSlide}
                 >
                     <Slider>
-                        {transformedData.map(card => (
+                        {filteredData.map(card => (
                             <Slide key={card.id} index={card.id} style={{ margin: '0 10px' }}>
                                 <Link href={`/properties?modal=yes&id=${card.id}`} _hover={{ textDecoration: "none" }} className="images-group">
                                     <Box className="property-item homeya-box card" bg="white" borderRadius="md" boxShadow="lg" overflow="hidden" transition="0.3s">
@@ -360,48 +384,48 @@ const Popular = () => {
                                         <Flex justify="space-between" align="center" bg="gray.100" p={4}>
                                             <Text fontWeight="bold" color="blue.800" fontSize="xl">{card.price}</Text>
                                             <Flex>
-                                        <Button
-                                            leftIcon={<Icon as={SiWhatsapp} />}
-                                            colorScheme="green"
-                                            onClick={() => {
-                                                const message = encodeURIComponent(`Interested in property ${card.title} with ID ${card.id}, priced at ${card.price}. View more at http://localhost:3000/properties?modal=yes&id=${card.id}`);
-                                                window.open(`https://wa.me/123456789?text=${message}`, "_blank");
-                                            }}
-                                            position="relative"
-                                            zIndex="1"
-                                            px="4" // Reduced padding on x-axis
-                                            py="2" // Reduced padding on y-axis
-                                            color="white"
-                                            fontWeight="bold"
-                                            fontSize={{ base: "xs", md: "sm", lg: "md" }} // Smaller font sizes
-                                            bg="#198754"
-                                            borderRadius="15px"
-                                            boxShadow="md"
-                                            overflow="hidden"
-                                            transition="all 0.25s"
-                                            _hover={{
-                                                color: "#white",
-                                                _before: {
-                                                    width: "100%",
-                                                },
-                                            }}
-                                            _before={{
-                                                content: '""',
-                                                position: "absolute",
-                                                top: 0,
-                                                left: 0,
-                                                height: "100%",
-                                                width: "0",
-                                                borderRadius: "15px",
-                                                bg: "#20c997",
-                                                zIndex: "-1",
-                                                boxShadow: "md",
-                                                transition: "all 0.25s",
-                                            }}
-                                        >
-                                            WhatsApp
-                                        </Button>
-                                    </Flex>
+                                                <Button
+                                                    leftIcon={<Icon as={SiWhatsapp} />}
+                                                    colorScheme="green"
+                                                    onClick={() => {
+                                                        const message = encodeURIComponent(`Interested in property ${card.title} with ID ${card.id}, priced at ${card.price}. View more at http://localhost:3000/properties?modal=yes&id=${card.id}`);
+                                                        window.open(`https://wa.me/123456789?text=${message}`, "_blank");
+                                                    }}
+                                                    position="relative"
+                                                    zIndex="1"
+                                                    px="4" // Reduced padding on x-axis
+                                                    py="2" // Reduced padding on y-axis
+                                                    color="white"
+                                                    fontWeight="bold"
+                                                    fontSize={{ base: "xs", md: "sm", lg: "md" }} // Smaller font sizes
+                                                    bg="#198754"
+                                                    borderRadius="15px"
+                                                    boxShadow="md"
+                                                    overflow="hidden"
+                                                    transition="all 0.25s"
+                                                    _hover={{
+                                                        color: "#white",
+                                                        _before: {
+                                                            width: "100%",
+                                                        },
+                                                    }}
+                                                    _before={{
+                                                        content: '""',
+                                                        position: "absolute",
+                                                        top: 0,
+                                                        left: 0,
+                                                        height: "100%",
+                                                        width: "0",
+                                                        borderRadius: "15px",
+                                                        bg: "#20c997",
+                                                        zIndex: "-1",
+                                                        boxShadow: "md",
+                                                        transition: "all 0.25s",
+                                                    }}
+                                                >
+                                                    WhatsApp
+                                                </Button>
+                                            </Flex>
                                         </Flex>
 
                                     </Box>
