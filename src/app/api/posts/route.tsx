@@ -174,12 +174,26 @@ export async function GET(req: NextRequest) {
       ...(status && { status: status as Status }),
       ...(categoryId && { categoryId: parseInt(categoryId, 10) }),
       ...(typeId && { typeId: parseInt(typeId, 10) }),
-      ...(bedromms || rooms ? { 
-        Detail: { 
-          ...(bedromms && { bedromms:bedromms }), 
-          ...(rooms && { rooms: rooms })
-        }
-      } : {}),
+        ...(bedromms
+          ? {
+              Detail: {
+                bedromms:
+                  ['1', '2', '3', '4'].includes(bedromms) 
+                    ? bedromms 
+                    : { gte: '5' }, 
+              },
+            }
+          : {}),
+        ...(rooms
+          ? {
+              Detail: {
+                rooms:
+                  ['1', '2', '3', '4'].includes(rooms) 
+                    ? rooms 
+                    : { gte: '5' }, 
+              },
+            }
+          : {}),
       ...(search
         ? {
             OR: [
