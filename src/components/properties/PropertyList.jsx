@@ -8,7 +8,6 @@ import Pagination from './pagination';
 import { useRouter } from 'next/router';
 
 const POSTS_API_URL = 'https://immoceanrepo.vercel.app/api/posts';
-const DETAILS_API_URL = 'https://immoceanrepo.vercel.app/api/details';
 
 const PropertyList = () => {
     const showSearch = true; // or false based on your logic
@@ -27,81 +26,49 @@ const PropertyList = () => {
 
     const totalPages = Math.ceil(filteredProperties.length / itemsPerPage);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const [postsResponse, detailsResponse] = await Promise.all([
-                    fetch(POSTS_API_URL),
-                    fetch(DETAILS_API_URL),
-                ]);
-                const postsData = await postsResponse.json();
-                const detailsData = await detailsResponse.json();
+    const fetchData = async () => {
+        try {
+            const queryParams = new URLSearchParams();
 
-                const propertiesWithDetails = postsData.map(post => {
-                    const detail = detailsData.find(d => d.postId === post.id);
-                    return { ...post, detail };
-                });
-
-                setProperties(propertiesWithDetails);
-                setFilteredProperties(propertiesWithDetails);
-            } catch (error) {
-                console.error('Error fetching data:', error);
+            if (activeTab === 'FOR Location') {
+                queryParams.append('categoryId', '2');
+            } else if (activeTab === 'FOR Vente') {
+                queryParams.append('categoryId', '1');
             }
-        };
 
-        fetchData();
-    }, []);
+            if (selectedPropertyType !== 'View All') {
+                queryParams.append('typeId', selectedPropertyType);
+            }
+
+            if (selectedCity && selectedCity !== 'All Ville') {
+                queryParams.append('search', selectedCity);
+            }
+
+            if (selectedRoomCount !== 'Tous chambre') {
+                queryParams.append('rooms', selectedRoomCount);
+            }
+
+            if (selectedBathroomsCount !== 'Tous Salle de bain') {
+                queryParams.append('bedrooms', selectedBathroomsCount);
+            }
+
+            if (searchQuery) {
+                queryParams.append('search', searchQuery);
+            }
+
+            const response = await fetch(`${POSTS_API_URL}?${queryParams.toString()}`);
+            const data = await response.json();
+
+            setProperties(data);
+            setFilteredProperties(data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
 
     useEffect(() => {
-        let filtered = properties;
-
-        if (activeTab === 'FOR Location') {
-            filtered = filtered.filter(property => property.categoryId === 2);
-        } else if (activeTab === 'FOR Vente') {
-            filtered = filtered.filter(property => property.categoryId === 1);
-        }
-
-        if (selectedPropertyType !== 'View All') {
-            filtered = filtered.filter(property => property.type.type === selectedPropertyType);
-        }
-        if (selectedCity && selectedCity !== 'All Ville') {
-            filtered = filtered.filter(property => property.ville.toLowerCase().includes(selectedCity.toLowerCase()));
-        }
-        if (selectedRoomCount !== 'Tous chambre') {
-            filtered = filtered.filter(property => {
-                const rooms = parseInt(property.detail?.rooms, 10);
-                if (isNaN(rooms)) return false;
-                if (selectedRoomCount.startsWith('Plus')) {
-                    return rooms >= 5;
-                }
-                return rooms === parseInt(selectedRoomCount, 10);
-            });
-        }
-
-        if (selectedBathroomsCount !== 'Tous Salle de bain') {
-            filtered = filtered.filter(property => {
-                const bathrooms = parseInt(property.detail?.bathrooms, 10);
-                if (isNaN(bathrooms)) return false;
-                if (selectedBathroomsCount.startsWith('Plus')) {
-                    return bathrooms >= 5;
-                }
-                return bathrooms === parseInt(selectedBathroomsCount, 10);
-            });
-        }
-
-        if (searchQuery) {
-            filtered = filtered.filter(property =>
-                property.ville.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                property.adress.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-        }
-
-        filtered = filtered.filter(property => property.status === 'available' || (property.status === 'taken' && property.categoryId === 2));
-
-        setFilteredProperties(filtered);
-        setCurrentPage(1);
-
-    }, [activeTab, selectedPropertyType, selectedCity, selectedRoomCount, selectedBathroomsCount, properties, searchQuery]);
+        fetchData();
+    }, [activeTab, selectedPropertyType, selectedCity, selectedRoomCount, selectedBathroomsCount, searchQuery]);
 
     useEffect(() => {
         const { page } = router.query;

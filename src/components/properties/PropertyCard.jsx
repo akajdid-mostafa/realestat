@@ -88,40 +88,40 @@ const PropertyCard = ({ property, onClick }) => {
                             {property.ville}
                         </Tag>
                     </Flex>
-
                     <Flex
                         align="center"
                         justify="space-between" // Changed to space-between to push content to edges
                         mt={1}
                     >
-                        <Flex align="center">
+                        <Flex 
+                        align="center"
+                        >
                             <FaMapMarkerAlt />
                             <Text ml={1} isTruncated>
                                 {property.adress}
                             </Text>
                         </Flex>
                     </Flex>
-
                     <Flex
                         justify="space-between"
                         mt={2}
                     >
-                        {property.detail && property.detail.rooms && (
+                        {property.Detail && property.Detail.rooms && (
                             <Flex align="center">
                                 <FaBed />
-                                <Text ml={1}>{property.detail.rooms} chambre</Text>
+                                <Text ml={1}>{property.Detail.rooms} chambre</Text>
                             </Flex>
                         )}
-                        {property.detail && property.detail.bathrooms && (
+                        {property.Detail && property.Detail.bathrooms && (
                             <Flex align="center">
                                 <FaBath />
-                                <Text ml={1}>{property.detail.bathrooms} salle de bain</Text>
+                                <Text ml={1}>{property.Detail.bathrooms} salle de bain</Text>
                             </Flex>
                         )}
-                        {property.detail && property.detail.surface && (
+                        {property.Detail && property.Detail.surface && (
                             <Flex align="center">
                                 <FaExpandArrowsAlt />
-                                <Text ml={1}>{property.detail.surface} m²</Text>
+                                <Text ml={1}>{property.Detail.surface} m²</Text>
                             </Flex>
                         )}
                     </Flex>

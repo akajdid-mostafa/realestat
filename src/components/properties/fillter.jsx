@@ -42,7 +42,7 @@ const PropertySearchPage = ({
   properties = [],
   onCityChange,
   onRoomCountChange,
-  onBathroomsCount,
+  onBathroomsCountChange, // Corrected prop name
   onSearchChange, // New prop for handling search
   searchDisplay, // New prop for controlling display
   num,
@@ -113,13 +113,11 @@ const PropertySearchPage = ({
 
   const handleBathroomsCountChange = (count) => {
     setSelectedBathroomsCount(count);
-    if (typeof onBathroomsCount === 'function') {
-      onBathroomsCount(count);
+    if (typeof onBathroomsCountChange === 'function') {
+      onBathroomsCountChange(count);
     }
     updateUrlWithoutNavigation({ bathroomsCount: count });
   };
-
-
 
   const handleCitySearch = (event) => {
     setCityInput(event.target.value);
@@ -132,7 +130,6 @@ const PropertySearchPage = ({
       city: selectedCity === 'Select a city' ? '' : selectedCity,
       roomCount: selectedRoomCount,
       bathroomsCount: selectedBathroomsCount,
-
     }).toString();
 
     return `/properties?${queryParams}`;
@@ -141,7 +138,6 @@ const PropertySearchPage = ({
   const handleSearch = () => {
     router.push(getSearchUrl());
   };
-  // array.includes()
 
   const filteredCities = citiesInMorocco.filter((city) =>
     city.toLowerCase().includes(cityInput.toLowerCase())
@@ -173,11 +169,9 @@ const PropertySearchPage = ({
         onPropertyTypeChange(formattedPropertyType);
       }
     }
-
   }, [router.query, onTabChange, onPropertyTypeChange]); // Add onTabChange and onPropertyTypeChange to the dependency array
 
   const [isMounted, setIsMounted] = useState(false);
-
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -194,9 +188,6 @@ const PropertySearchPage = ({
   const handleSearchInputChange = (event) => {
     setSearchInput(event.target.value);
   };
-
-
-
 
   useEffect(() => {
     setIsMounted(true);
@@ -232,7 +223,6 @@ const PropertySearchPage = ({
               <Flex p={4} align="center" gap={4} flexDir={{ base: "column", md: "row" }}>
                 <Grid templateColumns={{ base: "1fr", md: `repeat(${num}, 1fr)` }} gap={4} width="100%">
                   {/* Updated input search with display from props */}
-
                   <GridItem>
                     <Menu>
                       <MenuButton as={Button} rightIcon={<FaChevronDown />} w="100%" size="lg">
@@ -261,12 +251,24 @@ const PropertySearchPage = ({
                   <GridItem>
                     <Menu>
                       <MenuButton as={Button} leftIcon={<FaBed />} rightIcon={<FaChevronDown />} w="100%" size="lg">
-                        {selectedRoomCount}
+                        {selectedRoomCount === 1 ? "1 chambre" :
+                         selectedRoomCount === 2 ? "2 chambre" :
+                         selectedRoomCount === 3 ? "3 chambre" :
+                         selectedRoomCount === 4 ? "4 chambre" :
+                         selectedRoomCount === 5 ? "Plus 5 chambre" :
+                         "Tous chambre"}
                       </MenuButton>
-                      <MenuList>
-                        {["Tous chambre", "1 chambre", "2 chambre", "3 chambre", "4 chambre", "Plus 5 chambre"].map((count) => (
-                          <MenuItem key={count} onClick={() => setSelectedRoomCount(count)}>
-                            {count}
+                      <MenuList >
+                        {[
+                          { label: "Tous chambre", value: '' },
+                          { label: "1 chambre", value: 1 },
+                          { label: "2 chambre", value: 2 },
+                          { label: "3 chambre", value: 3 },
+                          { label: "4 chambre", value: 4 },
+                          { label: "Plus 5 chambre", value: 5 }
+                        ].map((count) => (
+                          <MenuItem key={count.value} onClick={() => setSelectedRoomCount(count.value)}>
+                            {count.label}
                           </MenuItem>
                         ))}
                       </MenuList>
@@ -275,12 +277,24 @@ const PropertySearchPage = ({
                   <GridItem>
                     <Menu>
                       <MenuButton as={Button} leftIcon={<FaBath />} rightIcon={<FaChevronDown />} w="100%" size="lg">
-                        {selectedBathroomsCount}
+                        {selectedBathroomsCount === 1 ? "1 Salle de bain" :
+                         selectedBathroomsCount === 2 ? "2 Salle de bain" :
+                         selectedBathroomsCount === 3 ? "3 Salle de bain" :
+                         selectedBathroomsCount === 4 ? "4 Salle de bain" :
+                         selectedBathroomsCount === 5 ? "Plus 5 Salle de bain" :
+                         "Tous Salle de bain"}
                       </MenuButton>
                       <MenuList>
-                        {["Tous Salle de bain", "1 Salle de bain", "2 Salle de bain", "3 Salle de bain", "4 Salle de bain", "Plus 5 Salle de bain"].map((count) => (
-                          <MenuItem key={count} onClick={() => setSelectedBathroomsCount(count)}>
-                            {count}
+                      {[
+                          { label: "Tous Salle de bain", value: '' },
+                          { label: "1 Salle de bain", value: 1 },
+                          { label: "2 Salle de bain", value: 2 },
+                          { label: "3 Salle de bain", value: 3 },
+                          { label: "4 Salle de bain", value: 4 },
+                          { label: "Plus 5 Salle de bain", value: 5 }
+                        ].map((count) => (
+                          <MenuItem key= {count.value} onClick={() => setSelectedBathroomsCount(count.value)}>
+                             {count.label}
                           </MenuItem>
                         ))}
                       </MenuList>
