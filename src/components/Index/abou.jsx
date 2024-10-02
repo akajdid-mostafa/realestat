@@ -6,7 +6,7 @@ import { motion } from "framer-motion"; // For animations
 
 const Abouta = () => {
     const router = useRouter();
-
+console.log("ez")
     // Badge Component
     const Badge = ({ text }) => {
         return (
