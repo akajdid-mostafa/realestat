@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from 'next/server';
-import { PrismaClient, CategoryName, Status} from '@prisma/client';
+import {Prisma , PrismaClient, CategoryName, Status} from '@prisma/client';
 import dotenv from 'dotenv';
 import cloudinary from 'cloudinary';
 
@@ -114,7 +114,7 @@ export async function POST(req: NextRequest) {
     }
 
     
-    const updatedTitle = `${post.type?.type ?? ''}  ${post.category?.name ?? ''} # ${post.id} ${createdDetail?.surface ? `/ surface: ${createdDetail.surface}m` : ''}`;
+    const updatedTitle =`${post.type?.type ?? ''} a ${post.category?.name ?? ''} # ${post.id} ${createdDetail?.surface ? `/ surface: ${createdDetail.surface}m `: ''}`;
 
     const updatedPost = await prisma.post.update({
       where: { id: post.id },
@@ -142,11 +142,13 @@ export async function GET(req: NextRequest) {
     const postId = url.searchParams.get('id');
     const status = url.searchParams.get('status');   
     const categoryId = url.searchParams.get('categoryId');  
-    // const ville = url.searchParams.get('ville');
+    const ville = url.searchParams.get('ville');
     const typeId = url.searchParams.get('typeId');    
     const search = url.searchParams.get('search');    
     const bedromms = url.searchParams.get('bedromms');
     const rooms = url.searchParams.get('rooms');
+    const parsedBedromms = bedromms ? parseInt(bedromms, 10) : null;
+    const parsedRooms = rooms ? parseInt(rooms, 10) : null;
 
     if (postId) {
       const post = await prisma.post.findUnique({
@@ -170,47 +172,89 @@ export async function GET(req: NextRequest) {
       };
       return NextResponse.json(formattedPost, { status: 200 });
     }
-    const filters = {
+
+   
+    // const filters = {
+    //   ...(status && { status: status as Status }),
+    //   ...(categoryId && { categoryId: parseInt(categoryId, 10) }),
+    //   ...(typeId && { typeId: parseInt(typeId, 10) }),
+    //   ...(bedromms || rooms ? { 
+    //     Detail: { 
+    //       ...(bedromms && { bedromms:bedromms }), 
+    //       ...(rooms && { rooms: rooms })
+    //     }
+    //   } : {}),
+    //   ...(search
+    //     ? {
+    //         OR: [
+    //           {
+    //             ville: {
+    //               contains: search, 
+    //               mode: 'insensitive',
+    //             },
+    //           },
+    //           {
+    //             adress: {
+    //               contains: search, 
+    //               mode: 'insensitive',
+    //             },
+    //           },
+    //         ],
+    //       }
+    //     : {}), 
+    // };
+
+    const filters: Prisma.PostWhereInput = {
       ...(status && { status: status as Status }),
       ...(categoryId && { categoryId: parseInt(categoryId, 10) }),
       ...(typeId && { typeId: parseInt(typeId, 10) }),
-        ...(bedromms
-          ? {
-              Detail: {
-                bedromms:
-                  ['1', '2', '3', '4'].includes(bedromms) 
-                    ? bedromms 
-                    : { gte: '5' }, 
-              },
-            }
-          : {}),
-        ...(rooms
-          ? {
-              Detail: {
-                rooms:
-                  ['1', '2', '3', '4'].includes(rooms) 
-                    ? rooms 
-                    : { gte: '5' }, 
-              },
-            }
-          : {}),
+      ...(ville && { ville:ville }),
+      // ...(bedromms || rooms
+      //   ? {
+      //       Detail: {
+      //         ...(bedromms && { bedromms: bedromms }),
+      //         ...(rooms && { rooms: rooms }),
+      //       },
+      //     }
+      //   : {}),
+      ...(parsedBedromms !== null
+        ? {
+            Detail: {
+              bedromms: parsedBedromms <= 4
+                ? parsedBedromms 
+                : { gte: 5 }, 
+            },
+          }
+        : {}),
+      
+      
+      ...(parsedRooms !== null
+        ? {
+            Detail: {
+              rooms: parsedRooms <= 4
+                ? parsedRooms 
+                : { gte: 5 }, 
+            },
+          }
+        : {}),
       ...(search
         ? {
             OR: [
               {
                 ville: {
-                  contains: search, 
+                  contains: search,
+                  mode: Prisma.QueryMode.insensitive, 
                 },
               },
               {
                 adress: {
-                  contains: search, 
+                  contains: search,
+                  mode: Prisma.QueryMode.insensitive, 
                 },
               },
             ],
           }
         : {}),
-      
     };
     
     const posts = await prisma.post.findMany({
@@ -238,6 +282,45 @@ export async function GET(req: NextRequest) {
         );
       }
 
+      // await Promise.all(
+      //   posts.map(async (post) => {
+      //     if (post.category?.name === CategoryName.Location && post.DateReserve?.length > 0) {
+
+      //       const earliestDateFine = post.DateReserve
+      //         .map((reserve) => reserve.dateFine)
+      //         .filter((dateFine): dateFine is Date => dateFine !== null) 
+      //         .reduce((minDate, currDate) => {
+      //           return new Date(currDate) < new Date(minDate) ? currDate : minDate;
+      //         });
+
+      //       const earliestDateDebut = post.DateReserve
+      //         .map((reserve) => reserve.dateDebut)
+      //         .filter((dateDebut): dateDebut is Date => dateDebut !== null) 
+      //         .reduce((minDate, currDate) => {
+      //           return new Date(currDate) < new Date(minDate) ? currDate : minDate;
+      //         });
+
+      //       if (earliestDateFine && new Date(earliestDateFine) < currentDate) {
+      //         await prisma.post.update({
+      //           where: { id: post.id },
+      //           data: { status: Status.available },
+      //         });
+      //       } 
+            
+      //       else if (earliestDateDebut && isSameDay(new Date(earliestDateDebut), currentDate)) {
+      //         await prisma.post.update({
+      //           where: { id: post.id },
+      //           data: { status: Status.taken },
+      //         });
+      //       }
+      //     } else if (!post.DateReserve || post.DateReserve.length === 0) {
+      //       await prisma.post.update({
+      //         where: { id: post.id },
+      //         data: { status: Status.available },
+      //       });
+      //     }
+      //   })
+      // );
       await Promise.all(
         posts.map(async (post) => {
           if (post.category?.name === CategoryName.Location && post.DateReserve?.length > 0) {
@@ -256,35 +339,31 @@ export async function GET(req: NextRequest) {
               });
       
             if (earliestDateFine && new Date(earliestDateFine) < currentDate) {
-              // Reservation has ended, mark post as available
               await prisma.post.update({
                 where: { id: post.id },
                 data: { status: Status.available },
               });
             } 
             
-            // Check if the current date is between the start and end of the reservation period
             else if (
               earliestDateDebut &&
               earliestDateFine &&
               new Date(earliestDateDebut) <= currentDate &&
               new Date(earliestDateFine) >= currentDate
             ) {
-              // Current date is within the reservation period, mark post as taken
               await prisma.post.update({
                 where: { id: post.id },
                 data: { status: Status.taken },
               });
             }
           } else if (!post.DateReserve || post.DateReserve.length === 0) {
-            // No reservations, mark post as available
             await prisma.post.update({
               where: { id: post.id },
               data: { status: Status.available },
             });
           }
         })
-      );     
+      );
           const formattedPosts = posts.map((post) => {
             return {
               ...post,

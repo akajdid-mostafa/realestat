@@ -59,11 +59,11 @@ model Detail {
   id               Int     @id @default(autoincrement())
   constructionyear String?
   surface          String?
-  rooms            String?
-  bedromms         String?
+  rooms            Int?
+  bedromms         Int?
   livingrooms      String?
   kitchen          String?
-  bathrooms        String?
+  bathrooms        Int?
   furnished        String?
   floor            String?        
   elevator         String?
@@ -77,7 +77,6 @@ model Detail {
   Guard            String?  // New column
   Proprietary      String?  // New column
 }
-
 
 model DateReserve {
   id        Int       @id @default(autoincrement())
