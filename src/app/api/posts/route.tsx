@@ -145,9 +145,9 @@ export async function GET(req: NextRequest) {
     const ville = url.searchParams.get('ville');
     const typeId = url.searchParams.get('typeId');    
     const search = url.searchParams.get('search');    
-    const bedromms = url.searchParams.get('bedromms');
+    const bathrooms = url.searchParams.get('bathrooms');
     const rooms = url.searchParams.get('rooms');
-    const parsedBedromms = bedromms ? parseInt(bedromms, 10) : null;
+    const parsedbathrooms = bathrooms ? parseInt(bathrooms, 10) : null;
     const parsedRooms = rooms ? parseInt(rooms, 10) : null;
 
     if (postId) {
@@ -217,11 +217,11 @@ export async function GET(req: NextRequest) {
       //       },
       //     }
       //   : {}),
-      ...(parsedBedromms !== null
+      ...(parsedbathrooms !== null
         ? {
             Detail: {
-              bedromms: parsedBedromms <= 4
-                ? parsedBedromms 
+              bathrooms: parsedbathrooms <= 4
+                ? parsedbathrooms 
                 : { gte: 5 }, 
             },
           }
