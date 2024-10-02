@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from 'next/server';
-import {Prisma , PrismaClient, CategoryName, Status} from '@prisma/client';
+import {Prisma , PrismaClient, CategoryName, Status,TypeName} from '@prisma/client';
 import dotenv from 'dotenv';
 import cloudinary from 'cloudinary';
 
@@ -143,8 +143,7 @@ export async function GET(req: NextRequest) {
     const status = url.searchParams.get('status');   
     const categoryId = url.searchParams.get('categoryId');  
     const ville = url.searchParams.get('ville');
-    const typeId = url.searchParams.get('typeId');    
-    const search = url.searchParams.get('search');    
+    const type = url.searchParams.get('type');    const search = url.searchParams.get('search');    
     const bathrooms = url.searchParams.get('bathrooms');
     const rooms = url.searchParams.get('rooms');
     const parsedbathrooms = bathrooms ? parseInt(bathrooms, 10) : null;
@@ -207,8 +206,8 @@ export async function GET(req: NextRequest) {
     const filters: Prisma.PostWhereInput = {
       ...(status && { status: status as Status }),
       ...(categoryId && { categoryId: parseInt(categoryId, 10) }),
-      ...(typeId && { typeId: parseInt(typeId, 10) }),
-      ...(ville && { ville:ville }),
+      ...(type && { type: { type: type as TypeName } }),
+            ...(ville && { ville:ville }),
       // ...(bedromms || rooms
       //   ? {
       //       Detail: {
