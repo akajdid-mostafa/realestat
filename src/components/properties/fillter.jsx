@@ -16,7 +16,6 @@ import {
 import { SearchIcon } from '@chakra-ui/icons';
 import { FaBed, FaChevronDown, FaBath, FaTimes } from "react-icons/fa";
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 
 const citiesInMorocco = [
   "All Ville", "Agadir", "Aïn Harrouda", "Ben Yakhlef", "Bouskoura", "Casablanca", "Médiouna", "Mohammadia", "Tit Mellil", "Bejaad", "Ben Ahmed", "Benslimane", "Berrechid",
@@ -42,28 +41,22 @@ const PropertySearchPage = ({
   properties = [],
   onCityChange,
   onRoomCountChange,
-  onBathroomsCountChange, // Corrected prop name
-  onSearchChange, // New prop for handling search
-  searchDisplay, // New prop for controlling display
+  onBathroomsCountChange,
+  onSearchChange,
+  searchDisplay,
   num,
 }) => {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('ALL TYPE');
-  const [selectedPropertyType, setSelectedPropertyType] = useState('View All');
+  const [selectedPropertyType, setSelectedPropertyType] = useState('');
   const [selectedCity, setSelectedCity] = useState('Select a city');
   const [cityInput, setCityInput] = useState('');
-  const [searchInput, setSearchInput] = useState(''); // State for search input
-  const [selectedRoomCount, setSelectedRoomCount] = useState('Tous chambre');
-  const [selectedBathroomsCount, setSelectedBathroomsCount] = useState('Tous Salle de bain');
+  const [roomselect, setroomselect] = useState('Tous chambre');
+  const [Bathroomselect, setBathroomselect] = useState('Tous Salle de bain');
+  const [searchInput, setSearchInput] = useState('');
+  const [selectedRoomCount, setSelectedRoomCount] = useState('');
+  const [selectedBathroomsCount, setSelectedBathroomsCount] = useState('');
   const inputRef = useRef(null);
-
-  const propertyTypes = [...new Set(properties.map(property => property.type.type))];
-
-  useEffect(() => {
-    // Assuming properties might be updated asynchronously, re-calculate propertyTypes when properties change
-    const newPropertyTypes = [...new Set(properties.map(property => property.type.type))];
-    // Optionally set a state here if propertyTypes needs to trigger re-renders
-  }, [properties]); // Dependency on properties to update when it changes
 
   const updateUrlWithoutNavigation = (newParams) => {
     const url = new URL(window.location.href);
@@ -82,7 +75,6 @@ const PropertySearchPage = ({
     if (typeof onTabChange === 'function') {
       onTabChange(tab);
     }
-    // Update URL without navigation
     updateUrlWithoutNavigation({ tab: tab.replace(/\s/g, '+') });
   };
 
@@ -91,7 +83,6 @@ const PropertySearchPage = ({
     if (typeof onPropertyTypeChange === 'function') {
       onPropertyTypeChange(type);
     }
-    // Update URL without navigation
     updateUrlWithoutNavigation({ propertyType: type.replace(/\s/g, '+') });
   };
 
@@ -105,6 +96,7 @@ const PropertySearchPage = ({
 
   const handleRoomCountChange = (count) => {
     setSelectedRoomCount(count);
+    setroomselect(count ? `${count} chambre${count > 1 ? 's' : ''}` : 'Tous chambre');
     if (typeof onRoomCountChange === 'function') {
       onRoomCountChange(count);
     }
@@ -113,6 +105,7 @@ const PropertySearchPage = ({
 
   const handleBathroomsCountChange = (count) => {
     setSelectedBathroomsCount(count);
+    setBathroomselect(count ? `${count} Salle de bain${count > 1 ? 's' : ''}` : 'Tous Salle de bain');
     if (typeof onBathroomsCountChange === 'function') {
       onBathroomsCountChange(count);
     }
@@ -126,10 +119,10 @@ const PropertySearchPage = ({
   const getSearchUrl = () => {
     const queryParams = new URLSearchParams({
       tab: activeTab.replace(/\s/g, '+'),
-      propertyType: selectedPropertyType === 'View All' ? '' : selectedPropertyType.replace(/\s/g, '+'),
-      city: selectedCity === 'Select a city' ? '' : selectedCity,
-      roomCount: selectedRoomCount,
-      bathroomsCount: selectedBathroomsCount,
+      propertyType: selectedPropertyType || '',
+      city: selectedCity !== 'Select a city' ? selectedCity : '',
+      roomCount: selectedRoomCount || '',
+      bathroomsCount: selectedBathroomsCount || '',
     }).toString();
 
     return `/properties?${queryParams}`;
@@ -151,7 +144,6 @@ const PropertySearchPage = ({
     const bathroomsCountFromUrl = queryParams.get('bathroomsCount');
     const propertyTypeFromUrl = queryParams.get('propertyType');
 
-    // Update states based on URL parameters
     if (tabFromUrl) {
       const formattedTab = tabFromUrl.replace(/\+/g, ' ');
       setActiveTab(formattedTab);
@@ -159,6 +151,7 @@ const PropertySearchPage = ({
         onTabChange(formattedTab);
       }
     }
+
     if (cityFromUrl) setSelectedCity(cityFromUrl);
     if (roomCountFromUrl) setSelectedRoomCount(roomCountFromUrl);
     if (bathroomsCountFromUrl) setSelectedBathroomsCount(bathroomsCountFromUrl);
@@ -169,21 +162,20 @@ const PropertySearchPage = ({
         onPropertyTypeChange(formattedPropertyType);
       }
     }
-  }, [router.query, onTabChange, onPropertyTypeChange]); // Add onTabChange and onPropertyTypeChange to the dependency array
+  }, [router.query, onTabChange, onPropertyTypeChange]);
 
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      // Check if searchDisplay is 'block' before triggering search change
       if (searchDisplay === 'block') {
-        onSearchChange(searchInput); // Trigger search change after debounce
+        onSearchChange(searchInput);
       }
     }, 100);
     return () => {
       clearTimeout(handler);
     };
-  }, [searchInput, onSearchChange, searchDisplay]); // Added searchDisplay to the dependency array
+  }, [searchInput, onSearchChange, searchDisplay]);
 
   const handleSearchInputChange = (event) => {
     setSearchInput(event.target.value);
@@ -194,7 +186,7 @@ const PropertySearchPage = ({
   }, []);
 
   if (!isMounted) {
-    return null; // or a loading indicator
+    return null;
   }
 
   return (
@@ -222,7 +214,6 @@ const PropertySearchPage = ({
               </Flex>
               <Flex p={4} align="center" gap={4} flexDir={{ base: "column", md: "row" }}>
                 <Grid templateColumns={{ base: "1fr", md: `repeat(${num}, 1fr)` }} gap={4} width="100%">
-                  {/* Updated input search with display from props */}
                   <GridItem>
                     <Menu>
                       <MenuButton as={Button} rightIcon={<FaChevronDown />} w="100%" size="lg">
@@ -251,23 +242,22 @@ const PropertySearchPage = ({
                   <GridItem>
                     <Menu>
                       <MenuButton as={Button} leftIcon={<FaBed />} rightIcon={<FaChevronDown />} w="100%" size="lg">
-                        {selectedRoomCount === 1 ? "1 chambre" :
-                         selectedRoomCount === 2 ? "2 chambre" :
-                         selectedRoomCount === 3 ? "3 chambre" :
-                         selectedRoomCount === 4 ? "4 chambre" :
-                         selectedRoomCount === 5 ? "Plus 5 chambre" :
-                         "Tous chambre"}
+                        {roomselect}
                       </MenuButton>
-                      <MenuList >
+                      <MenuList>
                         {[
                           { label: "Tous chambre", value: '' },
                           { label: "1 chambre", value: 1 },
-                          { label: "2 chambre", value: 2 },
-                          { label: "3 chambre", value: 3 },
-                          { label: "4 chambre", value: 4 },
-                          { label: "Plus 5 chambre", value: 5 }
+                          { label: "2 chambres", value: 2 },
+                          { label: "3 chambres", value: 3 },
+                          { label: "4 chambres", value: 4 },
+                          { label: "Plus de 5 chambres", value: 5 }
                         ].map((count) => (
-                          <MenuItem key={count.value} onClick={() => setSelectedRoomCount(count.value)}>
+                          <MenuItem key={count.value} 
+                          onClick={() => {
+                            setSelectedRoomCount(count.value);
+                            setroomselect(count.label);
+                          }}>
                             {count.label}
                           </MenuItem>
                         ))}
@@ -277,24 +267,22 @@ const PropertySearchPage = ({
                   <GridItem>
                     <Menu>
                       <MenuButton as={Button} leftIcon={<FaBath />} rightIcon={<FaChevronDown />} w="100%" size="lg">
-                        {selectedBathroomsCount === 1 ? "1 Salle de bain" :
-                         selectedBathroomsCount === 2 ? "2 Salle de bain" :
-                         selectedBathroomsCount === 3 ? "3 Salle de bain" :
-                         selectedBathroomsCount === 4 ? "4 Salle de bain" :
-                         selectedBathroomsCount === 5 ? "Plus 5 Salle de bain" :
-                         "Tous Salle de bain"}
+                        {Bathroomselect}
                       </MenuButton>
                       <MenuList>
-                      {[
+                        {[
                           { label: "Tous Salle de bain", value: '' },
                           { label: "1 Salle de bain", value: 1 },
                           { label: "2 Salle de bain", value: 2 },
                           { label: "3 Salle de bain", value: 3 },
                           { label: "4 Salle de bain", value: 4 },
-                          { label: "Plus 5 Salle de bain", value: 5 }
+                          { label: "Plus de 5 Salle de bain", value: 5 }
                         ].map((count) => (
-                          <MenuItem key= {count.value} onClick={() => setSelectedBathroomsCount(count.value)}>
-                             {count.label}
+                          <MenuItem key={count.value} 
+                          onClick={() => {
+                            setSelectedBathroomsCount(count.value); 
+                            setBathroomselect(count.label) }}>
+                            {count.label}
                           </MenuItem>
                         ))}
                       </MenuList>
@@ -307,10 +295,10 @@ const PropertySearchPage = ({
                         value={searchInput}
                         onChange={handleSearchInputChange}
                       />
-                      {searchInput && ( // Show the cancel icon only when there's input
+                      {searchInput && (
                         <InputRightElement>
                           <Button
-                            onClick={() => setSearchInput('')} // Clear the input on click
+                            onClick={() => setSearchInput('')}
                             variant="link"
                             color="gray.500"
                             aria-label="Clear search"
@@ -335,14 +323,14 @@ const PropertySearchPage = ({
                 </Button>
               </Flex>
               <Flex flexWrap="wrap" gap={2} p={4} borderTop="1px" borderColor="gray.200" justifyContent="center">
-                {['View All', ...propertyTypes].map((type) => (
+                {[{ label: "View All", value: '' }, { label: "Home", value: 'Home' }, { label: "Bureau", value: 'Bureau' }, { label: "Land", value: 'Land' }, { label: "Park", value: 'Park' }].map((type) => (
                   <Button
-                    key={type}
-                    variant={selectedPropertyType === type ? 'solid' : 'outline'}
-                    colorScheme={selectedPropertyType === type ? 'blue' : 'gray'}
-                    onClick={() => handlePropertyTypeChange(type)}
+                    key={type.value}
+                    variant={selectedPropertyType === type.value ? 'solid' : 'outline'}
+                    colorScheme={selectedPropertyType === type.value ? 'blue' : 'gray'}
+                    onClick={() => handlePropertyTypeChange(type.value)}
                   >
-                    {type}
+                    {type.label}
                   </Button>
                 ))}
               </Flex>

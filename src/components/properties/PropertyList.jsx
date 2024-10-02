@@ -12,7 +12,7 @@ const POSTS_API_URL = 'https://immoceanrepo.vercel.app/api/posts';
 const PropertyList = () => {
     const showSearch = true; // or false based on your logic
     const [properties, setProperties] = useState([]);
-    const [filteredProperties, setFilteredProperties] = useState([]);
+    const [filteredProperties, setFilteredProperties] = useState([]); // Ensure it's initialized as an array
     const [selectedProperty, setSelectedProperty] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [activeTab, setActiveTab] = useState('ALL TYPE');
@@ -37,7 +37,7 @@ const PropertyList = () => {
             }
 
             if (selectedPropertyType !== 'View All') {
-                queryParams.append('typeId', selectedPropertyType);
+                queryParams.append('type', selectedPropertyType);
             }
 
             if (selectedCity && selectedCity !== 'All Ville') {
@@ -49,7 +49,7 @@ const PropertyList = () => {
             }
 
             if (selectedBathroomsCount !== 'Tous Salle de bain') {
-                queryParams.append('bedrooms', selectedBathroomsCount);
+                queryParams.append('bathrooms', selectedBathroomsCount);
             }
 
             if (searchQuery) {
@@ -59,6 +59,7 @@ const PropertyList = () => {
             const response = await fetch(`${POSTS_API_URL}?${queryParams.toString()}`);
             const data = await response.json();
 
+            console.log('Fetched data:', data); // Debugging line
             setProperties(data);
             setFilteredProperties(data);
         } catch (error) {
@@ -134,16 +135,20 @@ const PropertyList = () => {
         setSelectedCity(city);
     };
     const handleRoomCountChange = (count) => {
+        console.log('Room count changed to:', count);
         setSelectedRoomCount(count);
     };
     const handleBathroomsCountChange = (count) => {
+        console.log('Bathrooms count changed to:', count);
         setSelectedBathroomsCount(count);
     };
 
-    const currentItems = filteredProperties.slice(
+    const currentItems = Array.isArray(filteredProperties) ? filteredProperties.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
-    );
+    ) : []; // Check if filteredProperties is an array
+
+    console.log('Current items:', currentItems); // Debugging line
 
     const handleSearchChange = (query) => {
         setSearchQuery(query);

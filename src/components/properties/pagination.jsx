@@ -125,7 +125,7 @@ const Pagination = ({ totalPages, currentPage, onPageChange, rowsPerPage, totalR
                             color={currentPage === page ? 'white' : 'black'}
                             borderColor="white" // Set border color to white
                             _hover={{
-                                bg: 'blue.600',
+                                bg: 'blue.500',
                                 color: 'white',
                             }}
                             isDisabled={page === '...'}

@@ -34,24 +34,7 @@ const Hero = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const router = useRouter();
 
-  useEffect(() => {
-    // Using the provided API endpoint
-    fetch("https://immoceanrepo.vercel.app/api/posts")
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(data => {
-        // Assuming the data is directly in the format needed
-        setProperties(data);
-        console.log("Properties fetched successfully:", data);
-      })
-      .catch(error => {
-        console.error('Error fetching properties:', error);
-      });
-  }, []);
+
 
   useEffect(() => {
     const sentenceIntervalId = setInterval(() => {
