@@ -6,6 +6,7 @@ import PropertySearchPage from './fillter';
 import NotFound from './notfound';
 import Pagination from './pagination';
 import { useRouter } from 'next/router';
+import Maps from './maps';
 
 const POSTS_API_URL = 'https://immoceanrepo.vercel.app/api/posts';
 
@@ -97,18 +98,18 @@ const PropertyList = () => {
 
     useEffect(() => {
         const { city, roomCount, bathroomsCount } = router.query;
-        
+
         if (router.isReady) {
             handleCityChange(city || '');
             handleRoomCountChange(roomCount || 'Tous chambre');
             handleBathroomsCountChange(bathroomsCount || 'Tous Salle de bain');
         }
-        
+
     }, [router.isReady, router.query]);
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
-        
+
         const currentQuery = {
             ...router.query,
             page: pageNumber,
@@ -118,7 +119,7 @@ const PropertyList = () => {
             roomCount: selectedRoomCount,
             bathroomsCount: selectedBathroomsCount,
         };
-    
+
         router.replace({
             pathname: router.pathname,
             query: currentQuery,
@@ -171,6 +172,35 @@ const PropertyList = () => {
                 onSearchChange={handleSearchChange}
                 searchDisplay={showSearch ? 'block' : 'none'}
                 num={4}
+            />
+            <Maps
+                center={[31.7917, -7.0926]}
+                markers={properties.map(property => ({
+                    id: property.id,
+                    position: [property.lat, property.lon],
+                    imageUrl: property.img[0],
+                    title: property.title,
+                    adress: property.adress,
+                    price: property.prix,
+                    iconUrl: (() => {
+                        switch (property.type.type) {
+                            case "Appartement":
+                                return '/images/appartemen.png';
+                            case "Local":
+                                return '/images/boutique.png';
+                            case "Maisons":
+                                return '/images/house.png';
+                            case "Bureaux":
+                                return '/images/office.png';
+                            case "Terrains":
+                                return '/images/spot.png';
+                            default:
+                                return '/images/appartemen.png'; // Default icon
+                        }
+                    })(),
+                    number: property.id
+
+                }))}
             />
             <Box p={4} display="flex" justifyContent="center">
                 {currentItems.length > 0 ? (

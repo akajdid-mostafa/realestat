@@ -323,7 +323,7 @@ const PropertySearchPage = ({
                 </Button>
               </Flex>
               <Flex flexWrap="wrap" gap={2} p={4} borderTop="1px" borderColor="gray.200" justifyContent="center">
-                {[{ label: "View All", value: '' }, { label: "Home", value: 'Home' }, { label: "Bureau", value: 'Bureau' }, { label: "Land", value: 'Land' }, { label: "Park", value: 'Park' }].map((type) => (
+                {[{ label: "View All", value: '' },{ label: "Appartement", value: 'Appartement' }, { label: "Maisons", value: 'Maisons' }, { label: "villas-Riad", value: 'villasRiad' },  { label: "Bureaux", value: 'Bureaux' }, { label: "Local", value: 'Local' }, { label: "Terrains", value: 'Terrains' }].map((type) => (
                   <Button
                     key={type.value}
                     variant={selectedPropertyType === type.value ? 'solid' : 'outline'}

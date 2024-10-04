@@ -44,7 +44,7 @@ const Naavbar = () => {
         py={2}
       >
         <Link
-          href="#"
+          href="/Index"
           display="flex"
           alignItems="center"
           gap={2}

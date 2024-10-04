@@ -56,11 +56,11 @@ const PropertyCard = ({ property, onClick }) => {
                         )}
                     </Flex>
 
-                    <Flex position="absolute" bottom={2} left={2}>
+                    {/* <Flex position="absolute" bottom={2} left={2}>
                         <Tag bg="white" color="black" fontWeight="bold">
                             {property.type.type}
                         </Tag>
-                    </Flex>
+                    </Flex> */}
                 </Box>
             </Link>
             <Box mt={2}>
