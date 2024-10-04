@@ -103,8 +103,10 @@ enum CategoryName {
 }
 
 enum TypeName {
-  Bureau
-  Land
-  Home
-  Park
+ Appartement
+Maisons
+villasRiad
+Bureaux
+Local
+Terrains
 }
