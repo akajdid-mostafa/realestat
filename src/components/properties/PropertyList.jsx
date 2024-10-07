@@ -211,6 +211,7 @@ const PropertyList = () => {
                                 imageUrl: property.img[0],
                                 title: property.title,
                                 adress: property.adress,
+                                label: property.type.type,
                                 price: property.prix,
                                 iconUrl: (() => {
                                     switch (property.type.type) {
