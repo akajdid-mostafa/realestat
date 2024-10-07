@@ -68,7 +68,13 @@ export default function Footer() {
                             <li className="flex items-center text-base text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600">
                                 <a href="tel:(+212)808649090" className="flex items-center space-x-2">
                                     <MdPhoneInTalk className="w-5 h-5" />
-                                    <span>(+212) 808 649 090</span>
+                                    <span>(+212) 808 649 090 </span>
+                                </a>
+                            </li>
+                            <li className="flex items-center text-base text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600">
+                                <a href="tel:(+49)15157575045" className="flex items-center space-x-2">
+                                    <MdPhoneInTalk className="w-5 h-5" />
+                                    <span>(+49) 15 157 575 045</span>
                                 </a>
                             </li>
                             <li className="flex items-center text-base text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600">

@@ -6,14 +6,14 @@ import PropertySearchPage from './fillter';
 import NotFound from './notfound';
 import Pagination from './pagination';
 import { useRouter } from 'next/router';
+import Maps from './maps';
 
 const POSTS_API_URL = 'https://immoceanrepo.vercel.app/api/posts';
-const DETAILS_API_URL = 'https://immoceanrepo.vercel.app/api/details';
 
 const PropertyList = () => {
     const showSearch = true; // or false based on your logic
     const [properties, setProperties] = useState([]);
-    const [filteredProperties, setFilteredProperties] = useState([]);
+    const [filteredProperties, setFilteredProperties] = useState([]); // Ensure it's initialized as an array
     const [selectedProperty, setSelectedProperty] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [activeTab, setActiveTab] = useState('ALL TYPE');
@@ -27,81 +27,50 @@ const PropertyList = () => {
 
     const totalPages = Math.ceil(filteredProperties.length / itemsPerPage);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const [postsResponse, detailsResponse] = await Promise.all([
-                    fetch(POSTS_API_URL),
-                    fetch(DETAILS_API_URL),
-                ]);
-                const postsData = await postsResponse.json();
-                const detailsData = await detailsResponse.json();
+    const fetchData = async () => {
+        try {
+            const queryParams = new URLSearchParams();
 
-                const propertiesWithDetails = postsData.map(post => {
-                    const detail = detailsData.find(d => d.postId === post.id);
-                    return { ...post, detail };
-                });
-
-                setProperties(propertiesWithDetails);
-                setFilteredProperties(propertiesWithDetails);
-            } catch (error) {
-                console.error('Error fetching data:', error);
+            if (activeTab === 'FOR Location') {
+                queryParams.append('categoryId', '2');
+            } else if (activeTab === 'FOR Vente') {
+                queryParams.append('categoryId', '1');
             }
-        };
 
-        fetchData();
-    }, []);
+            if (selectedPropertyType !== 'View All') {
+                queryParams.append('type', selectedPropertyType);
+            }
+
+            if (selectedCity && selectedCity !== 'All Ville') {
+                queryParams.append('search', selectedCity);
+            }
+
+            if (selectedRoomCount !== 'Tous chambre') {
+                queryParams.append('rooms', selectedRoomCount);
+            }
+
+            if (selectedBathroomsCount !== 'Tous Salle de bain') {
+                queryParams.append('bathrooms', selectedBathroomsCount);
+            }
+
+            if (searchQuery) {
+                queryParams.append('search', searchQuery);
+            }
+
+            const response = await fetch(`${POSTS_API_URL}?${queryParams.toString()}`);
+            const data = await response.json();
+
+            console.log('Fetched data:', data); // Debugging line
+            setProperties(data);
+            setFilteredProperties(data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
 
     useEffect(() => {
-        let filtered = properties;
-
-        if (activeTab === 'FOR Location') {
-            filtered = filtered.filter(property => property.categoryId === 2);
-        } else if (activeTab === 'FOR Vente') {
-            filtered = filtered.filter(property => property.categoryId === 1);
-        }
-
-        if (selectedPropertyType !== 'View All') {
-            filtered = filtered.filter(property => property.type.type === selectedPropertyType);
-        }
-        if (selectedCity && selectedCity !== 'All Ville') {
-            filtered = filtered.filter(property => property.ville.toLowerCase().includes(selectedCity.toLowerCase()));
-        }
-        if (selectedRoomCount !== 'Tous chambre') {
-            filtered = filtered.filter(property => {
-                const rooms = parseInt(property.detail?.rooms, 10);
-                if (isNaN(rooms)) return false;
-                if (selectedRoomCount.startsWith('Plus')) {
-                    return rooms >= 5;
-                }
-                return rooms === parseInt(selectedRoomCount, 10);
-            });
-        }
-
-        if (selectedBathroomsCount !== 'Tous Salle de bain') {
-            filtered = filtered.filter(property => {
-                const bathrooms = parseInt(property.detail?.bathrooms, 10);
-                if (isNaN(bathrooms)) return false;
-                if (selectedBathroomsCount.startsWith('Plus')) {
-                    return bathrooms >= 5;
-                }
-                return bathrooms === parseInt(selectedBathroomsCount, 10);
-            });
-        }
-
-        if (searchQuery) {
-            filtered = filtered.filter(property =>
-                property.ville.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                property.adress.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-        }
-
-        filtered = filtered.filter(property => property.status === 'available' || (property.status === 'taken' && property.categoryId === 2));
-
-        setFilteredProperties(filtered);
-        setCurrentPage(1);
-
-    }, [activeTab, selectedPropertyType, selectedCity, selectedRoomCount, selectedBathroomsCount, properties, searchQuery]);
+        fetchData();
+    }, [activeTab, selectedPropertyType, selectedCity, selectedRoomCount, selectedBathroomsCount, searchQuery]);
 
     useEffect(() => {
         const { page } = router.query;
@@ -129,18 +98,18 @@ const PropertyList = () => {
 
     useEffect(() => {
         const { city, roomCount, bathroomsCount } = router.query;
-        
+
         if (router.isReady) {
             handleCityChange(city || '');
             handleRoomCountChange(roomCount || 'Tous chambre');
             handleBathroomsCountChange(bathroomsCount || 'Tous Salle de bain');
         }
-        
+
     }, [router.isReady, router.query]);
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
-        
+
         const currentQuery = {
             ...router.query,
             page: pageNumber,
@@ -150,7 +119,7 @@ const PropertyList = () => {
             roomCount: selectedRoomCount,
             bathroomsCount: selectedBathroomsCount,
         };
-    
+
         router.replace({
             pathname: router.pathname,
             query: currentQuery,
@@ -167,16 +136,20 @@ const PropertyList = () => {
         setSelectedCity(city);
     };
     const handleRoomCountChange = (count) => {
+        console.log('Room count changed to:', count);
         setSelectedRoomCount(count);
     };
     const handleBathroomsCountChange = (count) => {
+        console.log('Bathrooms count changed to:', count);
         setSelectedBathroomsCount(count);
     };
 
-    const currentItems = filteredProperties.slice(
+    const currentItems = Array.isArray(filteredProperties) ? filteredProperties.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
-    );
+    ) : []; // Check if filteredProperties is an array
+
+    console.log('Current items:', currentItems); // Debugging line
 
     const handleSearchChange = (query) => {
         setSearchQuery(query);
@@ -199,6 +172,35 @@ const PropertyList = () => {
                 onSearchChange={handleSearchChange}
                 searchDisplay={showSearch ? 'block' : 'none'}
                 num={4}
+            />
+            <Maps
+                center={[31.7917, -7.0926]}
+                markers={properties.map(property => ({
+                    id: property.id,
+                    position: [property.lat, property.lon],
+                    imageUrl: property.img[0],
+                    title: property.title,
+                    adress: property.adress,
+                    price: property.prix,
+                    iconUrl: (() => {
+                        switch (property.type.type) {
+                            case "Appartement":
+                                return '/images/appartemen.png';
+                            case "Local":
+                                return '/images/boutique.png';
+                            case "Maisons":
+                                return '/images/house.png';
+                            case "Bureaux":
+                                return '/images/office.png';
+                            case "Terrains":
+                                return '/images/spot.png';
+                            default:
+                                return '/images/appartemen.png'; // Default icon
+                        }
+                    })(),
+                    number: property.id
+
+                }))}
             />
             <Box p={4} display="flex" justifyContent="center">
                 {currentItems.length > 0 ? (

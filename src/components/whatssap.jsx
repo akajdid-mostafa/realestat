@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 
 export const WhatsApp = () => {
-  const phoneNumber = '+212808649090'; // Replace with your WhatsApp number
+  const phoneNumber = '+4915157575045'; // Replace with your WhatsApp number
   const message = 'Hi *IMMOCEAN*! I need more info about oceanconnecting https://immocean.ma/'; // Replace with your default message
 
   const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;

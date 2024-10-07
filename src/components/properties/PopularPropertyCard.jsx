@@ -4,29 +4,27 @@ import {
   Flex,
   Text,
   Image,
-  IconButton,
+  Icon,
+  Button,
   Tag,
   Link,
-  HStack,
 } from "@chakra-ui/react";
 import { CarouselProvider, Slider, Slide } from "pure-react-carousel";
 import "pure-react-carousel/dist/react-carousel.es.css";
 import {
   FaBed,
-  FaEye,
   FaBath,
   FaExpandArrowsAlt,
   FaMapMarkerAlt,
 } from "react-icons/fa";
-import { TbListDetails } from "react-icons/tb";
 import { useBreakpointValue } from "@chakra-ui/react";
+import { SiWhatsapp } from "react-icons/si";
 
 const PopularCard = ({ currentCategory }) => {
   const [gridDisplay, setGridDisplay] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [posts, setPosts] = useState([]);
   const [details, setDetails] = useState([]);
-  const totalSlides = posts.length;
   const intervalRef = useRef(null);
   const screenSize = useBreakpointValue({ base: "base", md: "md", lg: "lg" });
 
@@ -41,13 +39,12 @@ const PopularCard = ({ currentCategory }) => {
       type: post.type?.type || "Unknown",
       location: post.adress,
       ville: post.ville,
-      detail: detail, // Changed '=' to ':' for correct object property assignment
+      detail: detail,
       category: post.category?.name || "Unknown",
-      rooms: detail.rooms ,
-      bathrooms: detail.bathrooms ,
-      area: detail.surface ,
-      price: `$${post.prix || "0"}`,
-      
+      rooms: detail.rooms,
+      bathrooms: detail.bathrooms,
+      area: detail.surface,
+      price: `${post.prix || "0"}`,
     };
   });
 
@@ -89,15 +86,13 @@ const PopularCard = ({ currentCategory }) => {
   }, []);
 
   useEffect(() => {
-
     const interval = () => {
-      if (window.innerWidth >= 1024) { // Changed from 1524 to 1024 for 'lg'
-        setCurrentSlide(prev => (prev + 1) % (filteredData.length - 2));
-      }
-      else if (window.innerWidth >= 640) {
-        setCurrentSlide(prev => (prev + 1) % (filteredData.length - 1));
+      if (window.innerWidth >= 1024) {
+        setCurrentSlide((prev) => (prev + 1) % (filteredData.length - 2));
+      } else if (window.innerWidth >= 640) {
+        setCurrentSlide((prev) => (prev + 1) % (filteredData.length - 1));
       } else {
-        setCurrentSlide(prev => (prev + 1) % filteredData.length);
+        setCurrentSlide((prev) => (prev + 1) % filteredData.length);
       }
     };
 
@@ -121,14 +116,14 @@ const PopularCard = ({ currentCategory }) => {
       flexDirection="column"
       alignItems="center"
       p={4}
-      width="100%"
+      width="auto"
     >
       <CarouselProvider
         naturalSlideWidth={100}
         naturalSlideHeight={125}
         totalSlides={filteredData.length}
         visibleSlides={slidesToShow}
-        infinite={true} // Ensure infinite is set to true
+        infinite={true}
         isIntrinsicHeight={true}
         className="w-full max-w-7xl"
         currentSlide={currentSlide}
@@ -147,7 +142,7 @@ const PopularCard = ({ currentCategory }) => {
                 boxShadow="lg"
                 overflow="hidden"
                 transition="0.3s"
-                width="100%"
+                width={{ base: "260px", md: "300px", lg: "400px" }} // Set a fixed width for all screen sizes
               >
                 <Link
                   href={`/properties?modal=yes&id=${card.id}`}
@@ -157,10 +152,12 @@ const PopularCard = ({ currentCategory }) => {
                     <Image
                       src={card.imageSrc}
                       alt={card.title}
-                      loading="lazy"
                       objectFit="cover"
+                      loading="lazy"
                       width="100%"
                       height="100%"
+                      borderRadius="md"
+                      className="hover-image"
                     />
                     <Flex position="absolute" top={2} left={2} gap={2}>
                       {card.category === "Vente" && (
@@ -174,19 +171,10 @@ const PopularCard = ({ currentCategory }) => {
                         </Tag>
                       )}
                     </Flex>
-                    <Flex position="absolute" bottom={2} left={2}>
-                      <Tag bg="white" color="black" fontWeight="bold">
-                        {card.type}
-                      </Tag>
-                    </Flex>
                   </Box>
                 </Link>
                 <Box mt={1} p={4}>
-                  <Flex
-                    align="center"
-                    justify="space-between" // Changed to space-between to push content to edges
-                    mt={1}
-                  >
+                  <Flex align="center" justify="space-between" mt={1}>
                     <Text
                       fontWeight="bold"
                       fontSize="lg"
@@ -208,68 +196,73 @@ const PopularCard = ({ currentCategory }) => {
                       {card.location}
                     </Text>
                   </Flex>
-                  {/* <HStack spacing={4} mt={2}> */}
-                  <Flex
-                        justify="space-between"
-                        mt={2}
-                    >
-                        {card.detail && card.rooms && (
-                            <Flex align="center">
-                                <FaBed />
-                                <Text ml={1}>{card.rooms} chambre</Text>
-                            </Flex>
-                        )}
-                        {card.detail && card.bathrooms && (
-                            <Flex align="center">
-                                <FaBath />
-                                <Text ml={1}>{card.bathrooms } salle de bain</Text>
-                            </Flex>
-                        )}
-                        {card.detail && card.area && (
-                            <Flex align="center">
-                                <FaExpandArrowsAlt />
-                                <Text ml={1}>{card.area} m²</Text>
-                            </Flex>
-                        )}
-                    </Flex>
-                    {/* <Flex alignItems="center">
-                      <FaBed />
-                      <Text ml={1}>{card.bedrooms} Bedrooms</Text>
-                    </Flex>
-                    <Flex alignItems="center">
-                      <FaBath />
-                      <Text ml={1}>{card.bathrooms} Bathrooms</Text>
-                    </Flex>
-                    <Flex alignItems="center">
-                      <FaExpandArrowsAlt />
-                      <Text ml={1}>{card.area}</Text>
-                    </Flex> */}
-                  {/* </HStack> */}
+                  <Flex justify="space-between" mt={2}>
+                    {card.rooms != null && (
+                      <Flex align="center">
+                        <FaBed />
+                        <Text ml={1}>{card.rooms} Chambre</Text>
+                      </Flex>
+                    )}
+                    {card.bathrooms != null && (
+                      <Flex align="center">
+                        <FaBath />
+                        <Text ml={1}>{card.bathrooms} Salle de bain</Text>
+                      </Flex>
+                    )}
+                    {card.area != null && (
+                      <Flex align="center">
+                        <FaExpandArrowsAlt />
+                        <Text ml={1}>{card.area} m²</Text>
+                      </Flex>
+                    )}
+                  </Flex>
                 </Box>
-                <Flex
-                  justify="space-between"
-                  align="center"
-                  bg="gray.100"
-                  p={4}
-                >
-                  <Text fontWeight="bold" color="blue.800" fontSize="xl">
+                <Flex justify="space-between" align="center" p={4}>
+                  <Tag p={1.5} bg="blue.600" color="white" fontWeight="bold" fontSize="xl">
                     {card.price}
-                  </Text>
+                  </Tag>
                   <Flex>
-                    <IconButton
-                      aria-label="Details"
-                      icon={<TbListDetails />}
-                      colorScheme="blue"
-                      fontSize={30}
-                      mr={2}
-                    />
-                    <IconButton
-                      aria-label="View"
-                      icon={<FaEye />}
-                      colorScheme="blue"
-                      fontSize={25}
-                      mr={1}
-                    />
+                    <Button
+                      leftIcon={<Icon as={SiWhatsapp} />}
+                      colorScheme="green"
+                      onClick={() => {
+                        const message = encodeURIComponent(`Interested in property ${card.title} with ID ${card.id}, priced at ${card.price}. View more at http://localhost:3000/properties?modal=yes&id=${card.id}`);
+                        window.open(`https://wa.me/+4915157575045?text=${message}`, "_blank");
+                      }}
+                      position="relative"
+                      zIndex="1"
+                      px="4"
+                      py="2"
+                      color="white"
+                      fontWeight="bold"
+                      fontSize={{ base: "xs", md: "sm", lg: "md" }}
+                      bg="#198754"
+                      borderRadius="15px"
+                      boxShadow="md"
+                      overflow="hidden"
+                      transition="all 0.25s"
+                      _hover={{
+                        color: "#white",
+                        _before: {
+                          width: "100%",
+                        },
+                      }}
+                      _before={{
+                        content: '""',
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        height: "100%",
+                        width: "0",
+                        borderRadius: "15px",
+                        bg: "#20c997",
+                        zIndex: "-1",
+                        boxShadow: "md",
+                        transition: "all 0.25s",
+                      }}
+                    >
+                      WhatsApp
+                    </Button>
                   </Flex>
                 </Flex>
               </Box>

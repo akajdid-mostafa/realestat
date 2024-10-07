@@ -124,14 +124,14 @@ const PropertySummary = ({ title, location, category, Ville, id, bathrooms, area
                             transition: "all 0.25s",
                         }}
                     >
-                        {showNumber ? "(+212) 808 649 090" : callButtonText} 
+                        {showNumber ? "+212808649090 OR +4915157575045" : callButtonText} 
                     </Button>
                     <Button
                         leftIcon={<Icon as={SiWhatsapp} />}
                         colorScheme="green"
                         onClick={() => {
                             const message = encodeURIComponent(`Interested in property ${title} with ID ${id}, priced at ${price}. View more at http://localhost:3000/properties?modal=yes&id=${id}`);
-                            window.open(`https://wa.me/123456789?text=${message}`, "_blank");
+                            window.open(`https://wa.me/+4915157575045?text=${message}`, "_blank");
                         }}                        
                         position="relative"
                         zIndex="1"

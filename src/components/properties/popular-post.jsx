@@ -7,21 +7,19 @@ import {
     Text,
     Image,
     Grid,
-    IconButton,
     Icon,
     Tag,
-    Link,
     HStack
 } from '@chakra-ui/react';
 import { CarouselProvider, Slider, Slide } from 'pure-react-carousel';
 import 'pure-react-carousel/dist/react-carousel.es.css';
 import { FaBed, FaBath, FaExpandArrowsAlt, FaMapMarkerAlt } from 'react-icons/fa';
-import { MdPhone } from 'react-icons/md';
-import { FaWhatsapp } from 'react-icons/fa';
 import { SiWhatsapp } from "react-icons/si";
+import Link from 'next/link';
+
 
 const Popular = () => {
-    const [gridDisplay, setGridDisplay] = useState(false);
+    const [gridDisplay, setGridDisplay] = useState(false); // Default value
     const [slidesToShow, setSlidesToShow] = useState(1);
     const [currentSlide, setCurrentSlide] = useState(0);
     const [posts, setPosts] = useState([]);
@@ -55,19 +53,12 @@ const Popular = () => {
 
     useEffect(() => {
         const handleResize = () => {
-            if (window.innerWidth >= 1024) { // Changed from 1524 to 1024 for 'lg'
-                setGridDisplay(true);
-                setSlidesToShow(3);
-            } else if (window.innerWidth >= 640) { // Changed from 768 to 640 for 'md'
-                setGridDisplay(false);
-                setSlidesToShow(2);
-            } else {
-                setGridDisplay(false);
-                setSlidesToShow(1); // 'base' remains unchanged
-            }
+            const isLargeScreen = window.innerWidth >= 1024; // Example condition
+            setGridDisplay(isLargeScreen);
+            setSlidesToShow(isLargeScreen ? 3 : window.innerWidth >= 640 ? 2 : 1);
         };
 
-        handleResize();
+        handleResize(); // Call on mount
         window.addEventListener('resize', handleResize);
 
         return () => window.removeEventListener('resize', handleResize);
@@ -103,19 +94,14 @@ const Popular = () => {
             id: post.id,
             imageSrc: post.img[0] || '/images/card.jpeg', // Default image if none provided
             title: post.title,
-            urltube: post.youtub || 'https://www.youtube.com/embed/rjKsKbU2Wuo?autoplay=1&controls=1',
             type: post.type?.type || 'Unknown',
             location: post.adress,
             ville: post.ville,
+            rooms: detail.rooms,
             category: post.category?.name || 'Unknown',
-            bedrooms: detail.bedromms || 0,
-            kitchen: detail.kitchen || 0,
-            bathrooms: detail.bathrooms || 0,
-            latitude: post.lat,
-            longitude: post.lon,
-            area: detail.surface || 'N/A',
-            floor: detail.floor || 'N/A',
-            price: `$${post.prix || '0'}`,
+            bathrooms: detail.bathrooms,
+            area: detail.surface,
+            price: post.prix,
             images: post.img.map((url, index) => ({
                 alt: `image${index + 1}`,
                 url
@@ -127,8 +113,9 @@ const Popular = () => {
     const filteredData = filterType === 'All' ? transformedData : transformedData.filter(card => card.type === filterType);
 
     // Get unique types from the data
-    const uniqueTypes = [...new Set(transformedData.map(card => card.type))];
+    const uniqueTypes = ["Home", "Bureau", "Land", "Park"]; // Fixed spacing
 
+    const filterall = (filterType === 'All');
     // Handle filter type change
     const handleFilterTypeChange = (type) => {
         setFilterType(type);
@@ -145,16 +132,19 @@ const Popular = () => {
             </Box>
 
             {/* Filter Buttons */}
-            <Flex mb={4} wrap="wrap" justifyContent="center">
-                <Button onClick={() => handleFilterTypeChange('All')} m={2} colorScheme={filterType === 'All' ? 'blue' : 'gray'}>
-                    View All
-                </Button>
-                {uniqueTypes.map(type => (
-                    <Button key={type} onClick={() => handleFilterTypeChange(type)} m={2} colorScheme={filterType === type ? 'blue' : 'gray'}>
-                        {type}
+            {gridDisplay && ( // Render only if gridDisplay is true
+                <Flex mb={4} wrap="wrap" justifyContent="center">
+                    <Button onClick={() => handleFilterTypeChange('All')} m={2} colorScheme={filterType === 'All' ? 'blue' : 'gray'}>
+                        View All
                     </Button>
-                ))}
-            </Flex>
+                    {uniqueTypes.map(type => (
+                        <Button key={type} onClick={() => handleFilterTypeChange(type)} m={2} colorScheme={filterType === type ? 'blue' : 'gray'}>
+                            {type}
+                        </Button>
+                    ))}
+                </Flex>
+            )}
+
 
             {gridDisplay ? (
                 <Grid
@@ -229,32 +219,38 @@ const Popular = () => {
                                         </Text>
                                     </Flex>
                                     <Flex justify="space-between" mt={2}>
-                                        <Flex align="center">
-                                            <FaBed />
-                                            <Text ml={1}>{card.bedrooms} Bedrooms</Text>
-                                        </Flex>
-                                        <Flex align="center">
-                                            <FaBath />
-                                            <Text ml={1}>{card.bathrooms} Bathrooms</Text>
-                                        </Flex>
-                                        <Flex align="center">
-                                            <FaExpandArrowsAlt />
-                                            <Text ml={1}>{card.area}</Text>
-                                        </Flex>
+                                        {card.rooms != null && ( // Check if bedrooms is not null
+                                            <Flex align="center">
+                                                <FaBed />
+                                                <Text ml={1}>{card.rooms} Chambre</Text>
+                                            </Flex>
+                                        )}
+                                        {card.bathrooms != null && ( // Check if bathrooms is not null
+                                            <Flex align="center">
+                                                <FaBath />
+                                                <Text ml={1}>{card.bathrooms} Salle de bain</Text>
+                                            </Flex>
+                                        )}
+                                        {card.area != null && ( // Check if area is not null
+                                            <Flex align="center">
+                                                <FaExpandArrowsAlt />
+                                                <Text ml={1}>{card.area} m²</Text>
+                                            </Flex>
+                                        )}
                                     </Flex>
                                 </Box>
 
-                                <Flex justify="space-between" align="center" bg="gray.100" p={4} mt={4}>
-                                    <Text fontWeight="bold" color="blue.800" fontSize="xl">
+                                <Flex justify="space-between" align="center"  p={4} mt={4}>
+                                    <Tag p={1.5} bg="blue.600" color="white" fontWeight="bold" fontSize="xl" >
                                         {card.price}
-                                    </Text>
+                                    </Tag>
                                     <Flex>
                                         <Button
                                             leftIcon={<Icon as={SiWhatsapp} />}
                                             colorScheme="green"
                                             onClick={() => {
                                                 const message = encodeURIComponent(`Interested in property ${card.title} with ID ${card.id}, priced at ${card.price}. View more at http://localhost:3000/properties?modal=yes&id=${card.id}`);
-                                                window.open(`https://wa.me/123456789?text=${message}`, "_blank");
+                                                window.open(`https://wa.me/+4915157575045?text=${message}`, "_blank");
                                             }}
                                             position="relative"
                                             zIndex="1"
@@ -308,7 +304,7 @@ const Popular = () => {
                     currentSlide={currentSlide}
                 >
                     <Slider>
-                        {filteredData.map(card => (
+                        {transformedData.map(card => (
                             <Slide key={card.id} index={card.id} style={{ margin: '0 10px' }}>
                                 <Link href={`/properties?modal=yes&id=${card.id}`} _hover={{ textDecoration: "none" }} className="images-group">
                                     <Box className="property-item homeya-box card" bg="white" borderRadius="md" boxShadow="lg" overflow="hidden" transition="0.3s">
@@ -368,20 +364,28 @@ const Popular = () => {
                                             </Flex>
                                             <HStack spacing={4} mt={2}>
                                                 <Flex alignItems="center">
-                                                    <FaBed />
-                                                    <Text ml={1}>{card.bedrooms} Bedrooms</Text>
-                                                </Flex>
-                                                <Flex alignItems="center">
-                                                    <FaBath />
-                                                    <Text ml={1}>{card.bathrooms} Bathrooms</Text>
-                                                </Flex>
-                                                <Flex alignItems="center">
-                                                    <FaExpandArrowsAlt />
-                                                    <Text ml={1}>{card.area}</Text>
+                                                    {card.rooms != null && ( // Check if bedrooms is not null
+                                                        <Flex align="center">
+                                                            <FaBed />
+                                                            <Text ml={1}>{card.rooms} Chambre</Text>
+                                                        </Flex>
+                                                    )}
+                                                    {card.bathrooms != null && ( // Check if bathrooms is not null
+                                                        <Flex align="center">
+                                                            <FaBath />
+                                                            <Text ml={1}>{card.bathrooms} Salle de bain</Text>
+                                                        </Flex>
+                                                    )}
+                                                    {card.area != null && ( // Check if area is not null
+                                                        <Flex align="center">
+                                                            <FaExpandArrowsAlt />
+                                                            <Text ml={1}>{card.area}</Text>
+                                                        </Flex>
+                                                    )}
                                                 </Flex>
                                             </HStack>
                                         </Box>
-                                        <Flex justify="space-between" align="center" bg="gray.100" p={4}>
+                                        <Flex justify="space-between" align="center"  p={4}>
                                             <Text fontWeight="bold" color="blue.800" fontSize="xl">{card.price}</Text>
                                             <Flex>
                                                 <Button
@@ -389,7 +393,7 @@ const Popular = () => {
                                                     colorScheme="green"
                                                     onClick={() => {
                                                         const message = encodeURIComponent(`Interested in property ${card.title} with ID ${card.id}, priced at ${card.price}. View more at http://localhost:3000/properties?modal=yes&id=${card.id}`);
-                                                        window.open(`https://wa.me/123456789?text=${message}`, "_blank");
+                                                        window.open(`https://wa.me/+4915157575045?text=${message}`, "_blank");
                                                     }}
                                                     position="relative"
                                                     zIndex="1"

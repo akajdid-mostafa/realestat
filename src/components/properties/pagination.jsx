@@ -41,8 +41,8 @@ const Pagination = ({ totalPages, currentPage, onPageChange, rowsPerPage, totalR
             endPage = currentPage + halfRange;
         }
 
-        // Add ellipsis if current page is greater than 2
-        if (currentPage > 2) {
+        // Add ellipsis if current page is greater than 3
+        if (currentPage > 3) {
             pages.push('...');
         }
 
@@ -125,7 +125,7 @@ const Pagination = ({ totalPages, currentPage, onPageChange, rowsPerPage, totalR
                             color={currentPage === page ? 'white' : 'black'}
                             borderColor="white" // Set border color to white
                             _hover={{
-                                bg: 'blue.600',
+                                bg: 'blue.500',
                                 color: 'white',
                             }}
                             isDisabled={page === '...'}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Flex, VStack, Text, Heading, Stack, Grid } from "@chakra-ui/react";
+import { Box, Flex, VStack, Text, Heading, Stack, Button , Grid } from "@chakra-ui/react";
 import PropertySearchPage from "../properties/fillter"; // Import the Filter component
 import { useRouter } from 'next/router'; // Import useRouter if you're using Next.js
 
@@ -19,37 +19,22 @@ const imageUrls = [
   "/images/21009878_6.jpg", // Duplicate the first image
 ];
 
-// Mock properties data
-
-
 const Hero = () => {
-  const showSearch = false; // or false based on your logic
+  const showSearch = false; // or true based on your logic
 
   const [properties, setProperties] = useState([]); // Initialize properties state
   const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [selectedTab, setSelectedTab] = useState('ALL TYPE'); // Default tab
+  const [selectedPropertyType, setSelectedPropertyType] = useState('View All');
+  const [selectedCity, setSelectedCity] = useState('');
+  const [selectedRoomCount, setSelectedRoomCount] = useState('Tous chambre');
+  const [selectedBathroomsCount, setSelectedBathroomsCount] = useState('Tous Salle de bain');
+  const [searchQuery, setSearchQuery] = useState('');
   const router = useRouter();
 
-  useEffect(() => {
-    // Using the provided API endpoint
-    fetch("https://immoceanrepo.vercel.app/api/posts")
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(data => {
-        // Assuming the data is directly in the format needed
-        setProperties(data);
-        console.log("Properties fetched successfully:", data);
-      })
-      .catch(error => {
-        console.error('Error fetching properties:', error);
-      });
-  }, []);
+
 
   useEffect(() => {
     const sentenceIntervalId = setInterval(() => {
@@ -77,33 +62,37 @@ const Hero = () => {
   }, []);
 
   const handleTabChange = (tab) => {
-    console.log("Tab changed to:", tab);
-    // Additional logic for handling tab change
+    setSelectedTab(tab);
   };
 
   const handlePropertyTypeChange = (type) => {
-    console.log("Property type changed to:", type);
-    // Additional logic for handling property type change
+    setSelectedPropertyType(type);
   };
 
   const handleCityChange = (city) => {
-    console.log("City changed to:", city);
-    // Additional logic for handling city change
+    setSelectedCity(city);
   };
 
   const handleRoomCountChange = (count) => {
-    console.log("Room count changed to:", count);
-    // Additional logic for handling room count change
+    setSelectedRoomCount(count);
   };
 
   const handleBathroomsCountChange = (count) => {
-    console.log("Bathrooms count changed to:", count);
-    // Additional logic for handling bathrooms count change
+    setSelectedBathroomsCount(count);
+  };
+
+  const handleSearchChange = (query) => {
+    setSearchQuery(query);
   };
 
   const handleHeroSearch = () => {
     const queryParams = new URLSearchParams({
-      tab: selectedTab.replace(/\s/g, '+') // Replace spaces with '+' for URL encoding
+      tab: selectedTab.replace(/\s/g, '+'),
+      propertyType: selectedPropertyType.replace(/\s/g, '+'),
+      city: selectedCity,
+      roomCount: selectedRoomCount,
+      bathroomsCount: selectedBathroomsCount,
+      search: searchQuery
     }).toString();
     router.push(`/properties?${queryParams}`);
   };
@@ -196,17 +185,19 @@ const Hero = () => {
             </Box>
           </Box>
         </Stack>
-        <Box mt={{base:2 , md:4 , lg :8}}>
-        <PropertySearchPage
-          properties={properties} // Pass fetched properties to PropertySearchPage
-          onTabChange={handleTabChange}
-          onPropertyTypeChange={handlePropertyTypeChange}
-          onCityChange={handleCityChange}
-          onRoomCountChange={handleRoomCountChange}
-          onBathroomsCountChange={handleBathroomsCountChange}
-          searchDisplay={showSearch ? 'block' : 'none'} // Set display value based on condition
-          num={3}
-        />
+        <Box mt={{ base: 2, md: 4, lg: 8 }}>
+          <PropertySearchPage
+            properties={properties} // Pass fetched properties to PropertySearchPage
+            onTabChange={handleTabChange}
+            onPropertyTypeChange={handlePropertyTypeChange}
+            onCityChange={handleCityChange}
+            onRoomCountChange={handleRoomCountChange}
+            onBathroomsCountChange={handleBathroomsCountChange}
+            onSearchChange={handleSearchChange}
+            searchDisplay={showSearch ? 'block' : 'none'} // Set display value based on condition
+            num={3}
+          />
+          
         </Box>
       </VStack>
     </Flex>
