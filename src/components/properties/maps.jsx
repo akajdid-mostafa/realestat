@@ -1,13 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import dynamic from "next/dynamic";
-import { Box, Flex,} from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import Image from 'next/image';
 import "leaflet/dist/leaflet.css";
 import Link from 'next/link';
-
-
 
 // Dynamically import MapContainer with SSR disabled
 const MapContainer = dynamic(() => import("react-leaflet").then(mod => mod.MapContainer), { ssr: false });
@@ -17,28 +15,28 @@ const Popup = dynamic(() => import("react-leaflet").then(mod => mod.Popup), { ss
 const ZoomControl = dynamic(() => import("react-leaflet").then(mod => mod.ZoomControl), { ssr: false });
 
 export default function Maps({ center, markers = [] }) {
-  const [iconCache, setIconCache] = useState({});
+  const iconCache = useRef({});
 
   useEffect(() => {
     import("leaflet").then(L => {
       markers.forEach(marker => {
-        if (!iconCache[marker.iconUrl]) {
+        if (!iconCache.current[marker.iconUrl]) {
           const icon = L.icon({
             iconUrl: marker.iconUrl,
             iconSize: [32, 32],
             iconAnchor: [16, 32],
             popupAnchor: [0, -32]
           });
-          setIconCache(prevCache => ({ ...prevCache, [marker.iconUrl]: icon }));
+          iconCache.current[marker.iconUrl] = icon;
         }
       });
     });
-  }, [markers, iconCache]);
+  }, [markers]);
 
   return (
     <Box maxW="7xl" mx="auto" p={4}>
-      <Box borderWidth="1px" borderRadius="lg" overflow="hidden" h="800px" >
-        {Object.keys(iconCache).length > 0 && (
+      <Box borderWidth="1px" borderRadius="lg" overflow="hidden" h="800px">
+        {Object.keys(iconCache.current).length > 0 && (
           <MapContainer
             center={center}
             zoom={6}
@@ -54,7 +52,8 @@ export default function Maps({ center, markers = [] }) {
               <Marker
                 key={marker.id}
                 position={marker.position}
-                icon={iconCache[marker.iconUrl]}
+                icon={iconCache.current[marker.iconUrl]}
+                
               >
                 <Popup>
                   <div className="flex w-64 h-40">
