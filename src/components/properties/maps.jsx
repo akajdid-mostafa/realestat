@@ -9,27 +9,6 @@ import Link from 'next/link';
 
 
 
-
-
-const popupContent = {
-  textAlign: "center",
-  height: "350px",
-  marginTop: "30px"
-};
-const popupHead = {
-  fontWeight: "bold",
-  fontSize: "22px"
-};
-
-const popupText = {
-  fontSize: "15px",
-  marginBottom: "20px"
-};
-
-const okText = {
-  fontSize: "15px"
-};
-
 // Dynamically import MapContainer with SSR disabled
 const MapContainer = dynamic(() => import("react-leaflet").then(mod => mod.MapContainer), { ssr: false });
 const TileLayer = dynamic(() => import("react-leaflet").then(mod => mod.TileLayer), { ssr: false });
@@ -58,11 +37,11 @@ export default function Maps({ center, markers = [] }) {
 
   return (
     <Box maxW="7xl" mx="auto" p={4}>
-      <Box borderWidth="1px" borderRadius="lg" overflow="hidden" h="300px">
+      <Box borderWidth="1px" borderRadius="lg" overflow="hidden" h="800px" >
         {Object.keys(iconCache).length > 0 && (
           <MapContainer
             center={center}
-            zoom={5}
+            zoom={6}
             style={{ height: '100%', width: '100%' }}
             zoomControl={false}
           >

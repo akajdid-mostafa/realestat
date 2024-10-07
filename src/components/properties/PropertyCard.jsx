@@ -106,19 +106,19 @@ const PropertyCard = ({ property, onClick }) => {
                         justify="space-between"
                         mt={2}
                     >
-                        {property.Detail && property.Detail.rooms && (
+                        {property.Detail && property.Detail.rooms != null && (
                             <Flex align="center">
                                 <FaBed />
                                 <Text ml={1}>{property.Detail.rooms} chambre</Text>
                             </Flex>
                         )}
-                        {property.Detail && property.Detail.bathrooms && (
+                        {property.Detail && property.Detail.bathrooms != null &&(
                             <Flex align="center">
                                 <FaBath />
                                 <Text ml={1}>{property.Detail.bathrooms} salle de bain</Text>
                             </Flex>
                         )}
-                        {property.Detail && property.Detail.surface && (
+                        {property.Detail && property.Detail.surface != null && (
                             <Flex align="center">
                                 <FaExpandArrowsAlt />
                                 <Text ml={1}>{property.Detail.surface} m²</Text>
