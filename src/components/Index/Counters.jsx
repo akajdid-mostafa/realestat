@@ -1,7 +1,9 @@
 import React, { useRef } from "react";
 import { useCountUp } from "react-countup";
 import { Waypoint } from "react-waypoint";
-import {  FaBuilding, FaExpandArrowsAlt , FaTruck, FaChair } from "react-icons/fa";
+import {  FaBuilding, FaExpandArrowsAlt , FaTruck } from "react-icons/fa";
+import { MdMeetingRoom  } from "react-icons/md";
+
 
 const Counters = () => {
   // Counter Component Logic
@@ -57,8 +59,8 @@ const Counters = () => {
           <div className="col-span-6 md:col-span-3 mt-8 md:mt-0">
             <Counter
               end={340}
-              text="Apartio Rooms"
-              Icon={FaChair}
+              text="Chambres immobilières"
+              Icon={MdMeetingRoom }
             />
           </div>
         </div>
