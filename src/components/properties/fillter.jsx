@@ -119,7 +119,7 @@ const PropertySearchPage = ({
   const getSearchUrl = () => {
     const queryParams = new URLSearchParams({
       tab: activeTab.replace(/\s/g, '+'),
-      propertyType: selectedPropertyType || '',
+      propertyType: selectedPropertyType.replace(/\s/g, '+'),
       city: selectedCity !== 'Select a city' ? selectedCity : '',
       roomCount: selectedRoomCount || '',
       bathroomsCount: selectedBathroomsCount || '',
