@@ -211,27 +211,29 @@ const PropertyList = () => {
                                 imageUrl: property.img[0],
                                 title: property.title,
                                 adress: property.adress,
-                                label: property.type.type,
+                                label: property.type?.type,
                                 price: property.prix,
-                                iconUrl: (() => {
-                                    switch (property.type.type) {
-                                        case "Appartement":
-                                            return '/images/Appartement.svg';
-                                        case "Local":
-                                            return '/images/local.svg';
-                                        case "Maisons":
-                                            return '/images/maison.svg';
-                                        case "Bureaux":
-                                            return '/images/bureaux.svg';
-                                        case "Terrains":
-                                            return '/images/terrains.svg';
-                                        case "villasRiad":
-                                            return '/images/villa.svg';
-                                        default:
-                                            return '/images/Appartement.svg';
-                                    }
-                                })(),
-                                number: property.id
+                                // iconUrl: '/images/Appartement.svg',
+                                //=> {
+                                //     switch (property.type?.type) {
+                                //         // case "Appartement":
+                                //         //     return '/images/Appartement.svg';
+                                //         // case "Local":
+                                //         //     return '/images/local.svg';
+                                //         // case "Maisons":
+                                //         //     return '/images/maison.svg';
+                                //         // case "Bureaux":
+                                //         //     return '/images/bureaux.svg';
+                                //         // case "Terrains":
+                                //         //     return '/images/terrains.svg';
+                                //         // case "villasRiad":
+                                //         //     return '/images/villa.svg';
+                                //         default:
+                                //             return '/images/Appartement.svg';
+                                //     }
+                                // }
+                                
+                                // number: property.id
                             }))}
                         />
                     </Box>

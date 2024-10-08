@@ -1,45 +1,44 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 import { Box } from "@chakra-ui/react";
 import Image from 'next/image';
-import Link from 'next/link';
 import "leaflet/dist/leaflet.css";
+import Link from 'next/link';
 
-// Dynamically import Map components with SSR disabled
-const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false });
-const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false });
-const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false });
-const Popup = dynamic(() => import('react-leaflet').then(mod => mod.Popup), { ssr: false });
+// Dynamically import MapContainer with SSR disabled
+const MapContainer = dynamic(() => import("react-leaflet").then(mod => mod.MapContainer), { ssr: false });
+const TileLayer = dynamic(() => import("react-leaflet").then(mod => mod.TileLayer), { ssr: false });
+const Marker = dynamic(() => import("react-leaflet").then(mod => mod.Marker), { ssr: false });
+const Popup = dynamic(() => import("react-leaflet").then(mod => mod.Popup), { ssr: false });
 const ZoomControl = dynamic(() => import("react-leaflet").then(mod => mod.ZoomControl), { ssr: false });
 
 export default function Maps({ center, markers = [] }) {
   const [iconCache, setIconCache] = useState({});
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const L = require('leaflet');
-
-      markers.forEach(marker => {
-        if (!iconCache[marker.iconUrl]) {
-          const icon = L.icon({
-            iconUrl: marker.iconUrl,
-            iconSize: [32, 32],
-            iconAnchor: [16, 32],
-            popupAnchor: [0, -32]
-          });
-          setIconCache(prevCache => ({ ...prevCache, [marker.iconUrl]: icon }));
-        }
-      });
-    }
-  }, [markers, iconCache]);
+    import("leaflet").then(L => {
+      const iconUrl = '/images/Appartement.svg';
+      if (!iconCache[iconUrl]) {
+        const icon = L.icon({
+          iconUrl: iconUrl,
+          iconSize: [32, 32],
+          iconAnchor: [16, 32],
+          popupAnchor: [0, -32]
+        });
+        setIconCache(prevCache => ({ ...prevCache, [iconUrl]: icon }));
+      }
+    });
+  }, [iconCache]);
 
   return (
     <Box maxW="7xl" mx="auto" p={4}>
-      <Box borderWidth="1px" borderRadius="lg" overflow="hidden" h="800px">
+      <Box borderWidth="1px" borderRadius="lg" overflow="hidden" h="300px">
         {Object.keys(iconCache).length > 0 && (
           <MapContainer
             center={center}
-            zoom={6}
+            zoom={5}
             style={{ height: '100%', width: '100%' }}
             zoomControl={false}
           >
@@ -52,7 +51,7 @@ export default function Maps({ center, markers = [] }) {
               <Marker
                 key={marker.id}
                 position={marker.position}
-                icon={iconCache[marker.iconUrl]}
+                icon={iconCache['/images/Appartement.svg']}
               >
                 <Popup>
                   <div className="flex w-64 h-40">
@@ -62,7 +61,7 @@ export default function Maps({ center, markers = [] }) {
                           src={marker.imageUrl}
                           alt={marker.title}
                           fill
-                          style={{ objectFit: 'cover' }}
+                          objectFit="cover"
                           className="rounded-l-md"
                         />
                       </Link>
