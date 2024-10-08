@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 export const WhatsApp = () => {
   const phoneNumber = '+4915157575045'; // Replace with your WhatsApp number
-  const message = 'Hi *IMMOCEAN*! I need more info about oceanconnecting https://immocean.ma/'; // Replace with your default message
+  const message = 'Hi *IMMOCEAN*! I need more info about immocean service immobilier https://immocean.ma/'; // Replace with your default message
 
   const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 
@@ -17,7 +17,7 @@ export const WhatsApp = () => {
       style={styles.button}
     >
       <Image 
-        src="/images/whatsapp.svg"
+        src="/images/WhatsApp.svg"
         alt="WhatsApp" 
         style={styles.icon} 
         width={30}
@@ -32,7 +32,7 @@ const styles = {
       position: 'fixed',
       bottom: '20px',
       left: '20px',
-      backgroundColor: '#25D366',
+      backgroundColor: '#48c857',
       borderRadius: '50%',
       padding: '10px',
       boxShadow: '0 2px 10px rgba(0, 0, 0, 0.2)',

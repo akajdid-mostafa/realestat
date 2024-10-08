@@ -113,7 +113,7 @@ const Popular = () => {
     const filteredData = filterType === 'All' ? transformedData : transformedData.filter(card => card.type === filterType);
 
     // Get unique types from the data
-    const uniqueTypes = ["Home", "Bureau", "Land", "Park"]; // Fixed spacing
+    const uniqueTypes = ["Appartement", "Maisons", "villasRiad", "Bureaux", "Local", "Bureaux"]; // Fixed spacing
 
     const filterall = (filterType === 'All');
     // Handle filter type change
