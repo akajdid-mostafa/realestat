@@ -75,6 +75,20 @@ export default function Maps({ center, markers = [] }) {
                     </div>
                   </div>
                 </Popup>
+                {/* Custom label for the marker */}
+                <div className="absolute" style={{ 
+                  left: '50%', 
+                  bottom: '100%', 
+                  transform: 'translateX(-50%) translateY(-5px)', 
+                  background: 'white', 
+                  padding: '2px 5px', 
+                  borderRadius: '4px', 
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+                  fontSize: '12px',
+                  whiteSpace: 'nowrap'
+                }}>
+                  {marker.label}
+                </div>
               </Marker>
             ))}
           </MapContainer>
