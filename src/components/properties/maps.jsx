@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { Box } from "@chakra-ui/react";
@@ -34,11 +32,11 @@ export default function Maps({ center, markers = [] }) {
 
   return (
     <Box maxW="7xl" mx="auto" p={4}>
-      <Box borderWidth="1px" borderRadius="lg" overflow="hidden" h="300px">
+      <Box borderWidth="1px" borderRadius="lg" overflow="hidden" h="800px">
         {Object.keys(iconCache).length > 0 && (
           <MapContainer
             center={center}
-            zoom={5}
+            zoom={6}
             style={{ height: '100%', width: '100%' }}
             zoomControl={false}
           >
