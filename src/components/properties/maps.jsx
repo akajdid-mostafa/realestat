@@ -32,7 +32,7 @@ export default function Maps({ center, markers = [] }) {
 
   return (
     <Box maxW="7xl" mx="auto" p={4}>
-      <Box borderWidth="1px" borderRadius="lg" overflow="hidden" h={{ base: "500px", md: "800px" }}>
+      <Box borderWidth="1px" borderRadius="lg" overflow="hidden" h={{ base: "500px", md: "800px"}}>
         {Object.keys(iconCache).length > 0 && (
           <MapContainer
             center={center}
