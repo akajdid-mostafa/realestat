@@ -16,20 +16,25 @@ export default function Maps({ center, markers = [] }) {
   const [iconCache, setIconCache] = useState({});
 
   useEffect(() => {
-    import("leaflet").then(L => {
-      const iconUrl = '/images/Appartement.svg';
-      if (!iconCache[iconUrl]) {
-        const icon = L.icon({
-          iconUrl: iconUrl,
-          iconSize: [32, 32],
-          iconAnchor: [16, 32],
-          popupAnchor: [0, -32]
-        });
-        setIconCache(prevCache => ({ ...prevCache, [iconUrl]: icon }));
-      }
-    });
-  }, [iconCache]);
-
+    if (typeof window !== 'undefined') {
+      const L = require('leaflet'); // Import Leaflet only on the client side
+      markers.forEach(marker => {
+        if (!iconCache[marker.iconUrl]) {
+          const icon = L.icon({
+            iconUrl: marker.iconUrl,
+            iconSize: [32, 32],
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -32]
+          });
+          setIconCache(prevCache => ({ ...prevCache, [marker.iconUrl]: icon }));
+        }
+      });
+    }
+    // Cleanup function to ensure proper removal of Leaflet components
+    return () => {
+      // Perform any necessary cleanup here
+    };
+  }, [markers, iconCache]);
   return (
     <Box maxW="7xl" mx="auto" p={4}>
       <Box borderWidth="1px" borderRadius="lg" overflow="hidden" h={{ base: "500px", md: "800px"}}>
@@ -49,7 +54,7 @@ export default function Maps({ center, markers = [] }) {
               <Marker
                 key={marker.id}
                 position={marker.position}
-                icon={iconCache['/images/Appartement.svg']}
+                icon={iconCache[marker.iconUrl]} // Updated to use marker.icon
               >
                 <Popup>
                   <div className="flex w-64 h-40">

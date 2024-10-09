@@ -205,7 +205,7 @@ const PropertyList = () => {
                     <Box flex="1" position="sticky" top="0" height="100%" w="full" overflow="hidden">
                         <Maps
                             center={[31.7917, -7.0926]}
-                            markers={properties.map(property => ({
+                            markers={currentItems.map(property => ({
                                 id: property.id,
                                 position: [property.lat, property.lon],
                                 imageUrl: property.img[0],
@@ -213,27 +213,25 @@ const PropertyList = () => {
                                 adress: property.adress,
                                 label: property.type?.type,
                                 price: property.prix,
-                                // iconUrl: '/images/Appartement.svg',
-                                //=> {
-                                //     switch (property.type?.type) {
-                                //         // case "Appartement":
-                                //         //     return '/images/Appartement.svg';
-                                //         // case "Local":
-                                //         //     return '/images/local.svg';
-                                //         // case "Maisons":
-                                //         //     return '/images/maison.svg';
-                                //         // case "Bureaux":
-                                //         //     return '/images/bureaux.svg';
-                                //         // case "Terrains":
-                                //         //     return '/images/terrains.svg';
-                                //         // case "villasRiad":
-                                //         //     return '/images/villa.svg';
-                                //         default:
-                                //             return '/images/Appartement.svg';
-                                //     }
-                                // }
-                                
-                                // number: property.id
+                                iconUrl: (() => {
+                                    switch (property.type?.type) {
+                                        case "Appartement":
+                                            return '/images/Appartement.svg';
+                                        case "Local":
+                                            return '/images/local.svg';
+                                        case "Maisons":
+                                            return '/images/maison.svg';
+                                        case "Bureaux":
+                                            return '/images/bureaux.svg';
+                                        case "Terrains":
+                                            return '/images/terrains.svg';
+                                        case "villasRiad":
+                                            return '/images/villa.svg';
+                                        default:
+                                            return '/images/Appartement.svg';
+                                    }
+                                })(),
+                                number: property.id
                             }))}
                         />
                     </Box>
