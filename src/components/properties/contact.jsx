@@ -115,7 +115,7 @@ console.log("dsd")
                             name="name"
                             id="name"
                             type="text"
-                            placeholder="Votre nom"
+                            placeholder="Votre mail"
                             value={formData.name}
                             onChange={handleChange}
                             required
