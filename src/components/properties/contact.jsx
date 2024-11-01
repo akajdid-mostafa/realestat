@@ -115,7 +115,7 @@ console.log("dsd")
                             name="name"
                             id="name"
                             type="text"
-                            placeholder="Your Name"
+                            placeholder="Votre nom"
                             value={formData.name}
                             onChange={handleChange}
                             required
@@ -133,7 +133,7 @@ console.log("dsd")
                             name="email"
                             id="email"
                             type="email"
-                            placeholder="Your Email"
+                            placeholder="Votre Email"
                             value={formData.email}
                             onChange={handleChange}
                             required
@@ -152,7 +152,7 @@ console.log("dsd")
                             name="phone"
                             id="phone"
                             type="tel"
-                            placeholder="Your Phone Number"
+                            placeholder="Votre numéro de téléphone"
                             value={formData.phone}
                             onChange={handleChange}
                             required
@@ -168,7 +168,7 @@ console.log("dsd")
                         id="message"
                         value={formData.message}
                         onChange={handleChange}
-                        placeholder="Your Message"
+                        placeholder="Votre Message"
                         style={{
                             fontWeight: "semibold",
                             borderColor: 'blue.600',
