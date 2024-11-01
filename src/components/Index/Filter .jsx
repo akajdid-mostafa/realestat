@@ -111,7 +111,7 @@ const Filter = () => {
               _hover={{ bg: 'white', color: 'black' }}
               _selected={{ bg: 'white', color: 'black' }}
               mr={1}
-            >All Type</Tab>
+            >TOUS TYPE</Tab>
             <Tab
               bgColor="rgba(128, 128, 128, 0.4)"
               _hover={{ bg: 'white', color: 'black' }}

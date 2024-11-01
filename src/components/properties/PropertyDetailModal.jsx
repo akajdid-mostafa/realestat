@@ -89,14 +89,14 @@ const PropertyDetailModal = ({ isOpen, onClose }) => {
 
     useEffect(() => {
         if (property && property.postid) {
-            const newMessage = `Interested in property ${property.title} with ID ${property.postid}, priced at ${property.price}.`;
+            const newMessage = `Intéressé par le bien ${property.title} avec  ID ${property.postid}, au prix de ${property.price}.`;
             setMessage(newMessage);
-            console.log("Updated message:", newMessage); // This should log the correct message
+            console.log("Message actualisé :", newMessage); // This should log the correct message
         }
     }, [property]);
 
     // Debugging output to check the message state
-    console.log("Message to ContactForm:", message); // This should log the message being passed to ContactForm
+    console.log("Message à ContactForm :", message); // This should log the message being passed to ContactForm
 
     if (loading) return <Text>Loading...</Text>;
     if (error) return <Text>{error}</Text>;

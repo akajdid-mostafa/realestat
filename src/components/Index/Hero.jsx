@@ -26,7 +26,7 @@ const Hero = () => {
   const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [selectedTab, setSelectedTab] = useState('ALL TYPE'); // Default tab
+  const [selectedTab, setSelectedTab] = useState('TOUS TYPE'); // Default tab
   const [selectedPropertyType, setSelectedPropertyType] = useState('View All');
   const [selectedCity, setSelectedCity] = useState('');
   const [selectedRoomCount, setSelectedRoomCount] = useState('Tous chambre');
@@ -179,8 +179,8 @@ const Hero = () => {
                 mx={{ base: 4, md: 20 }}
                 fontSize={{ base: "md", md: "lg" }}
               >
-                We are a real estate agency that will help you find the best
-                residence you dream of. Let’s discuss your dream house?
+                " Nous sommes une agence immobilière qui vous aidera à trouver la meilleure
+                résidence dont vous rêvez. Discutons de la maison de vos rêves ? "
               </Text>
             </Box>
           </Box>

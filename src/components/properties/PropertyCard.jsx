@@ -3,6 +3,7 @@ import { Box, IconButton, Image, Text, Flex, Tag, Link } from "@chakra-ui/react"
 import { FaBed, FaEye, FaCity, FaBath, FaExpandArrowsAlt, FaMapMarkerAlt } from "react-icons/fa";
 import { useRouter } from 'next/router';
 
+
 const PropertyCard = ({ property, onClick }) => {
     const router = useRouter();
 

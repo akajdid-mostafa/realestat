@@ -16,7 +16,7 @@ const PropertyList = () => {
     const [filteredProperties, setFilteredProperties] = useState([]);
     const [selectedProperty, setSelectedProperty] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
-    const [activeTab, setActiveTab] = useState('ALL TYPE');
+    const [activeTab, setActiveTab] = useState('TOUS TYPE');
     const [selectedPropertyType, setSelectedPropertyType] = useState('View All');
     const [selectedCity, setSelectedCity] = useState('');
     const [selectedRoomCount, setSelectedRoomCount] = useState('Tous chambre');
@@ -32,9 +32,9 @@ const PropertyList = () => {
         try {
             const queryParams = new URLSearchParams();
 
-            if (activeTab === 'FOR Location') {
+            if (activeTab === 'Pour Location') {
                 queryParams.append('categoryId', '2');
-            } else if (activeTab === 'FOR Vente') {
+            } else if (activeTab === 'Pour Vente') {
                 queryParams.append('categoryId', '1');
             }
 
