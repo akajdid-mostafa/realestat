@@ -9,7 +9,7 @@ const Aboutt = () => {
             {/* Header Section */}
             <div className="mt-8 mb-10 grid grid-cols-1 pb-6 text-center animate-fadeIn">
                 <h1 className="font-bold text-4xl leading-normal mb-4 animate-slideInDown">
-                    ABOUT US Immocean
+                À PROPOS DE NOUS IMMOCEAN
                 </h1>
             </div>
 
@@ -28,13 +28,13 @@ const Aboutt = () => {
                         <div className="w-full lg:w-6/12 px-4 ml-auto mr-auto text-center">
                             <div className="pr-12">
                                 <h1 className="text-white font-semibold text-5xl animate-slideInLeft">
-                                    Your story starts with us.
+                                Votre histoire commence avec nous.
                                 </h1>
                                 <p className="mt-4 text-lg text-gray-200 animate-slideInLeft">
-                                    Welcome to IMMOCEAN, your premier destination for finding exceptional apartments that suits your unique lifestyle.
-                                    With a commitment to excellence and a passion for real estate, we specialize in helping you discover your dream home.
-                                    Our experienced team of dedicated professionals is here to guide you through every step of the buying process, ensuring that you find the perfect apartment that truly feels like home.
-                                    Explore our diverse range of listings, personalized services, and unmatched expertise as we work together to make your property journey an unforgettable success.
+                                Bienvenue chez IMMOCEAN, votre première destination pour trouver des appartements exceptionnels qui correspondent à votre style de vie unique.
+                                    Avec un engagement d'excellence et une passion pour l'immobilier, nous sommes spécialisés dans l'aide à la découverte de la maison de vos rêves.
+                                    Notre équipe expérimentée de professionnels dévoués est là pour vous guider à travers chaque étape du processus d'achat, en veillant à ce que vous trouviez l'appartement parfait qui se sentira vraiment comme chez vous.
+                                    Découvrez notre gamme variée d'annonces, nos services personnalisés et notre expertise inégalée. Nous travaillerons ensemble pour faire de votre voyage immobilier un succès inoubliable.
                                 </p>
                             </div>
                         </div>

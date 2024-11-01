@@ -43,7 +43,7 @@ const ContactForm = forwardRef(({ siteInfo, formHeading, shouldHaveNegativeTopMa
       });
 
       if (response.ok) {
-        alert('Message sent successfully!');
+        alert('Message envoyé avec succès !');
         setFormData({
           name: '',
           email: '',
@@ -51,11 +51,11 @@ const ContactForm = forwardRef(({ siteInfo, formHeading, shouldHaveNegativeTopMa
           message: ''
         });
       } else {
-        alert('Failed to send message.');
+        alert("Échec de l'envoi du message.");
       }
     } catch (error) {
-      console.error('Error submitting form:', error);
-      alert('An error occurred. Please try again later.');
+      console.error('Erreur de soumission du formulaire :', error);
+      alert("Une erreur s'est produite. Veuillez réessayer plus tard.");
     }
   };
 
@@ -84,9 +84,9 @@ const ContactForm = forwardRef(({ siteInfo, formHeading, shouldHaveNegativeTopMa
     return formBox(
       <VStack spacing="1.5rem" py="8rem">
         <Heading fontSize="2xl" textAlign="center" fontWeight="bold" color="blue.600">
-          Thank you for your message!
+        Merci pour votre message !
         </Heading>
-        <Text fontSize="lg" textAlign="center">We will get back to you soon.</Text>
+        <Text fontSize="lg" textAlign="center">Nous vous répondrons bientôt.</Text>
       </VStack>
     );
   }
@@ -120,14 +120,14 @@ const ContactForm = forwardRef(({ siteInfo, formHeading, shouldHaveNegativeTopMa
             height="300"
             frameBorder="0"
             scrolling="no"
-            src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=+(OCEAN%20SALON)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
+            src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=Garage%20Nr:,%20791%20EL%20GOUIRA,%20Agadir%2080000+(ocean)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
           ></iframe>
           <Box bg="white" p={4} borderRadius="lg" mt={4}>
-            <Text fontWeight="bold" fontSize="lg">ADDRESS</Text>
+            <Text fontWeight="bold" fontSize="lg">ADRESSE</Text>
             <Text mt={1}>Garage Nr:, 791 EL GOUIRA, Agadir 80000</Text>
             <Text fontWeight="bold" fontSize="lg" mt={4}>EMAIL</Text>
             <Text mt={1} as="a" color="blue.500" href="mailto:maroc.immocean@gmail.com">maroc.immocean@gmail.com</Text>
-            <Text fontWeight="bold" fontSize="lg" mt={4}>PHONE</Text>
+            <Text fontWeight="bold" fontSize="lg" mt={4}>TÉLÉPHONE</Text>
             <Text mt={1}>(+212) 808 649 090</Text>
           </Box>
         </Box>
@@ -142,7 +142,7 @@ const ContactForm = forwardRef(({ siteInfo, formHeading, shouldHaveNegativeTopMa
         <form onSubmit={handleSubmit}>
           <VStack spacing="1.5rem">
             <Heading fontSize="2xl" textAlign="center" fontWeight="bold" color="blue.600">
-              {formHeading || 'Request a Free Consultation'}
+              {formHeading || 'Demande de consultation gratuite'}
             </Heading>
 
             <InputGroup>
@@ -154,7 +154,7 @@ const ContactForm = forwardRef(({ siteInfo, formHeading, shouldHaveNegativeTopMa
                 name="name"
                 id="name"
                 type="text"
-                placeholder="Your Name"
+                placeholder="Votre nom"
                 value={formData.name}
                 onChange={handleChange}
                 required
@@ -178,7 +178,7 @@ const ContactForm = forwardRef(({ siteInfo, formHeading, shouldHaveNegativeTopMa
                 name="email"
                 id="email"
                 type="email"
-                placeholder="Your Email"
+                placeholder="Votre courriel"
                 value={formData.email}
                 onChange={handleChange}
                 required
@@ -202,12 +202,12 @@ const ContactForm = forwardRef(({ siteInfo, formHeading, shouldHaveNegativeTopMa
                 name="phone"
                 id="phone"
                 type="tel"
-                placeholder="Your Phone Number"
+                placeholder="Votre numéro de téléphone"
                 value={formData.phone}
                 onChange={handleChange}
                 onBlur={(e) => {
                   if (!e.target.value.match(/^\+\d{4}\s\d{8}$/)) {
-                    alert('Please enter a correct phone number.');
+                    alert('Veuillez saisir un numéro de téléphone correct.');
                   }
                 }}
                 required
@@ -222,7 +222,7 @@ const ContactForm = forwardRef(({ siteInfo, formHeading, shouldHaveNegativeTopMa
               id="message"
               value={formData.message}
               onChange={handleChange}
-              placeholder="Your Message"
+              placeholder="Votre message"
               style={{
                 fontWeight: "semibold",
                 borderColor: 'blue.600',

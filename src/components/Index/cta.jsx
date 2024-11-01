@@ -52,8 +52,8 @@ const Cta3 = () => {
 
             <Flex flexDirection={{ base: 'column', lg: 'row' }} spacing={4}>
                 <MotionBox maxW="xl" pr={{ lg: 16 }} mb={10}>
-                    <Heading as="h5" size="lg" mb={6} fontWeight="extrabold">
-                        Pourquoi réserver avec Immocean ?
+                    <Heading as="h5" size="lg" mb={6} fontWeight="bold">
+                        Pourquoi réserver avec Immocean?
                     </Heading>
                     <Text mb={6} color="gray.900">
                         Immocean vous offre une expertise locale et un service personnalisé

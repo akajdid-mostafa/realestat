@@ -47,7 +47,7 @@ const PropertySearchPage = ({
   num,
 }) => {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState('ALL TYPE');
+  const [activeTab, setActiveTab] = useState('TOUS TYPE');
   const [selectedPropertyType, setSelectedPropertyType] = useState('');
   const [selectedCity, setSelectedCity] = useState('Select a city');
   const [cityInput, setCityInput] = useState('');
@@ -196,7 +196,7 @@ const PropertySearchPage = ({
           <Box borderRadius="lg" overflow="hidden" boxShadow="xl">
             <Box bg="white">
               <Flex borderBottom="1px" borderColor="gray.200" align="center" justify="center">
-                {['ALL TYPE', 'FOR Vente', 'FOR Location'].map((tab) => (
+                {['TOUS TYPE', 'Pour Vente', 'Pour Location'].map((tab) => (
                   <Button
                     key={tab}
                     variant="ghost"
@@ -291,7 +291,7 @@ const PropertySearchPage = ({
                   <GridItem display={searchDisplay}>
                     <InputGroup size="lg">
                       <Input
-                        placeholder="Search by ville or adresse..."
+                        placeholder="Recherche par ville ou adresse..."
                         value={searchInput}
                         onChange={handleSearchInputChange}
                       />
@@ -319,7 +319,7 @@ const PropertySearchPage = ({
                   color="white"
                 >
                   <SearchIcon mr={2} />
-                  Search
+                  Recherche
                 </Button>
               </Flex>
               <Flex flexWrap="wrap" gap={2} p={4} borderTop="1px" borderColor="gray.200" justifyContent="center">

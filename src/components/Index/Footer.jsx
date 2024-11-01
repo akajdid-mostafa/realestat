@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { MdOutgoingMail, MdPhoneInTalk, MdLocationOn, MdAccessTimeFilled } from 'react-icons/md';
 import { FaFacebookF, FaInstagram } from 'react-icons/fa';
 import { FiYoutube } from 'react-icons/fi';
@@ -7,6 +8,12 @@ import { BsTwitterX } from 'react-icons/bs';
 
 
 export default function Footer() {
+    const [email, setEmail] = useState('');
+
+    const handleSubscribe = (e) => {
+        e.preventDefault(); // Prevent the default anchor behavior
+        setEmail(''); // Clear the email input field
+    };
     return (
         <section
             className=" footer-container px-3  bg-gray-50 sm:pt-16 lg:pt-14"
@@ -57,7 +64,7 @@ export default function Footer() {
                     </div>
                     {/* Contact Information */}
                     <div>
-                        <p className="text-sm font-semibold tracking-widest text-gray-400 uppercase">CONTACT US</p>
+                        <p className="text-sm font-semibold tracking-widest text-gray-400 uppercase">CONTACTEZ-NOUS</p>
                         <ul className="mt-6 space-y-4">
                             <li className="flex items-center text-base text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600">
                                 <a href="mailto:maroc.immocean@gmail.com" className="flex items-center space-x-2">
@@ -93,30 +100,41 @@ export default function Footer() {
                     </div>
                     {/* Newsletter Subscription */}
                     <div className="flex flex-col space-y-6">
-                        <p className="text-sm font-semibold tracking-widest text-gray-400 uppercase">Subscribe to newsletter</p>
-                        <form action="#" method="POST" className="flex flex-col space-y-4">
+                        <p className="text-sm font-semibold tracking-widest text-gray-400 uppercase">
+                            S'abonner à la lettre d'information
+                        </p>
+                        <form className="flex flex-col space-y-4">
                             <div>
-                                <label htmlFor="email" className="sr-only">Email</label>
+                                <label htmlFor="email" className="sr-only">
+                                    Email
+                                </label>
                                 <input
                                     type="email"
                                     name="email"
                                     id="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                     placeholder="Enter your email"
                                     className="block w-full p-4 text-black placeholder-gray-500 transition-all duration-200 bg-white border border-gray-200 rounded-md focus:outline-none focus:border-blue-600 caret-blue-600"
                                 />
                             </div>
-                            <button  type="submit" className="inline-flex items-center justify-center  px-6 py-4 font-semibold text-white transition-all duration-200 bg-blue-600 rounded-md hover:bg-blue-700 focus:bg-blue-700">
-                                Subscribe
-                            </button>
+                            <Link
+                                href="/"
+                                title="Subscribe"
+                                onClick={handleSubscribe}
+                                className="inline-flex items-center justify-center px-6 py-4 font-semibold text-white transition-all duration-200 bg-blue-600 rounded-md hover:bg-blue-700 focus:bg-blue-700"
+                            >
+                                S'abonner
+                            </Link>
                         </form>
                     </div>
                 </div>
                 <Image
-                                src="/images/footer-art.svg"
-                                alt=""
-                                width="1200" 
-                                height="160"
-                            />
+                    src="/images/footer-art.svg"
+                    alt=""
+                    width="1200"
+                    height="160"
+                />
             </div>
         </section>
     );

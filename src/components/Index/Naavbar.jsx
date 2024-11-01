@@ -66,10 +66,10 @@ const Naavbar = () => {
           gap={12}
           fontWeight="bold"
         >
-          <NavLink href="/Index">Home</NavLink>
+          <NavLink href="/Index">Accueil</NavLink>
           <NavLink href="/properties">Propriétés</NavLink>
           <NavLink href="/service">Services</NavLink>
-          <NavLink href="/about">About</NavLink>
+          <NavLink href="/about">A propos de</NavLink>
           <NavLink href="/contact">Contact</NavLink>
         </Flex>
         <Flex alignItems="center" gap={2}>
@@ -108,9 +108,9 @@ const Naavbar = () => {
               <DrawerHeader>Menu</DrawerHeader>
               <DrawerBody>
                 <Flex direction="column" fontWeight="bold" gap={4}>
-                  <NavLink href="/Index">Home</NavLink>
+                  <NavLink href="/Index">Accueil</NavLink>
                   <NavLink href="/properties">Propriétés</NavLink>
-                  <NavLink href="/about">About</NavLink>
+                  <NavLink href="/about">A propos de</NavLink>
                   <NavLink href="/contact">Contact</NavLink>
                   <Button
                     position="relative"

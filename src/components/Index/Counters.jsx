@@ -52,7 +52,7 @@ const Counters = () => {
           <div className="col-span-6 md:col-span-3 mt-8 md:mt-0">
             <Counter
               end={268}
-              text="Total Constructions"
+              text="Total des constructions"
               Icon={FaTruck}
             />
           </div>
