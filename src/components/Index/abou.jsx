@@ -90,7 +90,7 @@ console.log("ez")
                     />
                 </motion.div>
                 <div className="col-span-12 md:col-span-12 lg:col-span-6 sm:col-span-12">
-                    <Badge text="About Us" />
+                    <Badge text="À propos de nous" />
                     <motion.h1
                         className="my-3 font-bold sm:text-xl md:text-xl lg:text-3xl xl:text-4xl 2xl:text-5xl leading-tight mb-6" // Reduced font sizes
                         initial={{ opacity: 0, y: -30 }}
