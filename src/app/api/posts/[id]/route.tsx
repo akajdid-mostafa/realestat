@@ -5,9 +5,14 @@ import { v2 as cloudinary } from 'cloudinary';
 const prisma = new PrismaClient();
 
 cloudinary.config({
-  cloud_name: 'dab60xyhf',
-  api_key: '141321481661693',
-  api_secret: 'T9zFUC5NdH51iFiSeOpyfGUlO1I',
+  // cloud_name: 'dab60xyhf',
+  // api_key: '141321481661693',
+  // api_secret: 'T9zFUC5NdH51iFiSeOpyfGUlO1I',
+
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+
 });
 
 export async function PUT(req: Request) {
