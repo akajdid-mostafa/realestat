@@ -1,0 +1,92 @@
+{
+  "api_endpoint": "POST /api/types",
+  "description": "Create a new property type",
+  "base_url": "http://localhost:3000",
+  "full_url": "http://localhost:3000/api/types",
+  
+  "request_examples": {
+    "create_type_appartement": {
+      "method": "POST",
+      "url": "http://localhost:3000/api/types",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "type": "Appartement"
+      }
+    },
+    
+    "create_type_maisons": {
+      "method": "POST",
+      "url": "http://localhost:3000/api/types",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "type": "Maisons"
+      }
+    },
+    
+    "create_type_bureau": {
+      "method": "POST",
+      "url": "http://localhost:3000/api/types",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "type": "Bureau"
+      }
+    }
+  },
+  
+  "response_examples": {
+    "success_response": {
+      "status": 201,
+      "body": {
+        "id": 1,
+        "type": "Appartement",
+        "posts": []
+      }
+    },
+    
+    "error_missing_type": {
+      "status": 400,
+      "body": {
+        "error": "Type name is required"
+      }
+    },
+    
+    "error_invalid_type": {
+      "status": 500,
+      "body": {
+        "error": "Error creating type",
+        "details": "Invalid enum value"
+      }
+    }
+  },
+  
+  "required_fields": [
+    "type"
+  ],
+  
+  "valid_type_names": [
+    "Bureau",
+    "Land",
+    "Home",
+    "Park",
+    "Appartement",
+    "Maisons",
+    "villasRiad",
+    "Bureaux",
+    "Local",
+    "Terrains"
+  ],
+  
+  "notes": [
+    "The 'type' field must be exactly one of the enum values listed above",
+    "Type names are case-sensitive",
+    "Each type can have multiple posts associated with it",
+    "Note: The field name is 'type' (not 'name')"
+  ]
+}
+

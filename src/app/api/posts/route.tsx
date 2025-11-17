@@ -19,9 +19,12 @@ export function OPTIONS() {
 const prisma = new PrismaClient();
 
 cloudinary.v2.config({
-  cloud_name: 'dtcfvpu6n',
-  api_key: '813952658855993',
-  api_secret: '41BFZx9tensYKPnhu3CppsmU9Ng',
+  // cloud_name: 'dtcfvpu6n',
+  // api_key: '813952658855993',
+  // api_secret: '41BFZx9tensYKPnhu3CppsmU9Ng',
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
 console.log("dw")

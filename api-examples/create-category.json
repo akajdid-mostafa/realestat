@@ -1,0 +1,72 @@
+{
+  "api_endpoint": "POST /api/categories",
+  "description": "Create a new category",
+  "base_url": "http://localhost:3000",
+  "full_url": "http://localhost:3000/api/categories",
+  
+  "request_examples": {
+    "create_category_location": {
+      "method": "POST",
+      "url": "http://localhost:3000/api/categories",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "name": "Location"
+      }
+    },
+    
+    "create_category_vente": {
+      "method": "POST",
+      "url": "http://localhost:3000/api/categories",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "name": "Vente"
+      }
+    }
+  },
+  
+  "response_examples": {
+    "success_response": {
+      "status": 201,
+      "body": {
+        "id": 1,
+        "name": "Location",
+        "posts": []
+      }
+    },
+    
+    "error_missing_name": {
+      "status": 400,
+      "body": {
+        "error": "Category name is required"
+      }
+    },
+    
+    "error_invalid_name": {
+      "status": 500,
+      "body": {
+        "error": "Error creating category",
+        "details": "Invalid enum value"
+      }
+    }
+  },
+  
+  "required_fields": [
+    "name"
+  ],
+  
+  "valid_category_names": [
+    "Location",
+    "Vente"
+  ],
+  
+  "notes": [
+    "The 'name' field must be exactly one of the enum values: 'Location' or 'Vente'",
+    "Category names are case-sensitive",
+    "Each category can have multiple posts associated with it"
+  ]
+}
+

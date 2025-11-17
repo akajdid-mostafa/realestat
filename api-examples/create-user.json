@@ -1,0 +1,93 @@
+{
+  "api_endpoint": "POST /api/user",
+  "description": "Create a new user or admin",
+  "base_url": "http://localhost:3000",
+  "full_url": "http://localhost:3000/api/user",
+  
+  "request_examples": {
+    "create_user_with_all_fields": {
+      "method": "POST",
+      "url": "http://localhost:3000/api/user",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "email": "user@example.com",
+        "password": "SecurePassword123!",
+        "name": "John Doe",
+        "phone": "+212612345678"
+      }
+    },
+    
+    "create_user_minimal": {
+      "method": "POST",
+      "url": "http://localhost:3000/api/user",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "email": "admin@example.com",
+        "password": "AdminPassword123!",
+        "name": "Admin User"
+      }
+    },
+    
+    "create_user_without_phone": {
+      "method": "POST",
+      "url": "http://localhost:3000/api/user",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "email": "test@example.com",
+        "password": "TestPassword123!",
+        "name": "Test User"
+      }
+    }
+  },
+  
+  "response_examples": {
+    "success_response": {
+      "status": 201,
+      "body": {
+        "id": 1,
+        "email": "user@example.com",
+        "name": "John Doe",
+        "phone": "+212612345678",
+        "password": "$2a$10$hashedPasswordHere..."
+      }
+    },
+    
+    "error_response": {
+      "status": 400,
+      "body": {
+        "error": "Error creating user"
+      }
+    },
+    
+    "error_duplicate_email": {
+      "status": 400,
+      "body": {
+        "error": "Error creating user"
+      }
+    }
+  },
+  
+  "required_fields": [
+    "email",
+    "password",
+    "name"
+  ],
+  
+  "optional_fields": [
+    "phone"
+  ],
+  
+  "notes": [
+    "Password will be automatically hashed using bcrypt",
+    "Email must be unique (cannot create duplicate emails)",
+    "Phone field is optional",
+    "The API does not distinguish between regular users and admins - all users are created the same way"
+  ]
+}
+
