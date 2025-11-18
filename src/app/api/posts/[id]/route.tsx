@@ -93,7 +93,7 @@ export async function PUT(req: Request) {
       uploadedImages = await Promise.all(
         img.map(async (imageUrl: string) => {
           const result = await cloudinary.uploader.upload(imageUrl, {
-            folder: 'your_folder_name',
+            folder: 'realstat',
           });
           return result.secure_url;
         })

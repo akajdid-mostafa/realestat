@@ -72,14 +72,33 @@ export async function POST(req: NextRequest) {
     }
 
     
-    const uploadedImages = await Promise.all(
-      img.map(async (imageUrl: string) => {
-        const result = await cloudinary.v2.uploader.upload(imageUrl, {
-          folder: 'your_folder_name',
-        });
-        return result.secure_url;
-      })
-    );
+    // Upload images to Cloudinary
+    let uploadedImages: string[] = [];
+    try {
+      uploadedImages = await Promise.all(
+        img.map(async (imageUrl: string) => {
+          try {
+            const result = await cloudinary.v2.uploader.upload(imageUrl, {
+              folder: 'realstat',
+            });
+            return result.secure_url;
+          } catch (uploadError: any) {
+            console.error('Cloudinary upload error for single image:', uploadError);
+            throw new Error(`Failed to upload image to Cloudinary: ${uploadError.message || String(uploadError)}`);
+          }
+        })
+      );
+    } catch (cloudinaryError: any) {
+      console.error('Cloudinary upload failed:', {
+        error: cloudinaryError,
+        cloudinaryConfig: {
+          cloud_name: process.env.CLOUD_NAME,
+          api_key: process.env.CLOUDINARY_API_KEY ? 'Set' : 'Missing',
+          api_secret: process.env.CLOUDINARY_API_SECRET ? 'Set' : 'Missing',
+        }
+      });
+      throw new Error(`Image upload failed: ${cloudinaryError.message || String(cloudinaryError)}`);
+    }
 
     
     const post = await prisma.post.create({
@@ -129,9 +148,26 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ id: updatedPost.id, post: updatedPost }, { status: 201 });
   } catch (error: any) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error('Error creating post:', errorMessage);
-    return NextResponse.json({ error: 'Error creating post', details: errorMessage }, { status: 500 });
+    // Better error logging
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const errorStack = error instanceof Error ? error.stack : undefined;
+    const errorDetails = {
+      message: errorMessage,
+      stack: errorStack,
+      fullError: error,
+      cloudinaryConfig: {
+        cloud_name: process.env.CLOUD_NAME ? 'Set' : 'Missing',
+        api_key: process.env.CLOUDINARY_API_KEY ? 'Set' : 'Missing',
+        api_secret: process.env.CLOUDINARY_API_SECRET ? 'Set' : 'Missing',
+      }
+    };
+    
+    console.error('Error creating post:', errorDetails);
+    return NextResponse.json({ 
+      error: 'Error creating post', 
+      details: errorMessage,
+      debug: process.env.NODE_ENV === 'development' ? errorDetails : undefined
+    }, { status: 500 });
   }
 }
 
