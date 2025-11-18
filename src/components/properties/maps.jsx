@@ -17,18 +17,27 @@ export default function Maps({ center, markers = [] }) {
 
   useEffect(() => {
     import("leaflet").then(L => {
-      const iconUrl = '/images/Appartement.svg';
-      if (!iconCache[iconUrl]) {
-        const icon = L.icon({
-          iconUrl: iconUrl,
-          iconSize: [32, 32],
-          iconAnchor: [16, 32],
-          popupAnchor: [0, -32]
+      // Get all unique icon URLs from markers
+      const uniqueIconUrls = [...new Set(markers.map(marker => marker.iconUrl || '/images/Appartement.svg'))];
+      
+      // Load icons for all unique icon URLs that aren't already cached
+      setIconCache(prevCache => {
+        const newCache = { ...prevCache };
+        uniqueIconUrls.forEach(iconUrl => {
+          if (!newCache[iconUrl] && iconUrl) {
+            const icon = L.icon({
+              iconUrl: iconUrl,
+              iconSize: [32, 32],
+              iconAnchor: [16, 32],
+              popupAnchor: [0, -32]
+            });
+            newCache[iconUrl] = icon;
+          }
         });
-        setIconCache(prevCache => ({ ...prevCache, [iconUrl]: icon }));
-      }
+        return newCache;
+      });
     });
-  }, [iconCache]);
+  }, [markers]);
 
   return (
     <Box maxW="7xl" mx="auto" p={4}>
@@ -45,11 +54,15 @@ export default function Maps({ center, markers = [] }) {
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             />
             <ZoomControl position="topright" />
-            {markers.map((marker) => (
+            {markers.map((marker) => {
+              const iconUrl = marker.iconUrl || '/images/Appartement.svg';
+              const markerIcon = iconCache[iconUrl] || iconCache['/images/Appartement.svg'];
+              
+              return (
               <Marker
                 key={marker.id}
                 position={marker.position}
-                icon={iconCache['/images/Appartement.svg']}
+                icon={markerIcon}
               >
                 <Popup>
                   <div className="flex w-64 h-40">
@@ -90,7 +103,8 @@ export default function Maps({ center, markers = [] }) {
                   {marker.label}
                 </div>
               </Marker>
-            ))}
+              );
+            })}
           </MapContainer>
         )}
       </Box>

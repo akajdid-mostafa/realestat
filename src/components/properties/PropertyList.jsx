@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Box, Grid, Button, useBreakpointValue } from '@chakra-ui/react';
+import Image from 'next/image';
 import PropertyCard from './PropertyCard';
 import PropertyDetailModal from './PropertyDetailModal';
 import PropertySearchPage from './fillter';
@@ -8,7 +9,7 @@ import Pagination from './pagination';
 import { useRouter } from 'next/router';
 import Maps from './maps';
 
-const POSTS_API_URL = 'https://immoceanrepo.vercel.app/api/posts';
+const POSTS_API_URL = 'https://realestat.vercel.app/api/posts';
 
 const PropertyList = () => {
     const showSearch = true;
@@ -28,7 +29,7 @@ const PropertyList = () => {
 
     const totalPages = Math.ceil(filteredProperties.length / itemsPerPage);
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         try {
             const queryParams = new URLSearchParams();
 
@@ -67,11 +68,11 @@ const PropertyList = () => {
         } catch (error) {
             console.error('Error fetching data:', error);
         }
-    };
+    }, [activeTab, selectedPropertyType, selectedCity, selectedRoomCount, selectedBathroomsCount, searchQuery]);
 
     useEffect(() => {
         fetchData();
-    }, [activeTab, selectedPropertyType, selectedCity, selectedRoomCount, selectedBathroomsCount, searchQuery]);
+    }, [fetchData]);
 
     useEffect(() => {
         const { page } = router.query;
@@ -188,13 +189,25 @@ const PropertyList = () => {
                         colorScheme='ble.600'
                         background="blue.600" // Changed button background color to blue.600
                         color="white" // Changed text color to white
-                        rightIcon={<img src={isMapView ? "/images/detail.png" : "/images/maps.png"} alt="Icon" style={{ 
-                            width: '35px', 
-                            height: '35px', 
-                            border: ' solid white', 
-                            borderRadius: '50%', 
-                            backgroundColor: 'white' 
-                        }} />} 
+                        rightIcon={
+                            <Box 
+                                position="relative" 
+                                width="35px" 
+                                height="35px" 
+                                borderRadius="50%" 
+                                backgroundColor="white"
+                                border="2px solid white"
+                                overflow="hidden"
+                            >
+                                <Image 
+                                    src={isMapView ? "/images/detail.png" : "/images/maps.png"} 
+                                    alt="Icon" 
+                                    width={35}
+                                    height={35}
+                                    style={{ objectFit: 'contain' }}
+                                />
+                            </Box>
+                        } 
                     >
                         {isMapView ? 'Afficher  List' : 'Afficher  Map'}
                     </Button>
@@ -205,36 +218,45 @@ const PropertyList = () => {
                     <Box flex="1" position="sticky" top="0" height="100%" w="full" overflow="hidden">
                         <Maps
                             center={[31.7917, -7.0926]}
-                            markers={properties.map(property => ({
-                                id: property.id,
-                                position: [property.lat, property.lon],
-                                imageUrl: property.img[0],
-                                title: property.title,
-                                adress: property.adress,
-                                label: property.type?.type,
-                                price: property.prix,
-                                // iconUrl: '/images/Appartement.svg',
-                                //=> {
-                                //     switch (property.type?.type) {
-                                //         // case "Appartement":
-                                //         //     return '/images/Appartement.svg';
-                                //         // case "Local":
-                                //         //     return '/images/local.svg';
-                                //         // case "Maisons":
-                                //         //     return '/images/maison.svg';
-                                //         // case "Bureaux":
-                                //         //     return '/images/bureaux.svg';
-                                //         // case "Terrains":
-                                //         //     return '/images/terrains.svg';
-                                //         // case "villasRiad":
-                                //         //     return '/images/villa.svg';
-                                //         default:
-                                //             return '/images/Appartement.svg';
-                                //     }
-                                // }
-                                
-                                // number: property.id
-                            }))}
+                            markers={properties.map(property => {
+                                // Get icon URL based on property type
+                                const getIconUrl = () => {
+                                    switch (property.type?.type) {
+                                        case "Appartement":
+                                            return '/images/Appartement.svg';
+                                        case "Local":
+                                            return '/images/local.svg';
+                                        case "Maisons":
+                                            return '/images/maison.svg';
+                                        case "Bureaux":
+                                        case "Bureau":
+                                            return '/images/bureaux.svg';
+                                        case "Terrains":
+                                            return '/images/terrains.svg';
+                                        case "villasRiad":
+                                            return '/images/villa.svg';
+                                        case "Home":
+                                            return '/images/maison.svg';
+                                        case "Land":
+                                            return '/images/terrains.svg';
+                                        case "Park":
+                                            return '/images/local.svg';
+                                        default:
+                                            return '/images/Appartement.svg';
+                                    }
+                                };
+
+                                return {
+                                    id: property.id,
+                                    position: [property.lat, property.lon],
+                                    imageUrl: property.img[0],
+                                    title: property.title,
+                                    adress: property.adress,
+                                    label: property.type?.type,
+                                    price: property.prix,
+                                    iconUrl: getIconUrl(),
+                                };
+                            })}
                         />
                     </Box>
                 )}

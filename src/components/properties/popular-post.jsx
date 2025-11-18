@@ -32,7 +32,7 @@ const Popular = () => {
         // Fetch posts and details from APIs
         const fetchData = async () => {
             try {
-                const postsResponse = await fetch('https://immoceanrepo.vercel.app/api/posts');
+                const postsResponse = await fetch('https://realestat.vercel.app/api/posts');
                 const postsData = await postsResponse.json();
                 if (Array.isArray(postsData)) {
                     setPosts(postsData);
@@ -40,7 +40,7 @@ const Popular = () => {
                     console.error('Expected an array for posts, received:', postsData);
                 }
 
-                const detailsResponse = await fetch('https://immoceanrepo.vercel.app/api/details');
+                const detailsResponse = await fetch('https://realestat.vercel.app/api/details');
                 const detailsData = await detailsResponse.json();
                 setDetails(detailsData);
             } catch (error) {
@@ -125,9 +125,9 @@ const Popular = () => {
     return (
         <Box display="flex" flexDirection="column" alignItems="center" p={4}>
             <Box textAlign="center" mt={8} mb={6}>
-                <Heading fontSize="4xl" mb={4}>Annonces d'accueil dans Votre Immocean</Heading>
+                <Heading fontSize="4xl" mb={4}>Annonces d&apos;accueil dans Votre Immocean</Heading>
                 <Text color="gray.400" maxWidth="xl" mx="auto">
-                    Avec plus d'un million de biens disponibles, il est facile de trouver le bien qui vous convient.
+                    Avec plus d&apos;un million de biens disponibles, il est facile de trouver le bien qui vous convient.
                 </Text>
             </Box>
 

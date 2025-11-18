@@ -22,8 +22,8 @@ import Map from './PropertyLocationMap';
 import PopularCard from './PopularPropertyCard';
 import PropertySummary from './PropertySumary';
 
-const POSTS_API_URL = 'https://immoceanrepo.vercel.app/api/posts';
-const DETAILS_API_URL = 'https://immoceanrepo.vercel.app/api/details';
+const POSTS_API_URL = 'https://realestat.vercel.app/api/posts';
+const DETAILS_API_URL = 'https://realestat.vercel.app/api/details';
 
 const PropertyDetailModal = ({ isOpen, onClose }) => {
     const router = useRouter();
