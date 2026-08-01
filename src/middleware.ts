@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 // Sprint 1: single active CORS layer for the local flow.
 // Allows the public site (localhost:3000) and the admin dashboard (localhost:3001).
 // The dashboard reads/writes the public API cross-origin from 3001.
-const allowedOrigins = ['http://localhost:3000', 'http://localhost:3001']
+const allowedOrigins = ['http://localhost:3000', 'http://localhost:3001', 'https://dashbord-realstat-chi.vercel.app', 'https://realestat-eight.vercel.app']
 
 const corsOptions = {
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',

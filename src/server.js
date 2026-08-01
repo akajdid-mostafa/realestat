@@ -4,7 +4,7 @@ import cors from 'cors';
 const app = express();
 
 // List of allowed origins
-const allowedOrigins = ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002'];
+const allowedOrigins = ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002', 'https://dashbord-realstat-chi.vercel.app', 'https://realestat-eight.vercel.app'];
 
 const corsOptions = {
   origin: function (origin, callback) {
