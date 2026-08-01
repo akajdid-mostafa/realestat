@@ -19,6 +19,11 @@ function setCorsHeaders(response: NextResponse) {
   return response;
 }
 
+function publicIdFromUrl(imageUrl: string): string | undefined {
+  const match = imageUrl.match(/\/upload\/(?:v\d+\/)?(.+?)\.[a-zA-Z0-9]+$/);
+  return match ? match[1] : imageUrl.split('/').pop()?.split('.')[0];
+}
+
 export function OPTIONS() {
   const response = new NextResponse(null, { status: 204 });
   return setCorsHeaders(response);
@@ -86,7 +91,7 @@ export async function PUT(req: NextRequest) {
           await Promise.all(
             (existingPost.img as string[]).map(async (image) => {
               if (image) {
-                const publicId = image.split("/").pop()?.split(".")[0];
+                const publicId = publicIdFromUrl(image);
                 if (publicId) {
                   await cloudinary.v2.uploader.destroy(publicId);
                 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Box, Grid, Button, useBreakpointValue } from '@chakra-ui/react';
+import { Box, Grid, Button, Alert, AlertIcon, useBreakpointValue } from '@chakra-ui/react';
 import Image from 'next/image';
 import PropertyCard from './PropertyCard';
 import PropertyDetailModal from './PropertyDetailModal';
@@ -24,6 +24,7 @@ const PropertyList = () => {
     const [selectedRoomCount, setSelectedRoomCount] = useState('Tous chambre');
     const [selectedBathroomsCount, setSelectedBathroomsCount] = useState('Tous Salle de bain');
     const [searchQuery, setSearchQuery] = useState('');
+    const [fetchError, setFetchError] = useState(null);
     const [itemsPerPage, setItemsPerPage] = useState(12);
     const [isMapView, setIsMapView] = useState(true);
     const router = useRouter();
@@ -32,12 +33,13 @@ const PropertyList = () => {
 
     const fetchData = useCallback(async () => {
         try {
+            setFetchError(null);
             const queryParams = new URLSearchParams();
 
             if (activeTab === 'Pour Location') {
-                queryParams.append('categoryId', '2');
-            } else if (activeTab === 'Pour Vente') {
                 queryParams.append('categoryId', '1');
+            } else if (activeTab === 'Pour Vente') {
+                queryParams.append('categoryId', '2');
             }
 
             if (selectedPropertyType !== 'View All') {
@@ -45,7 +47,7 @@ const PropertyList = () => {
             }
 
             if (selectedCity && selectedCity !== 'All Ville') {
-                queryParams.append('search', selectedCity);
+                queryParams.append('ville', selectedCity);
             }
 
             if (selectedRoomCount !== 'Tous chambre') {
@@ -63,11 +65,22 @@ const PropertyList = () => {
             const response = await fetch(`${POSTS_API_URL}?${queryParams.toString()}`);
             const data = await response.json();
 
+            if (!response.ok) {
+                console.error('Error fetching data:', data);
+                setProperties([]);
+                setFilteredProperties([]);
+                setFetchError(data?.error || 'Failed to load listings');
+                return;
+            }
+
             console.log('Fetched data:', data);
             setProperties(data);
             setFilteredProperties(data);
         } catch (error) {
             console.error('Error fetching data:', error);
+            setProperties([]);
+            setFilteredProperties([]);
+            setFetchError('Failed to load listings. Please try again.');
         }
     }, [activeTab, selectedPropertyType, selectedCity, selectedRoomCount, selectedBathroomsCount, searchQuery]);
 
@@ -264,7 +277,12 @@ const PropertyList = () => {
                 {(!isMapView || !isMobileView) && (
                     <Box flex="1" overflowY="auto" p={4}>
                         <Box display="flex" justifyContent="center">
-                            {currentItems.length > 0 ? (
+                            {fetchError ? (
+                                <Alert status="error" borderRadius="md" maxW="md" m={4}>
+                                    <AlertIcon />
+                                    {fetchError}
+                                </Alert>
+                            ) : currentItems.length > 0 ? (
                                 <Box maxW="7xl" w="full">
                                     <Grid
                                         templateColumns={{ base: '1fr', md: 'repeat(1, 1fr)', lg: 'repeat(2, 1fr)' }}

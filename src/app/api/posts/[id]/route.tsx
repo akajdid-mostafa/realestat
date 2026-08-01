@@ -12,6 +12,11 @@ cloudinary.config({
 
 });
 
+function publicIdFromUrl(imageUrl: string): string | undefined {
+  const match = imageUrl.match(/\/upload\/(?:v\d+\/)?(.+?)\.[a-zA-Z0-9]+$/);
+  return match ? match[1] : imageUrl.split('/').pop()?.split('.')[0];
+}
+
 export async function PUT(req: Request) {
   const id = req.url.split('/').pop();
   const {
@@ -78,7 +83,7 @@ export async function PUT(req: Request) {
         await Promise.all(
           (existingPost.img as string[]).map(async (image) => {
             if (image) { 
-              const publicId = image.split('/').pop()?.split('.')[0]; 
+              const publicId = publicIdFromUrl(image); 
               if (publicId) {
                 await cloudinary.uploader.destroy(publicId);
               }
@@ -108,7 +113,7 @@ export async function PUT(req: Request) {
         adress,
         ville,
         status: status as Status,
-        title:typeId,categoryId,
+        title,
         youtub,
         comment,
         category: categoryId ? { connect: { id: categoryId } } : undefined,
@@ -183,7 +188,7 @@ export async function DELETE(req: Request) {
       await Promise.all(
         post.img.map(async (image) => {
           if (typeof image === 'string') {
-            const publicId = image.split('/').pop()?.split('.')[0];
+            const publicId = publicIdFromUrl(image);
             if (publicId) {
               await cloudinary.uploader.destroy(publicId);
             }
