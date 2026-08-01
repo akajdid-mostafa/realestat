@@ -10,9 +10,10 @@ import {
   Flex,
   InputGroup,
   InputLeftElement,
-  Icon
+  Icon,
+  Alert,
+  AlertIcon
 } from '@chakra-ui/react';
-import { useForm, ValidationError } from '@formspree/react';
 import { MdPerson, MdEmail, MdPhone } from 'react-icons/md';
 import { CONTACT_API_URL } from '@/config/api';
 
@@ -23,6 +24,8 @@ const ContactForm = forwardRef(({ siteInfo, formHeading, shouldHaveNegativeTopMa
     phone: '',
     message: ''
   });
+  const [status, setStatus] = useState('idle');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,21 +37,32 @@ const ContactForm = forwardRef(({ siteInfo, formHeading, shouldHaveNegativeTopMa
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!CONTACT_API_URL) {
-      alert("Échec de l'envoi du message.");
+    if (status === 'submitting') {
       return;
     }
+    if (!CONTACT_API_URL) {
+      setStatus('error');
+      setErrorMessage('Le service de contact n\'est pas configuré.');
+      return;
+    }
+    setStatus('submitting');
+    setErrorMessage('');
     try {
-      const response = await fetch(`${CONTACT_API_URL}/Email`, {
+      const response = await fetch(CONTACT_API_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          nom: formData.name,
+          phone: formData.phone,
+          email: formData.email,
+          message: formData.message,
+        }),
       });
 
       if (response.ok) {
-        alert('Message envoyé avec succès !');
+        setStatus('success');
         setFormData({
           name: '',
           email: '',
@@ -56,17 +70,15 @@ const ContactForm = forwardRef(({ siteInfo, formHeading, shouldHaveNegativeTopMa
           message: ''
         });
       } else {
-        alert("Échec de l'envoi du message.");
+        setStatus('error');
+        setErrorMessage('Échec de l\'envoi du message.');
       }
     } catch (error) {
       console.error('Erreur de soumission du formulaire :', error);
-      alert("Une erreur s'est produite. Veuillez réessayer plus tard.");
+      setStatus('error');
+      setErrorMessage('Une erreur réseau s\'est produite. Veuillez réessayer plus tard.');
     }
   };
-
-  const [state] = useForm('YOUR_FORM_ID');
-
-  const errorTextColor = '#e53e3e';
 
   const formBox = (children) => (
     <Box
@@ -85,7 +97,7 @@ const ContactForm = forwardRef(({ siteInfo, formHeading, shouldHaveNegativeTopMa
     </Box>
   );
 
-  if (state.succeeded) {
+  if (status === 'success') {
     return formBox(
       <VStack spacing="1.5rem" py="8rem">
         <Heading fontSize="2xl" textAlign="center" fontWeight="bold" color="blue.600">
@@ -168,11 +180,6 @@ const ContactForm = forwardRef(({ siteInfo, formHeading, shouldHaveNegativeTopMa
                 _focus={{ borderColor: 'blue.500', boxShadow: '0 0 0 1px blue.500' }}
               />
             </InputGroup>
-            <ValidationError
-              field="name"
-              errors={state.errors}
-              style={{ color: errorTextColor }}
-            />
 
             <InputGroup>
               <InputLeftElement
@@ -192,11 +199,6 @@ const ContactForm = forwardRef(({ siteInfo, formHeading, shouldHaveNegativeTopMa
                 _focus={{ borderColor: 'blue.500', boxShadow: '0 0 0 1px blue.500' }}
               />
             </InputGroup>
-            <ValidationError
-              field="email"
-              errors={state.errors}
-              style={{ color: errorTextColor }}
-            />
 
             <InputGroup>
               <InputLeftElement
@@ -210,11 +212,6 @@ const ContactForm = forwardRef(({ siteInfo, formHeading, shouldHaveNegativeTopMa
                 placeholder="Votre numéro de téléphone"
                 value={formData.phone}
                 onChange={handleChange}
-                onBlur={(e) => {
-                  if (!e.target.value.match(/^\+\d{4}\s\d{8}$/)) {
-                    alert('Veuillez saisir un numéro de téléphone correct.');
-                  }
-                }}
                 required
                 borderColor="gray.300"
                 _placeholder={{ color: 'gray.500' }}
@@ -236,11 +233,13 @@ const ContactForm = forwardRef(({ siteInfo, formHeading, shouldHaveNegativeTopMa
               }}
               required
             />
-            <ValidationError
-              field="message"
-              errors={state.errors}
-              style={{ color: errorTextColor }}
-            />
+
+            {status === 'error' && errorMessage && (
+              <Alert status="error" borderRadius="md" w="full">
+                <AlertIcon />
+                {errorMessage}
+              </Alert>
+            )}
 
             <Button
               type="submit"
@@ -249,11 +248,12 @@ const ContactForm = forwardRef(({ siteInfo, formHeading, shouldHaveNegativeTopMa
               bg="blue.500"
               color="white"
               rounded="md"
+              isDisabled={status === 'submitting'}
               _hover={{ bg: 'blue.600', transform: 'translateY(-2px)' }}
               _active={{ bg: 'blue.700', transform: 'translateY(0)' }}
               transition="transform 0.2s ease"
             >
-              {state.submitting ? 'Sending...' : 'Send'}
+              {status === 'submitting' ? 'Envoi en cours...' : 'Envoyer'}
             </Button>
           </VStack>
         </form>

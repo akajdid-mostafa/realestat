@@ -24,7 +24,9 @@ const ContactForm = ({ message, setMessage, defaultMessage }) => {
         email: '',
         phone: ''
     });
-console.log("dsd")
+    const [status, setStatus] = useState('idle');
+    const [errorMessage, setErrorMessage] = useState('');
+
     useEffect(() => {
         setFormData(formData => ({ ...formData, message: defaultMessage }));
     }, [defaultMessage]);  // Update formData.message when defaultMessage changes
@@ -69,27 +71,38 @@ console.log("dsd")
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (status === 'submitting') {
+            return;
+        }
         if (validationErrors.email || validationErrors.phone) {
             alert('Please fix the errors before submitting.');
             return;
         }
 
         if (!CONTACT_API_URL) {
-            alert('Failed to send message.');
+            setStatus('error');
+            setErrorMessage('Contact service is not configured.');
             return;
         }
 
+        setStatus('submitting');
+        setErrorMessage('');
         try {
-            const response = await fetch(`${CONTACT_API_URL}/Email`, {
+            const response = await fetch(CONTACT_API_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify({
+                    nom: formData.name,
+                    phone: formData.phone,
+                    email: formData.email,
+                    message: formData.message,
+                }),
             });
 
             if (response.ok) {
-                alert('Message sent successfully!');
+                setStatus('success');
                 setFormData({
                     name: '',
                     email: '',
@@ -97,11 +110,13 @@ console.log("dsd")
                     message: defaultMessage || ''  // Use defaultMessage or fallback to empty string
                 });
             } else {
-                alert('Failed to send message.');
+                setStatus('error');
+                setErrorMessage('Failed to send message.');
             }
         } catch (error) {
             console.error('Error submitting form:', error);
-            alert('An error occurred. Please try again later.');
+            setStatus('error');
+            setErrorMessage('A network error occurred. Please try again later.');
         }
     };
 
@@ -185,15 +200,27 @@ console.log("dsd")
                     />
                 </FormControl>
 
+                {status === 'success' && (
+                    <Text color="green.500" fontWeight="semibold" mb={4}>
+                        Message sent successfully! We will get back to you soon.
+                    </Text>
+                )}
+                {status === 'error' && errorMessage && (
+                    <Text color="red.500" fontWeight="semibold" mb={4}>
+                        {errorMessage}
+                    </Text>
+                )}
+
                 <Button
                     type="submit"
                     colorScheme="blue"
                     width="full"
                     bg="blue.600"
+                    isDisabled={status === 'submitting'}
                     _hover={{ transform: 'scale(1.05)' }}
                     transition="transform 0.2s"
                 >
-                    Send Message
+                    {status === 'submitting' ? 'Sending...' : 'Send Message'}
                 </Button>
             </form>
 
