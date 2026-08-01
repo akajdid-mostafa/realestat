@@ -8,8 +8,9 @@ import NotFound from './notfound';
 import Pagination from './pagination';
 import { useRouter } from 'next/router';
 import Maps from './maps';
+import { API_BASE_URL } from '@/config/api';
 
-const POSTS_API_URL = 'https://realestat.vercel.app/api/posts';
+const POSTS_API_URL = `${API_BASE_URL}/api/posts`;
 
 const PropertyList = () => {
     const showSearch = true;

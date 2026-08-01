@@ -19,6 +19,7 @@ import {
 } from "react-icons/fa";
 import { useBreakpointValue } from "@chakra-ui/react";
 import { SiWhatsapp } from "react-icons/si";
+import { API_BASE_URL, SITE_BASE_URL } from "@/config/api";
 
 const PopularCard = ({ currentCategory }) => {
   const [gridDisplay, setGridDisplay] = useState(false);
@@ -56,13 +57,13 @@ const PopularCard = ({ currentCategory }) => {
     const fetchData = async () => {
       try {
         const postsResponse = await fetch(
-          "https://realestat.vercel.app/api/posts"
+          `${API_BASE_URL}/api/posts`
         );
         const postsData = await postsResponse.json();
         setPosts(postsData);
 
         const detailsResponse = await fetch(
-          "https://realestat.vercel.app/api/details"
+          `${API_BASE_URL}/api/details`
         );
         const detailsData = await detailsResponse.json();
         setDetails(detailsData);
@@ -226,7 +227,7 @@ const PopularCard = ({ currentCategory }) => {
                       leftIcon={<Icon as={SiWhatsapp} />}
                       colorScheme="green"
                       onClick={() => {
-                        const message = encodeURIComponent(`Interested in property ${card.title} with ID ${card.id}, priced at ${card.price}. View more at http://localhost:3000/properties?modal=yes&id=${card.id}`);
+                        const message = encodeURIComponent(`Interested in property ${card.title} with ID ${card.id}, priced at ${card.price}. View more at ${SITE_BASE_URL}/properties?modal=yes&id=${card.id}`);
                         window.open(`https://wa.me/+4915157575045?text=${message}`, "_blank");
                       }}
                       position="relative"

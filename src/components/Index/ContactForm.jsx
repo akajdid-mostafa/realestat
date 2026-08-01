@@ -14,6 +14,7 @@ import {
 } from '@chakra-ui/react';
 import { useForm, ValidationError } from '@formspree/react';
 import { MdPerson, MdEmail, MdPhone } from 'react-icons/md';
+import { CONTACT_API_URL } from '@/config/api';
 
 const ContactForm = forwardRef(({ siteInfo, formHeading, shouldHaveNegativeTopMargin ,displayProp }, ref) => {
   const [formData, setFormData] = useState({
@@ -33,8 +34,12 @@ const ContactForm = forwardRef(({ siteInfo, formHeading, shouldHaveNegativeTopMa
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!CONTACT_API_URL) {
+      alert("Échec de l'envoi du message.");
+      return;
+    }
     try {
-      const response = await fetch('https://sendmailimmocean.onrender.com/Email', {
+      const response = await fetch(`${CONTACT_API_URL}/Email`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

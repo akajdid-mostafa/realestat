@@ -11,6 +11,7 @@ import {
     Button
 } from "@chakra-ui/react";
 import { FaUser, FaEnvelope, FaPhone } from "react-icons/fa";
+import { CONTACT_API_URL } from '@/config/api';
 
 const ContactForm = ({ message, setMessage, defaultMessage }) => {
     const [formData, setFormData] = useState({
@@ -73,8 +74,13 @@ console.log("dsd")
             return;
         }
 
+        if (!CONTACT_API_URL) {
+            alert('Failed to send message.');
+            return;
+        }
+
         try {
-            const response = await fetch('https://sendmailimmocean.onrender.com/Email', {
+            const response = await fetch(`${CONTACT_API_URL}/Email`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

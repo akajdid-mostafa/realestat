@@ -16,6 +16,7 @@ import 'pure-react-carousel/dist/react-carousel.es.css';
 import { FaBed, FaBath, FaExpandArrowsAlt, FaMapMarkerAlt } from 'react-icons/fa';
 import { SiWhatsapp } from "react-icons/si";
 import Link from 'next/link';
+import { API_BASE_URL, SITE_BASE_URL } from '@/config/api';
 
 
 const Popular = () => {
@@ -32,7 +33,7 @@ const Popular = () => {
         // Fetch posts and details from APIs
         const fetchData = async () => {
             try {
-                const postsResponse = await fetch('https://realestat.vercel.app/api/posts');
+                const postsResponse = await fetch(`${API_BASE_URL}/api/posts`);
                 const postsData = await postsResponse.json();
                 if (Array.isArray(postsData)) {
                     setPosts(postsData);
@@ -40,7 +41,7 @@ const Popular = () => {
                     console.error('Expected an array for posts, received:', postsData);
                 }
 
-                const detailsResponse = await fetch('https://realestat.vercel.app/api/details');
+                const detailsResponse = await fetch(`${API_BASE_URL}/api/details`);
                 const detailsData = await detailsResponse.json();
                 setDetails(detailsData);
             } catch (error) {
@@ -249,7 +250,7 @@ const Popular = () => {
                                             leftIcon={<Icon as={SiWhatsapp} />}
                                             colorScheme="green"
                                             onClick={() => {
-                                                const message = encodeURIComponent(`Interested in property ${card.title} with ID ${card.id}, priced at ${card.price}. View more at http://localhost:3000/properties?modal=yes&id=${card.id}`);
+                                                        const message = encodeURIComponent(`Interested in property ${card.title} with ID ${card.id}, priced at ${card.price}. View more at ${SITE_BASE_URL}/properties?modal=yes&id=${card.id}`);
                                                 window.open(`https://wa.me/+4915157575045?text=${message}`, "_blank");
                                             }}
                                             position="relative"
@@ -392,7 +393,7 @@ const Popular = () => {
                                                     leftIcon={<Icon as={SiWhatsapp} />}
                                                     colorScheme="green"
                                                     onClick={() => {
-                                                        const message = encodeURIComponent(`Interested in property ${card.title} with ID ${card.id}, priced at ${card.price}. View more at http://localhost:3000/properties?modal=yes&id=${card.id}`);
+                                                const message = encodeURIComponent(`Interested in property ${card.title} with ID ${card.id}, priced at ${card.price}. View more at ${SITE_BASE_URL}/properties?modal=yes&id=${card.id}`);
                                                         window.open(`https://wa.me/+4915157575045?text=${message}`, "_blank");
                                                     }}
                                                     position="relative"

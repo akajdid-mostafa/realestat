@@ -19,6 +19,7 @@ import {
 } from 'react-icons/fa';
 import { SiWhatsapp } from "react-icons/si";
 import { FaKitchenSet } from 'react-icons/fa6';
+import { SITE_BASE_URL } from '@/config/api';
 
 const PropertySummary = ({ title, location, category, Ville, id, bathrooms, area, price }) => {
     const [showNumber, setShowNumber] = useState(false); // Add state to toggle phone number display
@@ -130,7 +131,7 @@ const PropertySummary = ({ title, location, category, Ville, id, bathrooms, area
                         leftIcon={<Icon as={SiWhatsapp} />}
                         colorScheme="green"
                         onClick={() => {
-                            const message = encodeURIComponent(`Interested in property ${title} with ID ${id}, priced at ${price}. View more at http://localhost:3000/properties?modal=yes&id=${id}`);
+                            const message = encodeURIComponent(`Interested in property ${title} with ID ${id}, priced at ${price}. View more at ${SITE_BASE_URL}/properties?modal=yes&id=${id}`);
                             window.open(`https://wa.me/+4915157575045?text=${message}`, "_blank");
                         }}                        
                         position="relative"
