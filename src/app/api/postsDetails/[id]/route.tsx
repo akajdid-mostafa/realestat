@@ -86,10 +86,35 @@ export async function PUT(req: NextRequest) {
 
       let uploadedImages: string[] = existingPost.img as string[];
 
-      if (img && Array.isArray(img) && img.length > 0) {
-        if (existingPost.img && Array.isArray(existingPost.img)) {
+      if (img && Array.isArray(img)) {
+        const incomingUrls = img.filter(
+          (image): image is string => typeof image === "string" && !image.startsWith("data:")
+        );
+        const newImages = img.filter(
+          (image): image is string => typeof image === "string" && image.startsWith("data:")
+        );
+
+        const unchanged =
+          newImages.length === 0 &&
+          incomingUrls.length === (existingPost.img as string[]).length &&
+          incomingUrls.every((url) => (existingPost.img as string[]).includes(url));
+
+        if (!unchanged) {
+          const uploadedNew = await Promise.all(
+            newImages.map(async (imageUrl: string) => {
+              const result = await cloudinary.v2.uploader.upload(imageUrl, {
+                folder: "realstat",
+              });
+              return result.secure_url;
+            })
+          );
+          uploadedImages = [...incomingUrls, ...uploadedNew];
+
+          const removed = (existingPost.img as string[]).filter(
+            (url) => !incomingUrls.includes(url)
+          );
           await Promise.all(
-            (existingPost.img as string[]).map(async (image) => {
+            removed.map(async (image) => {
               if (image) {
                 const publicId = publicIdFromUrl(image);
                 if (publicId) {
@@ -99,15 +124,6 @@ export async function PUT(req: NextRequest) {
             })
           );
         }
-
-        uploadedImages = await Promise.all(
-          img.map(async (imageUrl: string) => {
-            const result = await cloudinary.v2.uploader.upload(imageUrl, {
-              folder: "realstat",
-            });
-            return result.secure_url;
-          })
-        );
       }
 
       const updatedPost = await prisma.post.update({

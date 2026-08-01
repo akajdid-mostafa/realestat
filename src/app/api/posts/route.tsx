@@ -364,14 +364,14 @@ export async function GET(req: NextRequest) {
               .reduce((minDate, currDate) => {
                 return new Date(currDate) < new Date(minDate) ? currDate : minDate;
               });
-      
+
             const earliestDateDebut = post.DateReserve
               .map((reserve) => reserve.dateDebut)
               .filter((dateDebut): dateDebut is Date => dateDebut !== null)
               .reduce((minDate, currDate) => {
                 return new Date(currDate) < new Date(minDate) ? currDate : minDate;
               });
-      
+
             if (earliestDateFine && new Date(earliestDateFine) < currentDate) {
               await prisma.post.update({
                 where: { id: post.id },
@@ -390,11 +390,6 @@ export async function GET(req: NextRequest) {
                 data: { status: Status.taken },
               });
             }
-          } else if (!post.DateReserve || post.DateReserve.length === 0) {
-            await prisma.post.update({
-              where: { id: post.id },
-              data: { status: Status.available },
-            });
           }
         })
       );
