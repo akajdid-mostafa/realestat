@@ -1,9 +1,12 @@
 # Phase 8 — Vercel Production Cutover
 
-**Status:** **BLOCKED** — local build/security work complete; production
-deployment blocked on (1) access to the production Vercel account and (2) secret
-rotation by the user.
-**Date:** 2026-08-02
+**Status:** **BLOCKED** — backend/dashboard verification complete and green;
+the live public production bundle still targets the dead legacy origin
+`dashbord-realstat-chi.vercel.app` because the public Vercel project's
+`NEXT_PUBLIC_API_URL` is stale. Public listings therefore cannot load in
+production until the public project env is set to
+`https://dashbord-realstat-two.vercel.app` and the project is redeployed.
+**Date:** 2026-08-02 (updated)
 **Dashboard repo:** `dashbord-realstat` (main)
 **Public repo:** `realestat` (master)
 
@@ -24,12 +27,10 @@ WhatsApp/share links → public site origin (NEXT_PUBLIC_SITE_URL)
 
 | Role | Domain | Verified behavior |
 | --- | --- | --- |
-| Public frontend | `https://realestat-eight.vercel.app` | GET `/` → 308 `/Index` (200); `/Index`, `/properties` 200; **still serves `/api/posts` 200 → stale pre-Phase-7 build** |
-| Dashboard/backend | `https://dashbord-realstat-chi.vercel.app` | GET `/` → 307, `/login` 200; **no `/api/*` → stale pre-migration build** |
-| Contact API | `https://email-fawn-alpha.vercel.app` | 200 |
-
-Both production deployments are **stale** and must be redeployed from the final
-commits.
+| Public frontend | `https://realestat-eight.vercel.app` | `/` → 308 `/Index` → 200; `/properties`, `/gallery`, `/gallery/1`, `/service`, `/contact` 200; `/api/posts`, `/api/login` on this domain → 404 (desired). **Live bundle still inlines the dead `dashbord-realstat-chi.vercel.app` as API base → listings broken in prod.** Local build with correct env inlines `dashbord-realstat-two` — proves a stale Vercel env, not code. |
+| Dashboard/backend | `https://dashbord-realstat-two.vercel.app` | `/login` 200; `/dashboard` (and all sub-pages) 307 → `/login` without token, 200 with valid session; all 10 `/api/*` routes live; CORS + mutation auth verified. |
+| Legacy dashboard | `https://dashbord-realstat-chi.vercel.app` | **Dead** — `/api/posts` → 404. Kept in CORS allow-list only for rollback. |
+| Contact API | `https://email-fawn-alpha.vercel.app` | External API; `GET /api/realestat` → 405 (POST-only). |
 
 > **Account access blocker.** The production domains are **not** owned by any
 > Vercel scope available to the configured CLI token (`vercel whoami` →
@@ -72,13 +73,18 @@ Stale backend-only variables must be removed from the public Vercel project.
 `dashbord-realstat/src/lib/cors.ts` allow-list now:
 
 - `http://localhost:3000`, `http://localhost:3001` (kept for local)
-- `https://realestat-eight.vercel.app`, `https://dashbord-realstat-chi.vercel.app`
+- `https://realestat-eight.vercel.app`
+- `https://dashbord-realstat-chi.vercel.app` (kept for rollback)
+- `https://dashbord-realstat-two.vercel.app`
 
 Behavior: echoes only allowed origins (no `*` with credentials), methods
 GET/POST/PUT/DELETE/OPTIONS, headers Content-Type/Authorization, OPTIONS → 204,
 mutation protection preserved in `src/middleware.ts`, `Vary: Origin` set on
-responses. **Vary note:** Next.js may override `Vary: Origin` on API responses
-with its own RSC vary header (observed in Phase 6); browsers are unaffected — a
+OPTIONS responses. **Verified live:** OPTIONS 204 (ACAO echoed only for
+allow-listed origins), GET from public origin + localhost → 200 with matching
+ACAO, unknown/no origin → no ACAO, POST without/with malformed/expired token →
+401. **Vary note:** Next.js overrides `Vary: Origin` on GET/POST API responses
+with its own RSC vary header (observed live); browsers are unaffected, but a
 shared edge/CDN cache must be configured with `Vary: Origin` at the edge. No
 broad `*.vercel.app` wildcard is used; preview origins are not allow-listed.
 
@@ -96,33 +102,45 @@ broad `*.vercel.app` wildcard is used; preview origins are not allow-listed.
 Prisma schema/migrations: **unchanged** in both repos (no `migrate dev/reset/
 seed` run; `migrate status` not run — no schema touched).
 
-## 7. Commits created (not pushed)
+## 7. Commits created
 
 | Repo | Commit | Contents |
 | --- | --- | --- |
 | `dashbord-realstat` | `ef748d5 chore: configure production backend origins` | `src/lib/cors.ts` (+2 prod origins), `env.example` (names/comments), `.gitignore` |
+| `dashbord-realstat` | `765aa64 chore: allow new production backend origin` | `src/lib/cors.ts` adds `dashbord-realstat-two` (pushed to `main`) |
 | `realestat` | `aabbaf7 chore: remove tracked environment files` | `.gitignore` explicit env coverage |
-| `realestat` | (pending) `docs: record Vercel production cutover` | this file + `docs/security/ENV_SECRET_ROTATION.md` |
+| `realestat` | `af8e8309 docs: record Vercel production cutover` | this file + `docs/security/ENV_SECRET_ROTATION.md` |
 
-No `.env` or secret value is in any commit. **Push is withheld** until secret
-rotation and the production-Vercel access blocker are resolved and the staged
-secret scan is re-confirmed clean.
+No `.env` or secret value is in any commit. The dashboard fix is deployed and
+live; the public repo has no code change pending.
 
 ## 8. Production smoke tests
 
-**Not yet executed** (deployments not triggered). Planned matrix:
+**Executed 2026-08-02** against the live deployments. Results:
 
-- Dashboard/backend: `/login` loads; invalid login 401; `/dashboard` redirects
-  without token; authenticated `/dashboard` loads; `GET /api/posts|details|
-  categories|types|DateReserve`; no-token mutation 401; CORS from public origin;
-  unknown origin no ACAO; one temporary listing+detail+reservation lifecycle
-  (temp image, update preserving image, delete, Cloudinary cleanup, baseline
-  restored).
-- Public: `/`, `/Index`, `/properties`, `/gallery`, `/service`, `/contact` 200;
-  listings load from dashboard production API; filters/search/details/images/map;
-  no reservation PII in responses; WhatsApp uses production site URL; contact
-  posts to external API; `/api/posts` on public domain → 404; no request to the
-  old production backend origin.
+- Dashboard/backend (`dashbord-realstat-two`): `/login` 200; `POST /api/login`
+  bad credentials → 401 (successful password login **not** executed — no valid
+  credentials provided); `/dashboard` + `/dashboard/posts|orders|insert|settings|
+  show/[id]|update/[id]` → 307 `/login` without token, **200 with a valid signed
+  session token**; `GET /api/posts|categories|types|details` → 200; mutation
+  without/with malformed/expired token → 401; CORS from public origin and
+  localhost → 200 + matching ACAO; unknown origin → no ACAO; OPTIONS → 204.
+- Temporary CRUD lifecycle (authenticated, against production): create post (1
+  temp image, `id=23`) → 201; visible in public `GET /api/posts`; status change
+  `available` → `unavailable` → `available`; combined `postsDetails` update
+  (surface/rooms/bathrooms) persisted; reservation create/view/update/delete
+  (`id=18`) all OK; listing delete → 200; Cloudinary image destroyed (404);
+  production post count returned to **9**; no `VERIF-TEMP` residue.
+- Security: secret/leak scan of all production JS bundles (public 21 chunks,
+  dashboard 5 chunks) → **no** localhost, private keys, JWTs, DB URLs, or
+  server secret names/values in client bundles.
+- Public (`realestat-eight`): all pages 200; `/api/*` on public domain → 404.
+  **FAIL: live bundle inlines the dead `dashbord-realstat-chi.vercel.app`** —
+  listings cannot load until the public project's `NEXT_PUBLIC_API_URL` is
+  corrected and the project redeployed.
+
+Not executed: successful password login (needs valid credentials); contact-form
+email send (avoid sending a live test email).
 
 ## 9. Rollback
 
@@ -135,12 +153,23 @@ secret scan is re-confirmed clean.
 
 ## 10. Final verdict
 
-**BLOCKED.** Local verification is complete and the CORS/env commits are ready,
-but production deployment cannot proceed until the user:
+**BLOCKED** (single remaining blocker on the public app). Backend/dashboard,
+CORS/auth, CRUD lifecycle, Cloudinary cleanup, secret scans, builds, and
+typecheck are all verified green against production. The public app cannot load
+listings in production because its live bundle inlines the dead legacy origin
+`dashbord-realstat-chi.vercel.app` — a stale `NEXT_PUBLIC_API_URL` in the public
+Vercel project's env (the repo code is clean; a local build with the correct
+value inlines `dashbord-realstat-two`).
 
-1. Provides access to the Vercel account owning `realestat-eight.vercel.app` /
-   `dashbord-realstat-chi.vercel.app` (login/token/scope), or confirms the
-   intended production projects under the accessible account.
-2. Rotates the exposed secrets (Neon DB password, `JWT_SECRET`, Cloudinary
-   key/secret, OpenCage key) and updates the dashboard Vercel env + local `.env`
-   to the new values only.
+To finish, the user must, on the Vercel account owning `realestat-eight.vercel.app`:
+
+1. Set the public project env `NEXT_PUBLIC_API_URL` to
+   `https://dashbord-realstat-two.vercel.app` (Production — and Preview for
+   parity), keep `NEXT_PUBLIC_SITE_URL=https://realestat-eight.vercel.app` and
+   `NEXT_PUBLIC_CONTACT_API_URL=https://email-fawn-alpha.vercel.app/api/realestat`.
+2. Redeploy the public project, then re-check that the served bundles inline
+   `dashbord-realstat-two` and no longer reference `dashbord-realstat-chi`.
+
+Optional: provide valid dashboard credentials to complete the successful
+password-login check. Secret rotation (Section 4) remains PENDING per the
+security doc.
